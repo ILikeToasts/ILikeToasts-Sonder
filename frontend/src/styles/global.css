@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital@0;1&display=swap');
+
+.raleway-base {
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  
+  .raleway-bold {
+    font-weight: 700;
+  }
+
+  .raleway-light {
+    font-weight: 200;
+  }
+}

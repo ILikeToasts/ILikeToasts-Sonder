@@ -1,14 +1,13 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import './styles/global.css';
+import Albums from './components/Album/Albums';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Jerome's music recommendations!</h1>
-      </header>
-    </div>
+    <main>
+      <h1 className='raleway-base'>Albums</h1>
+      <Albums />
+    </main>
   );
 }
 

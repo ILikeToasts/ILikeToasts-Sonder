@@ -20,3 +20,14 @@ class SpotifyClient:
             "tracks": [track['name'] for track in album['tracks']['items']],
             "album_art": album['images'][0]['url'] if album['images'] else None,
         }
+    
+    def get_artist(self, artist_id):
+        artist = self.sp.artist(artist_id)
+        return {
+            "id": artist['id'],
+            "name": artist['name'],
+            "genres": artist.get('genres', []),
+            "followers": artist['followers']['total'],
+            "popularity": artist['popularity'],
+            "images": [image['url'] for image in artist.get('images', [])],
+        }
