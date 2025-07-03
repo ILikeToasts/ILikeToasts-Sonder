@@ -7,7 +7,12 @@ export default function HomePage() {
       <nav>
         <ul>
           <li><Link to="/album">Album</Link></li>
+          <li><Link to="/artist">Artists</Link></li>
           <li><Link to="/games">Games</Link></li>
+          <li><Link to="/movies">Movies</Link></li>
+          <li><Link to="/pictures">Pictures</Link></li>
+          <li><Link to="/series">Series</Link></li>
+          <li><Link to="/trips">Trips</Link></li>
         </ul>
       </nav>
     </div>
