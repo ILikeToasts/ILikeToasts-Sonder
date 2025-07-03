@@ -4,10 +4,9 @@ import '../../styles/album.css';
 
 interface SpotifyAlbumEmbedProps {
   albumId: string;
-  albumName?: string;
 }
 
-const SpotifyAlbumEmbed: React.FC<SpotifyAlbumEmbedProps> = ({ albumId, albumName }) => {
+const SpotifyAlbumEmbed: React.FC<SpotifyAlbumEmbedProps> = ({ albumId }) => {
   return (
     <div className="album">
       <iframe

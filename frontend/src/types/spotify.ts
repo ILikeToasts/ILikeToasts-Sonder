@@ -8,6 +8,5 @@ export interface SpotifyArtist {
 }
 
 export interface SpotifyAlbum {
-    id: string;
-    name: string;
+    spotify_id: string;
 }

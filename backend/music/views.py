@@ -1,11 +1,12 @@
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics
 
+from .models import Album
 from music.utils.spotify_data_importer import add_album_by_id
 from .spotify_client import SpotifyClient
-from .serializers import AlbumSerializer, ArtistSerializer
+from .serializers import AlbumSerializer, ArtistSerializer, AlbumDBSerializer
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
@@ -31,6 +32,10 @@ class ArtistDetail(APIView):
 
         serializer = ArtistSerializer(artist_data)
         return Response(serializer.data)
+
+class AlbumListView(generics.ListAPIView):
+    queryset = Album.objects.all()
+    serializer_class = AlbumDBSerializer
 
 class AlbumImportView(APIView):
 

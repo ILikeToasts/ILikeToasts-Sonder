@@ -16,7 +16,6 @@ const AlbumGrid: React.FC = () => {
           <SpotifyAlbumEmbed
             key={album.id}
             albumId={album.id}
-            albumName={album.name}
           />
         ))}
       </div>
