@@ -5,12 +5,25 @@
   font-optical-sizing: auto;
   font-weight: 500;
   font-style: normal;
-  
-  .raleway-bold {
-    font-weight: 700;
-  }
+}
 
-  .raleway-light {
-    font-weight: 200;
-  }
+.raleway-light {
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 200;
+  font-style: normal;
+}
+
+.raleway-bold {
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 800;
+  font-style: normal;
+}
+
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }

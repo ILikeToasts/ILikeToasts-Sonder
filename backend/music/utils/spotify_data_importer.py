@@ -12,52 +12,47 @@ def add_album_by_id(sp: Spotify, album_id: str):
     # Get album details
     album_data = sp.album(album_id)
 
-    if album_data :
-        # Get or create all artists for this album
+    if album_data:
         artist_instances = []
-        for artist_data in album_data['artists']:
+
+        for artist_info in album_data['artists']:
+            artist_data = sp.artist(artist_info['id'])
+
+            # Get or create the artist instance
             artist, _ = Artist.objects.update_or_create(
-                spotify_id=artist_data['id'],
+                spotify_id=artist_info['id'],
                 defaults={
-                    'name': artist_data['name'],
-                    'image_url': '',  # You may want to get artist images separately
+                    'name': artist_info['name'],
+                    'image_url': artist_data['images'][0]['url'] if artist_data['images'] else '',
+                    'popularity': artist_data.get('popularity', 0),
+                    'followers': artist_data.get('followers', {}).get('total', 0),
                 }
             )
+
+            # Handle genres M2M properly
+            genres = [Genre.objects.get_or_create(name=genre)[0] for genre in artist_data.get('genres', [])]
+            artist.genres.set(genres)
+
             artist_instances.append(artist)
 
-        # Create or update album
+        # Create or update the album
         album, _ = Album.objects.update_or_create(
             spotify_id=album_data['id'],
             defaults={
                 'title': album_data['name'],
                 'cover_url': album_data['images'][0]['url'] if album_data['images'] else '',
-                'artist': artist_instances[0],  # Use the first artist as primary
+                'artist': artist_instances[0],
             }
         )
-        
-        # Add genres from main artist
-        add_album_genres_from_artist(sp, album, artist_instances)
+
+        # Use the first artist’s genres for the album
+        album.genres.set(artist_instances[0].genres.all())
+        album.save()
 
         # Get tracks for this album
         add_album_tracks(sp, album)
 
         print(f"Imported album '{album.title}'")
-
-
-def add_album_genres_from_artist(sp: Spotify, album: Album, artist_instances: list[Artist]):
-    """
-    Adds genres to an album from the first artist mentionned.
-    :param sp: spotipy.Spotify client instance.
-    :param album: Album instance to which tracks will be added.
-    :param artist_instances: List of Artist instances related to the album.
-    """
-    artist_data = sp.artist(artist_instances[0].spotify_id)
-    for genre_name in artist_data.get('genres', []):
-        genre, _ = Genre.objects.get_or_create(name=genre_name)
-        album.genres.add(genre)
-        artist_instances[0].genres.add(genre)
-    album.save()
-    artist_instances[0].save()
 
 def add_album_tracks(sp: Spotify, album: Album):
     """

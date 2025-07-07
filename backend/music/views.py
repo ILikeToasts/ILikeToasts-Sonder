@@ -3,10 +3,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
 
-from .models import Album
+from .models import Album, Artist
 from music.utils.spotify_data_importer import add_album_by_id
 from .spotify_client import SpotifyClient
-from .serializers import AlbumSerializer, ArtistSerializer, AlbumDBSerializer
+from .serializers import AlbumSerializer, ArtistDBSerializer, ArtistSerializer, AlbumDBSerializer
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
@@ -51,3 +51,7 @@ class AlbumImportView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response({"message": f"Album '{album_id}' imported successfully!"}, status=status.HTTP_201_CREATED)
+    
+class ArtistListView(generics.ListAPIView):
+    queryset = Artist.objects.all()
+    serializer_class = ArtistDBSerializer

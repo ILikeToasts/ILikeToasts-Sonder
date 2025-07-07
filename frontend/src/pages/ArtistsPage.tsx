@@ -1,7 +1,9 @@
-export default function Artists() {
+import Artists from "../components/Artists/Artists";
+
+export default function ArtistsPage() {
   return (
     <div>
-      <h1>Artists Page</h1>
+      <Artists/>
     </div>
   );
 }

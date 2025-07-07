@@ -1,37 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import SpotifyAlbumEmbed from './SpotifyAlbumEmbed';
-import '../../styles/album.css';
-import '../../styles/global.css';
 import { SpotifyAlbum } from '../../types/spotify';
-  
+import GalleryGrid, { GalleryItem } from '../Common/Gallery';
+
 const Albums: React.FC = () => {
   const [albums, setAlbums] = useState<SpotifyAlbum[]>([]);
 
   useEffect(() => {
     const fetchAlbums = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/api/spotify/albums/');
-        const data = await response.json();
-        setAlbums(data);
-      } catch (error) {
-        console.error('Error fetching albums:', error);
-      }
+      const response = await fetch('http://localhost:8000/api/spotify/albums/');
+      const data = await response.json();
+      setAlbums(data);
     };
-
     fetchAlbums();
   }, []);
-  return (
-    <div>
-        <div className="albumContainer">
-            {albums.map((album) => (
-            <SpotifyAlbumEmbed
-                key={album.spotify_id}
-                albumId={album.spotify_id}
-            />
-            ))}
-        </div>
-    </div>
-  );
+
+  const albumItems: GalleryItem[] = albums.map((album) => ({
+    id: album.id,
+    title: album.title,
+    imageUrl: album.cover_url,
+    linkTo: `/albums/${album.spotify_id}`,
+    state: { album },
+  }));
+
+  return <GalleryGrid items={albumItems} />;
 };
 
 export default Albums;

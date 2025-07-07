@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Album
+from .models import Album, Artist
 
 class AlbumSerializer(serializers.Serializer):
     id = serializers.CharField()
@@ -24,4 +24,9 @@ class ArtistSerializer(serializers.Serializer):
 class AlbumDBSerializer(serializers.ModelSerializer):
     class Meta:
         model = Album
-        fields = ['spotify_id', 'title', 'artist', 'genres', 'cover_url']
+        fields = ['id', 'spotify_id', 'title', 'artist', 'genres', 'cover_url']
+
+class ArtistDBSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Artist
+        fields = ['id', 'spotify_id', 'name', 'genres', 'image_url', 'popularity', 'followers']

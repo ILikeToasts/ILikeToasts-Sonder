@@ -12,6 +12,8 @@ class Artist(models.Model):
     name = models.CharField(max_length=255)
     genres = models.ManyToManyField(Genre, related_name='artists')
     image_url = models.URLField(blank=True)
+    popularity = models.IntegerField(default=0)
+    followers = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
