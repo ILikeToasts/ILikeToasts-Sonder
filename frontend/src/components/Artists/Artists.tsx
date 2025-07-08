@@ -18,7 +18,7 @@ const Artists: React.FC = () => {
     id: artist.id,
     title: artist.name,
     imageUrl: artist.image_url,
-    linkTo: `/albums/${artist.spotify_id}`,
+    linkTo: `/artists/${artist.spotify_id}`,
     state: { artist },
   }));
 

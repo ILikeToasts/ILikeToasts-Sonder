@@ -3,10 +3,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
 
-from .models import Album, Artist
-from music.utils.spotify_data_importer import add_album_by_id
+from .models import Album, Artist, Playlist
+from music.utils.spotify_data_importer import add_album_by_id, add_playlist_by_id
 from .spotify_client import SpotifyClient
-from .serializers import AlbumSerializer, ArtistDBSerializer, ArtistSerializer, AlbumDBSerializer
+from .serializers import AlbumSerializer, ArtistDBSerializer, ArtistSerializer, AlbumDBSerializer, PlaylistDBSerializer
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
@@ -55,3 +55,20 @@ class AlbumImportView(APIView):
 class ArtistListView(generics.ListAPIView):
     queryset = Artist.objects.all()
     serializer_class = ArtistDBSerializer
+
+class PlaylistList(APIView):
+    queryset = Playlist.objects.all()
+    serializer_class = PlaylistDBSerializer
+    
+class PlaylistImport(APIView):
+    def post(self, request, playlist_id):
+        if not playlist_id:
+            return Response({"error": "Missing playlist_id"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            client = SpotifyClient()
+            sp = client.sp
+            add_playlist_by_id(sp, playlist_id)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        return Response({"message": f"Playlist '{playlist_id}' imported successfully!"}, status=status.HTTP_201_CREATED)
