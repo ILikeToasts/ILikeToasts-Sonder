@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Genre(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -7,14 +8,18 @@ class Genre(models.Model):
         return self.name
 
 class Artist(models.Model):
+    spotify_id = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=255)
     genres = models.ManyToManyField(Genre, related_name='artists')
     image_url = models.URLField(blank=True)
+    popularity = models.IntegerField(default=0)
+    followers = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
 
 class Album(models.Model):
+    spotify_id = models.CharField(max_length=50, unique=True)
     title = models.CharField(max_length=255)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='albums')
     genres = models.ManyToManyField(Genre, related_name='albums')
@@ -24,10 +29,28 @@ class Album(models.Model):
         return f"{self.title} - {self.artist.name}"
 
 class Song(models.Model):
+    spotify_id = models.CharField(max_length=50, unique=True)
     title = models.CharField(max_length=255)
-    album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='songs')
+    album = models.ForeignKey(
+        Album,
+        on_delete=models.CASCADE,
+        related_name='songs',
+        null=True,
+        blank=True
+    )
+    artists = models.ManyToManyField(Artist, related_name='songs')
     duration_seconds = models.PositiveIntegerField()
     cover_url = models.URLField(blank=True)
+
+    def __str__(self):
+        return self.title
+
+class Playlist(models.Model):
+    title = models.CharField(max_length=255)
+    spotify_id = models.CharField(max_length=255, unique=True)
+    description = models.TextField(blank=True)
+    cover_url = models.URLField(blank=True)
+    songs = models.ManyToManyField(Song, related_name='playlists')
 
     def __str__(self):
         return self.title
@@ -41,7 +64,9 @@ class Review(models.Model):
     target_type = models.CharField(max_length=5, choices=REVIEW_TARGET_CHOICES)
     album = models.ForeignKey(Album, null=True, blank=True, on_delete=models.CASCADE)
     song = models.ForeignKey(Song, null=True, blank=True, on_delete=models.CASCADE)
-    rating = models.IntegerField()
+    rating = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(10)]
+    )
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 

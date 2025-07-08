@@ -1,13 +1,22 @@
 export interface SpotifyArtist {
-    /* id: string; */
-    name: string;
-    /* genres: string[];
-    followers: number;
-    images:{url:string}[];
-    popularity: number; */
+  id: number;
+  name: string;
+  image_url: string;
+  spotify_id: string;
+  popularity: number;
+  followers: number;
+  genres: SpotifyGenre[];
+}
+
+export interface SpotifyGenre {
+  id: number;
+  name: string;
 }
 
 export interface SpotifyAlbum {
-    id: string;
-    name: string;
+    id: number;
+    title: string;
+    spotify_id: string;
+    cover_url: string;
+    genres: SpotifyGenre[];
 }

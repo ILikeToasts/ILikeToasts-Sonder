@@ -1,27 +1,31 @@
-import React from 'react';
-import SpotifyAlbumEmbed from './SpotifyAlbumEmbed';
-import '../../styles/album.css';
-import '../../styles/global.css';
-
-const albums = [
-  { id: '3DQueEd1Ft9PHWgovDzPKh', name: 'Album 1' },
-  { id: '1wNDOs0Zmqrm7dhgnneflC', name: 'Album 2' },
-  { id: '3CCnGldVQ90c26aFATC1PW', name: 'Album 3' },
-];
+import React, { useEffect, useState } from 'react';
+import { SpotifyAlbum } from '../../types/spotify';
+import FilterableGalleryPage from '../Common/FilteredGalleryPage';
 
 const Albums: React.FC = () => {
+  const [albums, setAlbums] = useState<SpotifyAlbum[]>([]);
+
+  useEffect(() => {
+    const fetchAlbums = async () => {
+      const response = await fetch('http://localhost:8000/api/spotify/albums/');
+      const data = await response.json();
+      setAlbums(data);
+    };
+    fetchAlbums();
+  }, []);
+
   return (
-    <div>
-        <div className="albumContainer">
-            {albums.map((album) => (
-            <SpotifyAlbumEmbed
-                key={album.id}
-                albumId={album.id}
-                albumName={album.name}
-            />
-            ))}
-        </div>
-    </div>
+    <FilterableGalleryPage
+      items={albums}
+      extractGenres={(album) => album.genres.map(g => g.name)}
+      mapToGalleryItem={(album) => ({
+        id: album.id,
+        title: album.title,
+        imageUrl: album.cover_url,
+        linkTo: `/albums/${album.spotify_id}`,
+        state: { album },
+      })}
+    />
   );
 };
 

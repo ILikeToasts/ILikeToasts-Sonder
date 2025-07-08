@@ -1,10 +1,12 @@
-from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics
+
+from .models import Album, Artist, Playlist
+from music.utils.spotify_data_importer import add_album_by_id, add_playlist_by_id
 from .spotify_client import SpotifyClient
-from .serializers import AlbumSerializer, ArtistSerializer
+from .serializers import AlbumSerializer, ArtistDBSerializer, ArtistSerializer, AlbumDBSerializer, PlaylistDBSerializer
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
@@ -30,3 +32,43 @@ class ArtistDetail(APIView):
 
         serializer = ArtistSerializer(artist_data)
         return Response(serializer.data)
+
+class AlbumListView(generics.ListAPIView):
+    queryset = Album.objects.all()
+    serializer_class = AlbumDBSerializer
+
+class AlbumImportView(APIView):
+
+    def post(self, request, album_id):
+        if not album_id:
+            return Response({"error": "album_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            client = SpotifyClient()
+            sp = client.sp
+            add_album_by_id(sp, album_id)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({"message": f"Album '{album_id}' imported successfully!"}, status=status.HTTP_201_CREATED)
+    
+class ArtistListView(generics.ListAPIView):
+    queryset = Artist.objects.all()
+    serializer_class = ArtistDBSerializer
+
+class PlaylistView(APIView):
+    queryset = Playlist.objects.all()
+    serializer_class = PlaylistDBSerializer
+
+class PlaylistImport(APIView):
+    def post(self, request, playlist_id):
+        if not playlist_id:
+            return Response({"error": "Missing playlist_id"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            client = SpotifyClient()
+            sp = client.sp
+            add_playlist_by_id(sp, playlist_id)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        return Response({"message": f"Playlist '{playlist_id}' imported successfully!"}, status=status.HTTP_201_CREATED)
