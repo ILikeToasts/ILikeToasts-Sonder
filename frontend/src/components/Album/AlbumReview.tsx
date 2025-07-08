@@ -17,11 +17,13 @@ const AlbumReview: React.FC = () => {
           albumName={album.title}
         />
         <div className='reviewBox'>
-          <h2 className='raleway-bold'>Album Review</h2>
+          <h2 className='raleway-bold'>{album.title}</h2>
+          <h3>
+            {album.genres.map((g: { name: string; }) =>g.name).join(', ')}
+          </h3>
           <div className='raleway-light'>
             <p>This is a placeholder for the album review content.</p>
             <p>More details about the album can be added here.</p>
-            <p>{album.genres}</p>
           </div>
         </div>
       </div>

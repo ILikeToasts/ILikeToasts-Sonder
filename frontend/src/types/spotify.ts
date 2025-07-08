@@ -5,6 +5,12 @@ export interface SpotifyArtist {
   spotify_id: string;
   popularity: number;
   followers: number;
+  genres: SpotifyGenre[];
+}
+
+export interface SpotifyGenre {
+  id: number;
+  name: string;
 }
 
 export interface SpotifyAlbum {
@@ -12,4 +18,5 @@ export interface SpotifyAlbum {
     title: string;
     spotify_id: string;
     cover_url: string;
+    genres: SpotifyGenre[];
 }

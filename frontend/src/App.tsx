@@ -10,6 +10,7 @@ import Series from './pages/SeriesPages';
 import Trips from './pages/TripsPage';
 import AlbumReview from './components/Album/AlbumReview';
 import Header from './components/ui/AppHeader';
+import ArtistReview from './components/Artists/ArtistReview';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/series" element={<Series />} />
         <Route path="/trips" element={<Trips />} />
         <Route path="/albums/:album_id" element={<AlbumReview />} />
+        <Route path="/artists/:artist_id" element={<ArtistReview />} />
       </Routes>
     </Router>
   );

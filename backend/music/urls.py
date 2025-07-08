@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import AlbumDetail, AlbumImportView, AlbumListView, ArtistDetail, ArtistListView, PlaylistImport, PlaylistList
+from .views import AlbumDetail, AlbumImportView, AlbumListView, ArtistDetail, ArtistListView, PlaylistImport, PlaylistView
 
 urlpatterns = [
     path('spotify/albums/', AlbumListView.as_view(), name='album-list'),
@@ -9,7 +9,7 @@ urlpatterns = [
 
     path('spotify/artists/', ArtistListView.as_view(), name='artist-list'),
     path('spotify/artists/<str:artist_id>/', ArtistDetail.as_view(), name='artist-detail'),
-    
-    path('spotify/playlists/', PlaylistList.as_view(), name='playlist-list'),
+
+    path('spotify/playlists/', PlaylistView.as_view(), name='playlist-list'),
     path('spotify/playlists/import/<str:playlist_id>/', PlaylistImport.as_view(), name='playlist-import'),
 ]

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { SpotifyAlbum } from '../../types/spotify';
-import GalleryGrid, { GalleryItem } from '../Common/Gallery';
+import FilterableGalleryPage from '../Common/FilteredGalleryPage';
 
 const Albums: React.FC = () => {
   const [albums, setAlbums] = useState<SpotifyAlbum[]>([]);
@@ -14,15 +14,19 @@ const Albums: React.FC = () => {
     fetchAlbums();
   }, []);
 
-  const albumItems: GalleryItem[] = albums.map((album) => ({
-    id: album.id,
-    title: album.title,
-    imageUrl: album.cover_url,
-    linkTo: `/albums/${album.spotify_id}`,
-    state: { album },
-  }));
-
-  return <GalleryGrid items={albumItems} />;
+  return (
+    <FilterableGalleryPage
+      items={albums}
+      extractGenres={(album) => album.genres.map(g => g.name)}
+      mapToGalleryItem={(album) => ({
+        id: album.id,
+        title: album.title,
+        imageUrl: album.cover_url,
+        linkTo: `/albums/${album.spotify_id}`,
+        state: { album },
+      })}
+    />
+  );
 };
 
 export default Albums;

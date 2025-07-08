@@ -56,10 +56,10 @@ class ArtistListView(generics.ListAPIView):
     queryset = Artist.objects.all()
     serializer_class = ArtistDBSerializer
 
-class PlaylistList(APIView):
+class PlaylistView(APIView):
     queryset = Playlist.objects.all()
     serializer_class = PlaylistDBSerializer
-    
+
 class PlaylistImport(APIView):
     def post(self, request, playlist_id):
         if not playlist_id:
