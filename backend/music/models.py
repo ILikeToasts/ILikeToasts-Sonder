@@ -1,5 +1,6 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
+
 
 class Genre(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -7,10 +8,11 @@ class Genre(models.Model):
     def __str__(self):
         return self.name
 
+
 class Artist(models.Model):
     spotify_id = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=255)
-    genres = models.ManyToManyField(Genre, related_name='artists')
+    genres = models.ManyToManyField(Genre, related_name="artists")
     image_url = models.URLField(blank=True)
     popularity = models.IntegerField(default=0)
     followers = models.IntegerField(default=0)
@@ -18,47 +20,47 @@ class Artist(models.Model):
     def __str__(self):
         return self.name
 
+
 class Album(models.Model):
     spotify_id = models.CharField(max_length=50, unique=True)
     title = models.CharField(max_length=255)
-    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='albums')
-    genres = models.ManyToManyField(Genre, related_name='albums')
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="albums")
+    genres = models.ManyToManyField(Genre, related_name="albums")
     cover_url = models.URLField(blank=True)
 
     def __str__(self):
         return f"{self.title} - {self.artist.name}"
 
+
 class Song(models.Model):
     spotify_id = models.CharField(max_length=50, unique=True)
     title = models.CharField(max_length=255)
     album = models.ForeignKey(
-        Album,
-        on_delete=models.CASCADE,
-        related_name='songs',
-        null=True,
-        blank=True
+        Album, on_delete=models.CASCADE, related_name="songs", null=True, blank=True
     )
-    artists = models.ManyToManyField(Artist, related_name='songs')
+    artists = models.ManyToManyField(Artist, related_name="songs")
     duration_seconds = models.PositiveIntegerField()
     cover_url = models.URLField(blank=True)
 
     def __str__(self):
         return self.title
 
+
 class Playlist(models.Model):
     title = models.CharField(max_length=255)
     spotify_id = models.CharField(max_length=255, unique=True)
     description = models.TextField(blank=True)
     cover_url = models.URLField(blank=True)
-    songs = models.ManyToManyField(Song, related_name='playlists')
+    songs = models.ManyToManyField(Song, related_name="playlists")
 
     def __str__(self):
         return self.title
 
+
 class Review(models.Model):
     REVIEW_TARGET_CHOICES = [
-        ('album', 'Album'),
-        ('song', 'Song'),
+        ("album", "Album"),
+        ("song", "Song"),
     ]
 
     target_type = models.CharField(max_length=5, choices=REVIEW_TARGET_CHOICES)
@@ -72,9 +74,10 @@ class Review(models.Model):
 
     def clean(self):
         from django.core.exceptions import ValidationError
-        if self.target_type == 'album' and not self.album:
+
+        if self.target_type == "album" and not self.album:
             raise ValidationError("Album review must be linked to an album.")
-        if self.target_type == 'song' and not self.song:
+        if self.target_type == "song" and not self.song:
             raise ValidationError("Song review must be linked to a song.")
 
     def __str__(self):

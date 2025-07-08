@@ -1,16 +1,16 @@
-import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/HomePage';
-import Album from './pages/AlbumsPage';
-import Games from './pages/GamesPage';
-import Movies from './pages/MoviesPages';
-import Artists from './pages/ArtistsPage';
-import Pictures from './pages/PicturesPages';
-import Series from './pages/SeriesPages';
-import Trips from './pages/TripsPage';
-import AlbumReview from './components/Album/AlbumReview';
-import Header from './components/ui/AppHeader';
-import ArtistReview from './components/Artists/ArtistReview';
+import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/HomePage";
+import Album from "./pages/AlbumsPage";
+import Games from "./pages/GamesPage";
+import Movies from "./pages/MoviesPages";
+import Artists from "./pages/ArtistsPage";
+import Pictures from "./pages/PicturesPages";
+import Series from "./pages/SeriesPages";
+import Trips from "./pages/TripsPage";
+import AlbumReview from "./components/Album/AlbumReview";
+import Header from "./components/ui/AppHeader";
+import ArtistReview from "./components/Artists/ArtistReview";
 
 function App() {
   return (

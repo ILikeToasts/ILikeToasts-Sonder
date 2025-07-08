@@ -7,31 +7,36 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('music', '0001_initial'),
+        ("music", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='album',
-            name='spotify_id',
+            model_name="album",
+            name="spotify_id",
             field=models.CharField(default=1, max_length=50, unique=True),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='artist',
-            name='spotify_id',
+            model_name="artist",
+            name="spotify_id",
             field=models.CharField(default=1, max_length=50, unique=True),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='song',
-            name='spotify_id',
+            model_name="song",
+            name="spotify_id",
             field=models.CharField(default=1, max_length=50, unique=True),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='review',
-            name='rating',
-            field=models.IntegerField(validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(10)]),
+            model_name="review",
+            name="rating",
+            field=models.IntegerField(
+                validators=[
+                    django.core.validators.MinValueValidator(1),
+                    django.core.validators.MaxValueValidator(10),
+                ]
+            ),
         ),
     ]

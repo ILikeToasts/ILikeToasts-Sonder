@@ -3,7 +3,7 @@
   top: 0;
   right: 0;
   width: 60px;
-  height: 100vh;    
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -22,7 +22,7 @@
 .sidebar-menu {
   position: absolute;
   top: 60px;
-  right:40px;
+  right: 40px;
   background: #dadadac7;
   padding: 1rem;
   border-radius: 8px;

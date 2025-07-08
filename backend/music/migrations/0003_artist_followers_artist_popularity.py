@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('music', '0002_album_spotify_id_artist_spotify_id_song_spotify_id_and_more'),
+        ("music", "0002_album_spotify_id_artist_spotify_id_song_spotify_id_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='artist',
-            name='followers',
+            model_name="artist",
+            name="followers",
             field=models.IntegerField(default=0),
         ),
         migrations.AddField(
-            model_name='artist',
-            name='popularity',
+            model_name="artist",
+            name="popularity",
             field=models.IntegerField(default=0),
         ),
     ]

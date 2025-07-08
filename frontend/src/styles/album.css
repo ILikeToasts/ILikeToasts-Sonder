@@ -1,41 +1,41 @@
-.album{
-    display: flex;
-    min-width: 400px;
-    flex-direction: column;
-    align-items: center;
-    margin: 30px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s;
+.album {
+  display: flex;
+  min-width: 400px;
+  flex-direction: column;
+  align-items: center;
+  margin: 30px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
 }
 
 .album:hover {
   transform: scale(1.05);
 }
 
-.albumContainer{
-    display: flex;
-    width: 100%;
-    align-items: center;
-    margin: 20px;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
+.albumContainer {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  margin: 20px;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
 }
 
-.reviewContainer{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.reviewContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.reviewBox{
-    width: 100%;
-    height: 200px;
-    border: 1px solid rgba(0, 0, 0, 1);
-    margin: 20px;
-    padding: 20px;
+.reviewBox {
+  width: 100%;
+  height: 200px;
+  border: 1px solid rgba(0, 0, 0, 1);
+  margin: 20px;
+  padding: 20px;
 }
 
 .spotifyAlbumEmbed {
-    margin: 20px;
-    width: 100vh;
+  margin: 20px;
+  width: 100vh;
 }

@@ -1,6 +1,6 @@
 // SpotifyAlbumEmbed.tsx
-import React from 'react';
-import '../../styles/album.css';
+import React from "react";
+import "../../styles/album.css";
 
 interface SpotifyAlbumEmbedProps {
   albumId: string;
@@ -9,10 +9,10 @@ interface SpotifyAlbumEmbedProps {
 
 const SpotifyAlbumEmbed: React.FC<SpotifyAlbumEmbedProps> = ({ albumId }) => {
   return (
-    <div className='spotifyAlbumEmbed'>
+    <div className="spotifyAlbumEmbed">
       <iframe
         className="rounded-lg"
-        style={{ borderRadius: '12px' }}
+        style={{ borderRadius: "12px" }}
         src={`https://open.spotify.com/embed/album/${albumId}?utm_source=generator`}
         width="100%"
         height="600"

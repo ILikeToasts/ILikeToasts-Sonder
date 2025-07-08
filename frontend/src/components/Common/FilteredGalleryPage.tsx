@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import GalleryGrid, { GalleryItem } from './Gallery';
+import React, { useState } from "react";
+import GalleryGrid, { GalleryItem } from "./Gallery";
 
 export interface FilterableGalleryPageProps<T> {
   items: T[];
@@ -12,31 +12,28 @@ function FilterableGalleryPage<T>({
   extractGenres,
   mapToGalleryItem,
 }: FilterableGalleryPageProps<T>) {
-  const [selectedGenre, setSelectedGenre] = useState<string>('All');
+  const [selectedGenre, setSelectedGenre] = useState<string>("All");
 
-  const genres = Array.from(
-    new Set(items.flatMap(extractGenres))
-  );
+  const genres = Array.from(new Set(items.flatMap(extractGenres)));
 
-  const filteredItems = selectedGenre === 'All'
-    ? items
-    : items.filter(item =>
-        extractGenres(item).includes(selectedGenre)
-      );
+  const filteredItems =
+    selectedGenre === "All"
+      ? items
+      : items.filter((item) => extractGenres(item).includes(selectedGenre));
 
   const galleryItems = filteredItems.map(mapToGalleryItem);
 
   return (
     <div>
-      <div style={{ marginBottom: '1rem' }}>
-        <button onClick={() => setSelectedGenre('All')}>All</button>
-        {genres.map(genre => (
+      <div style={{ marginBottom: "1rem" }}>
+        <button onClick={() => setSelectedGenre("All")}>All</button>
+        {genres.map((genre) => (
           <button
             key={genre}
             onClick={() => setSelectedGenre(genre)}
             style={{
-              fontWeight: selectedGenre === genre ? 'bold' : 'normal',
-              marginRight: '0.5rem',
+              fontWeight: selectedGenre === genre ? "bold" : "normal",
+              marginRight: "0.5rem",
             }}
           >
             {genre}

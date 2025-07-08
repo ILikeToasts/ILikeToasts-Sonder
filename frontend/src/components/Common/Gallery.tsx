@@ -1,7 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import '../../styles/album.css';
-import '../../styles/global.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import "../../styles/album.css";
+import "../../styles/global.css";
 
 export interface GalleryItem {
   id: string | number;
@@ -20,11 +20,7 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({ items }) => {
     <div className="albumContainer">
       {items.map((item) => (
         <Link key={item.id} to={item.linkTo} state={item.state}>
-          <img
-            src={item.imageUrl}
-            alt={item.title}
-            className="album"
-          />
+          <img src={item.imageUrl} alt={item.title} className="album" />
         </Link>
       ))}
     </div>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Raleway:ital@0;1&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Raleway:ital@0;1&display=swap");
 
 .raleway-base {
   font-family: "Raleway", sans-serif;
@@ -22,8 +22,8 @@
 }
 
 .center-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }

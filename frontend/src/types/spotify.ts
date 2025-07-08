@@ -14,9 +14,9 @@ export interface SpotifyGenre {
 }
 
 export interface SpotifyAlbum {
-    id: number;
-    title: string;
-    spotify_id: string;
-    cover_url: string;
-    genres: SpotifyGenre[];
+  id: number;
+  title: string;
+  spotify_id: string;
+  cover_url: string;
+  genres: SpotifyGenre[];
 }
