@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import SpotifyAlbumEmbed from "../Album/SpotifyAlbumEmbed";
+import SpotifyArtistEmbed from "./SpotiftyArtistEmbed";
 
 const ArtistReview: React.FC = () => {
   const location = useLocation();
@@ -12,13 +12,7 @@ const ArtistReview: React.FC = () => {
   return (
     <div className="center-container">
       <div className="reviewContainer">
-        <div className="artistHeader">
-          <img
-            src={artist.image_url}
-            alt={artist.name}
-            className="artistImage"
-          />
-        </div>
+        <SpotifyArtistEmbed artistId={artist.spotify_id} />
         <div className="reviewBox">
           <h2 className="raleway-bold">{artist.name}</h2>
           <h3>
