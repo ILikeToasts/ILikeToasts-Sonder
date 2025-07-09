@@ -19,3 +19,9 @@ build/
 # IDE
 .vscode/
 .idea/
+
+# Celery
+celerybeat-schedule*
+*.bak
+*.dat
+*.dir
