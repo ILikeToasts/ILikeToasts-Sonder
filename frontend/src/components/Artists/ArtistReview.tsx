@@ -1,5 +1,12 @@
 import { useLocation } from "react-router-dom";
 import SpotifyArtistEmbed from "./SpotiftyArtistEmbed";
+import { CenteredContainer } from "../../styles/global.styles";
+import {
+  ReviewBox,
+  ReviewContainer,
+  ReviewSubtitle,
+  ReviewTitle,
+} from "../../styles/review.styles";
 
 const ArtistReview: React.FC = () => {
   const location = useLocation();
@@ -10,19 +17,19 @@ const ArtistReview: React.FC = () => {
   }
 
   return (
-    <div className="center-container">
-      <div className="reviewContainer">
+    <CenteredContainer>
+      <ReviewContainer>
         <SpotifyArtistEmbed artistId={artist.spotify_id} />
-        <div className="reviewBox">
-          <h2 className="raleway-bold">{artist.name}</h2>
-          <h3>
+        <ReviewBox>
+          <ReviewTitle className="raleway-bold">{artist.name}</ReviewTitle>
+          <ReviewSubtitle>
             {artist.genres.map((g: { name: string }) => g.name).join(", ")}
-          </h3>
+          </ReviewSubtitle>
           <p className="raleway-light">Popularity: {artist.popularity}</p>
           <p className="raleway-light">Followers: {artist.followers}</p>
-        </div>
-      </div>
-    </div>
+        </ReviewBox>
+      </ReviewContainer>
+    </CenteredContainer>
   );
 };
 

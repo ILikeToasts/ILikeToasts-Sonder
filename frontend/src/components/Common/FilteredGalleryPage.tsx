@@ -3,7 +3,7 @@ import GalleryGrid, { GalleryItem } from "./Gallery";
 
 export interface FilterableGalleryPageProps<T> {
   items: T[];
-  extractGenres: (item: T) => string[]; // e.g., album.genres.map(g => g.name)
+  extractGenres: (item: T) => string[];
   mapToGalleryItem: (item: T) => GalleryItem;
 }
 
