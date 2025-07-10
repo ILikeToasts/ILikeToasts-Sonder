@@ -6,7 +6,8 @@ RUN apt-get update && apt-get install -y \
     default-libmysqlclient-dev \
     curl \
     pkg-config \
-    build-essential \
+    build-essential \ 
+    redis-tools \
     && rm -rf /var/lib/apt/lists/*
 
 # --- Install Poetry 2.0.1 ---

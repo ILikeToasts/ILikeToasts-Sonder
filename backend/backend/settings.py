@@ -13,9 +13,12 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 
+from celery import app as celery_app
 from dotenv import load_dotenv
 
 load_dotenv()
+
+__all__ = ("celery_app",)
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "fallback")
 DEBUG = os.getenv("DJANGO_DEBUG") == "True"
@@ -50,6 +53,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "drf_yasg",  # Swagger for API documentation
     "music",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -97,7 +101,7 @@ DATABASES = {
         "NAME": os.environ.get("MYSQL_DATABASE", "albumdb"),
         "USER": os.environ.get("MYSQL_USER", "albumuser"),
         "PASSWORD": os.environ.get("MYSQL_PASSWORD", "albumpassword"),
-        "HOST": os.environ.get("MYSQL_HOST", "localhost"),
+        "HOST": os.environ.get("MYSQL_HOST", "db"),
         "PORT": os.environ.get("MYSQL_PORT", "3306"),
     }
 }
@@ -143,3 +147,17 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# Redis as the broker & backend
+CELERY_BROKER_URL = "redis://redis:6379/0"
+CELERY_RESULT_BACKEND = "redis://redis:6379/0"
+
+# Use timezone-aware scheduling
+CELERY_TIMEZONE = "UTC"
+CELERY_BEAT_SCHEDULE = {
+    "update-artist-data-every-2-hours": {
+        "task": "music.tasks.update_artist_data",
+        "schedule": 60 * 60 * 2,  # Every 2 hours
+    },
+}
