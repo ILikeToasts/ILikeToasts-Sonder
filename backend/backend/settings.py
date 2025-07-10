@@ -156,8 +156,8 @@ CELERY_RESULT_BACKEND = "redis://redis:6379/0"
 # Use timezone-aware scheduling
 CELERY_TIMEZONE = "UTC"
 CELERY_BEAT_SCHEDULE = {
-    "update-artist-data-every-3-hours": {
+    "update-artist-data-every-2-hours": {
         "task": "music.tasks.update_artist_data",
-        "schedule": 60 * 60 * 3,  # Every 3 hours
+        "schedule": 60 * 60 * 2,  # Every 2 hours
     },
 }
