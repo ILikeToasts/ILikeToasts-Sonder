@@ -50,7 +50,7 @@ services:
       - mysql_data:/var/lib/mysql
   frontend:
     build:
-      context: ./frontend
+      context: ./mr-frontend
     ports:
       - "3000:80"
 volumes:

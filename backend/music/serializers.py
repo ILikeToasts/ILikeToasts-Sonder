@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Album, Artist, Genre, Playlist, Song
+from .models import Album, Artist, Genre, Playlist, Review, Song
 
 
 class AlbumSerializer(serializers.Serializer):
@@ -74,3 +74,17 @@ class PlaylistDBSerializer(serializers.ModelSerializer):
     class Meta:
         model = Playlist
         fields = ["id", "title", "spotify_id", "description", "cover_url", "songs"]
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = [
+            "id",
+            "target_type",
+            "album",
+            "song",
+            "rating",
+            "content",
+            "created_at",
+        ]

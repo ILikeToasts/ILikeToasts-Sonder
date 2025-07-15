@@ -8,6 +8,7 @@ from .views import (
     ArtistListView,
     PlaylistImport,
     PlaylistView,
+    ReviewsByAlbumView,
 )
 
 urlpatterns = [
@@ -27,5 +28,10 @@ urlpatterns = [
         "spotify/playlists/import/<str:playlist_id>/",
         PlaylistImport.as_view(),
         name="playlist-import",
+    ),
+    path(
+        "spotify/reviews/album/<int:album_id>/",
+        ReviewsByAlbumView.as_view(),
+        name="reviews-by-album",
     ),
 ]
