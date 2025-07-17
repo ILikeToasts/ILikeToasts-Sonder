@@ -10,25 +10,26 @@ import Series from "./pages/SeriesPages";
 import Trips from "./pages/TripsPage";
 import AlbumReview from "./components/Album/AlbumReview";
 import ArtistReview from "./components/Artists/ArtistReview";
-import Header from "./components/ui/AppHeader";
 import { ThemeProvider } from "./components/Common/theme-provider";
+import Layout from "./layouts/Layout";
 
 function App() {
   return (
     <ThemeProvider>
       <Router>
-        <Header />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/albums" element={<Album />} />
-          <Route path="/artists" element={<Artists />} />
-          <Route path="/games" element={<Games />} />
-          <Route path="/movies" element={<Movies />} />
-          <Route path="/pictures" element={<Pictures />} />
-          <Route path="/series" element={<Series />} />
-          <Route path="/trips" element={<Trips />} />
-          <Route path="/albums/:album_id" element={<AlbumReview />} />
-          <Route path="/artists/:artist_id" element={<ArtistReview />} />
+          <Route element={<Layout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/albums" element={<Album />} />
+            <Route path="/artists" element={<Artists />} />
+            <Route path="/games" element={<Games />} />
+            <Route path="/movies" element={<Movies />} />
+            <Route path="/pictures" element={<Pictures />} />
+            <Route path="/series" element={<Series />} />
+            <Route path="/trips" element={<Trips />} />
+            <Route path="/albums/:album_id" element={<AlbumReview />} />
+            <Route path="/artists/:artist_id" element={<ArtistReview />} />
+          </Route>
         </Routes>
       </Router>
     </ThemeProvider>

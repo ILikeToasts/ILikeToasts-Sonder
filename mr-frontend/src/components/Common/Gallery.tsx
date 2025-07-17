@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../../styles/album.css";
 import "../../styles/global.css";
+import TiltedCard from "./TiltedCard";
 
 export interface GalleryItem {
   id: string | number;
@@ -16,11 +17,27 @@ interface GalleryGridProps {
 }
 
 export const GalleryGrid: React.FC<GalleryGridProps> = ({ items }) => {
+  const height = "500px";
+  const width = "500px";
+
   return (
     <div className="albumContainer">
       {items.map((item) => (
         <Link key={item.id} to={item.linkTo} state={item.state}>
-          <img src={item.imageUrl} alt={item.title} className="album" />
+          <TiltedCard
+            imageSrc={item.imageUrl}
+            altText={item.title}
+            captionText={item.title}
+            containerHeight={height}
+            containerWidth={width}
+            imageHeight={height}
+            imageWidth={width}
+            rotateAmplitude={15}
+            scaleOnHover={1.2}
+            showMobileWarning={false}
+            showTooltip={false}
+            displayOverlayContent={false}
+          />
         </Link>
       ))}
     </div>
