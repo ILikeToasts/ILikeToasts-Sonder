@@ -7,29 +7,66 @@ import {
   ReviewSubtitle,
   ReviewTitle,
 } from "../../styles/review.styles";
+import Aurora, { AuroraBackground } from "../ui/Aurora";
+import { Vibrant } from "node-vibrant/browser";
+import { useEffect, useState } from "react";
 
 const ArtistReview: React.FC = () => {
   const location = useLocation();
   const artist = location.state?.artist;
+  const [auroraColors, setAuroraColors] = useState<string[]>([]);
 
   if (!artist) {
     return <div>No artist data found.</div>;
   }
 
+  useEffect(() => {
+    if (!artist?.image_url) return;
+
+    const fetchColors = async () => {
+      try {
+        const palette = await Vibrant.from(artist.image_url).getPalette();
+        const selectedColors = [
+          palette.Vibrant?.hex,
+          palette.DarkMuted?.hex,
+          palette.DarkVibrant?.hex,
+        ].filter(Boolean) as string[];
+
+        setAuroraColors(selectedColors);
+      } catch (err) {
+        console.error("Failed to extract colors", err);
+        setAuroraColors(["#3A29FF", "#FF94B4", "#FF3232"]);
+      }
+    };
+    fetchColors();
+  }, [artist]);
+
   return (
-    <CenteredContainer>
-      <ReviewContainer>
-        <SpotifyArtistEmbed artistId={artist.spotify_id} />
-        <ReviewBox>
-          <ReviewTitle className="raleway-bold">{artist.name}</ReviewTitle>
-          <ReviewSubtitle>
-            {artist.genres.map((g: { name: string }) => g.name).join(", ")}
-          </ReviewSubtitle>
-          <p className="raleway-light">Popularity: {artist.popularity}</p>
-          <p className="raleway-light">Followers: {artist.followers}</p>
-        </ReviewBox>
-      </ReviewContainer>
-    </CenteredContainer>
+    <div>
+      {auroraColors.length > 0 && (
+        <AuroraBackground>
+          <Aurora
+            colorStops={auroraColors}
+            blend={0.6}
+            amplitude={0.5}
+            speed={1}
+          />
+        </AuroraBackground>
+      )}
+      <CenteredContainer>
+        <ReviewContainer>
+          <SpotifyArtistEmbed artistId={artist.spotify_id} />
+          <ReviewBox>
+            <ReviewTitle className="raleway-bold">{artist.name}</ReviewTitle>
+            <ReviewSubtitle>
+              {artist.genres.map((g: { name: string }) => g.name).join(", ")}
+            </ReviewSubtitle>
+            <p className="raleway-light">Popularity: {artist.popularity}</p>
+            <p className="raleway-light">Followers: {artist.followers}</p>
+          </ReviewBox>
+        </ReviewContainer>
+      </CenteredContainer>
+    </div>
   );
 };
 
