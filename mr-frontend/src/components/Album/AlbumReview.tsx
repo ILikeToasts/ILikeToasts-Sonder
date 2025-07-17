@@ -23,6 +23,7 @@ const AlbumReview: React.FC = () => {
       );
       const data = await response.json();
       setReview(data);
+      console.log(data);
     };
     fetchReview();
   }, []);
@@ -40,14 +41,20 @@ const AlbumReview: React.FC = () => {
           <ReviewSubtitle>
             {album.genres.map((g: { name: string }) => g.name).join(", ")}
           </ReviewSubtitle>
-          <ReviewText>
-            {review[0].rating
-              ? `Rating: ${review[0].rating}/10`
-              : "No rating available."}
-          </ReviewText>
-          <ReviewText>
-            {review[0].content || "No description available."}
-          </ReviewText>
+          {review[0] ? (
+            <div>
+              <ReviewText>
+                {review[0].rating
+                  ? `Rating: ${review[0].rating}/10`
+                  : "No rating available."}
+              </ReviewText>
+              <ReviewText>
+                {review[0].content || "No description available."}
+              </ReviewText>
+            </div>
+          ) : (
+            <div></div>
+          )}
         </ReviewBox>
       </ReviewContainer>
     </CenteredContainer>
