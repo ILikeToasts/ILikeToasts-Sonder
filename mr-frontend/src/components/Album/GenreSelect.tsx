@@ -27,31 +27,33 @@ export function GenreSelect({
   const [open, setOpen] = React.useState(false);
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button variant="outline" className="justify-between">
-          {value}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-64 p-0">
-        <Command>
-          <CommandInput placeholder="Search genres..." />
-          <CommandList>
-            <CommandEmpty>No genres found.</CommandEmpty>
-            {options.map((genre) => (
-              <CommandItem
-                key={genre}
-                onSelect={() => {
-                  onValueChange(genre);
-                  setOpen(false);
-                }}
-              >
-                {genre}
-              </CommandItem>
-            ))}
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
+    <div className="flex justify-center items-center space-x-4">
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button variant="outline" className="justify-between">
+            {"Current filter : " + value}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-64 p-0">
+          <Command>
+            <CommandInput placeholder="Search genres..." />
+            <CommandList>
+              <CommandEmpty>No genres found.</CommandEmpty>
+              {options.map((genre) => (
+                <CommandItem
+                  key={genre}
+                  onSelect={() => {
+                    onValueChange(genre);
+                    setOpen(false);
+                  }}
+                >
+                  {genre}
+                </CommandItem>
+              ))}
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 }

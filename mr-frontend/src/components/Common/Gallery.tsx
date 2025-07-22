@@ -25,7 +25,7 @@ export const GalleryGrid: React.FC<GalleryGridProps> = ({ items }) => {
       {items.map((item) => (
         <Link key={item.id} to={item.linkTo} state={item.state}>
           <TiltedCard
-            imageSrc={item.imageUrl}
+            imageSrc={item.imageUrl ? item.imageUrl : null}
             altText={item.title}
             captionText={item.title}
             containerHeight={height}
