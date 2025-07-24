@@ -1,4 +1,4 @@
-import { Button } from "./button";
+import { Button } from "./Button";
 import { ChevronRightIcon, ChevronLeftIcon } from "lucide-react";
 
 interface PageScrollerProps {

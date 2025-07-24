@@ -16,7 +16,7 @@ const SpotifyArtistEmbed: React.FC<SpotifyArtistEmbedProps> = ({
         className="rounded-lg"
         style={{ borderRadius: "12px" }}
         src={`https://open.spotify.com/embed/artist/${artistId}?utm_source=generator`}
-        width="100%"
+        width="600"
         height="600"
         frameBorder="0"
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"

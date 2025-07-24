@@ -123,6 +123,10 @@ interface AuroraProps {
   speed?: number;
 }
 
+export const AuroraBottom = styled(AuroraBackground)`
+  transform: rotateX(180deg) rotateY(180deg);
+`;
+
 export default function Aurora(props: AuroraProps) {
   const {
     colorStops = ["#5227FF", "#7cff67", "#5227FF"],

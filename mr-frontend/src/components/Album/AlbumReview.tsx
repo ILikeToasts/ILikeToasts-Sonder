@@ -5,7 +5,6 @@ import {
   ReviewBox,
   ReviewContainer,
   ReviewSubtitle,
-  ReviewText,
   ReviewTitle,
 } from "../../styles/review.styles";
 import type { SpotifyAlbumReview } from "../../types/spotify";
@@ -56,45 +55,47 @@ const AlbumReview: React.FC = () => {
   }
 
   return (
-    <div style={{ position: "relative", overflow: "hidden" }}>
-      {auroraColors.length > 0 && (
-        <AuroraBackground>
-          <Aurora
-            colorStops={auroraColors}
-            blend={0.6}
-            amplitude={0.5}
-            speed={1}
-          />
-        </AuroraBackground>
-      )}
-      <CenteredContainer>
-        <ReviewContainer className="reviewContainer">
-          <SpotifyAlbumEmbed
-            albumId={album.spotify_id}
-            albumName={album.title}
-          />
-          <ReviewBox>
-            <ReviewTitle>{album.title}</ReviewTitle>
-            <ReviewSubtitle>
-              {album.genres.map((g: { name: string }) => g.name).join(", ")}
-            </ReviewSubtitle>
-            {review[0] ? (
-              <div>
-                <ReviewText>
-                  {review[0].rating
-                    ? `Rating: ${review[0].rating}/10`
-                    : "No rating available."}
-                </ReviewText>
-                <ReviewText>
-                  {review[0].content || "No description available."}
-                </ReviewText>
-              </div>
-            ) : (
-              <div></div>
-            )}
-          </ReviewBox>
-        </ReviewContainer>
-      </CenteredContainer>
+    <div className="space-y-4">
+      <div style={{ position: "relative", overflow: "hidden" }}>
+        {auroraColors.length > 0 && (
+          <AuroraBackground>
+            <Aurora
+              colorStops={auroraColors}
+              blend={0.6}
+              amplitude={0.5}
+              speed={1}
+            />
+          </AuroraBackground>
+        )}
+        <CenteredContainer>
+          <ReviewContainer className="reviewContainer">
+            <SpotifyAlbumEmbed
+              albumId={album.spotify_id}
+              albumName={album.title}
+            />
+            <ReviewBox>
+              <ReviewTitle>{album.title}</ReviewTitle>
+              <ReviewSubtitle>
+                {album.genres.map((g: { name: string }) => g.name).join(", ")}
+              </ReviewSubtitle>
+              {review[0] ? (
+                <div>
+                  <ReviewText>
+                    {review[0].rating
+                      ? `Rating: ${review[0].rating}/10`
+                      : "No rating available."}
+                  </ReviewText>
+                  <ReviewText>
+                    {review[0].content || "No description available."}
+                  </ReviewText>
+                </div>
+              ) : (
+                <div></div>
+              )}
+            </ReviewBox>
+          </ReviewContainer>
+        </CenteredContainer>
+      </div>
     </div>
   );
 };

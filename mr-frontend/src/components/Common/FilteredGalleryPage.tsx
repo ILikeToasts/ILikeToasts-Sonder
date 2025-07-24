@@ -2,7 +2,6 @@ import { useState } from "react";
 import GalleryGrid from "./Gallery";
 import type { GalleryItem } from "./Gallery";
 import { GenreSelect } from "../Album/GenreSelect";
-import { Button } from "../ui/button";
 import { PageScroller } from "../ui/PageScroller";
 
 export interface FilterableGalleryPageProps<T> {

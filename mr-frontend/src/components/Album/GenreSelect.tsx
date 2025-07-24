@@ -9,9 +9,9 @@ import {
   CommandList,
   CommandEmpty,
   CommandItem,
-} from "@/components/ui/command";
-import { Button } from "@/components/ui/button";
+} from "@/components/ui/Command";
 import React from "react";
+import { Button } from "../ui/Button";
 
 interface GenreSelectProps {
   options: string[];
@@ -27,7 +27,7 @@ export function GenreSelect({
   const [open, setOpen] = React.useState(false);
 
   return (
-    <div className="flex justify-center items-center space-x-4">
+    <div className="flex justify-center items-center cursor-pointer space-x-4">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" className="justify-between">
