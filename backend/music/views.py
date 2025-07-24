@@ -4,6 +4,7 @@ from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from music.ollama_client import Ollama_client
 from music.utils.spotify_data_importer import add_album_by_id, add_playlist_by_id
 
 from .models import Album, Artist, Playlist, Review
@@ -116,3 +117,19 @@ class ReviewsByAlbumView(generics.ListAPIView):
             raise NotFound(detail="Album not found.")
 
         return Review.objects.filter(target_type="album", album=album)
+
+
+class RecommendMusicView(APIView):
+    def get(self, request, artist_name):
+        if not artist_name:
+            return Response({"error": "Missing 'artist' parameter"}, status=400)
+
+        try:
+            client = Ollama_client()
+            recommendations = client.generate_recommendations(artist_name)
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        return Response({"recommendations": recommendations}, status=status.HTTP_200_OK)
