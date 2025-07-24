@@ -1,17 +1,20 @@
 from django.http import HttpResponse
 from rest_framework import generics, status
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from music.ollama_client import Ollama_client
 from music.utils.spotify_data_importer import add_album_by_id, add_playlist_by_id
 
-from .models import Album, Artist, Playlist
+from .models import Album, Artist, Playlist, Review
 from .serializers import (
     AlbumDBSerializer,
     AlbumSerializer,
     ArtistDBSerializer,
     ArtistSerializer,
     PlaylistDBSerializer,
+    ReviewSerializer,
 )
 from .spotify_client import SpotifyClient
 
@@ -101,3 +104,32 @@ class PlaylistImport(APIView):
             {"message": f"Playlist '{playlist_id}' imported successfully!"},
             status=status.HTTP_201_CREATED,
         )
+
+
+class ReviewsByAlbumView(generics.ListAPIView):
+    serializer_class = ReviewSerializer
+
+    def get_queryset(self):
+        album_id = self.kwargs.get("album_id")
+        try:
+            album = Album.objects.get(id=album_id)
+        except Album.DoesNotExist:
+            raise NotFound(detail="Album not found.")
+
+        return Review.objects.filter(target_type="album", album=album)
+
+
+class RecommendMusicView(APIView):
+    def get(self, request, artist_name):
+        if not artist_name:
+            return Response({"error": "Missing 'artist' parameter"}, status=400)
+
+        try:
+            client = Ollama_client()
+            recommendations = client.generate_recommendations(artist_name)
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        return Response({"recommendations": recommendations}, status=status.HTTP_200_OK)
