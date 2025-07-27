@@ -5,6 +5,7 @@ import {
   ReviewBox,
   ReviewContainer,
   ReviewSubtitle,
+  ReviewTextSection,
   ReviewTitle,
 } from "../../styles/review.styles";
 import type { SpotifyAlbumReview } from "../../types/spotify";
@@ -80,14 +81,14 @@ const AlbumReview: React.FC = () => {
               </ReviewSubtitle>
               {review[0] ? (
                 <div>
-                  <ReviewText>
+                  <ReviewTextSection>
                     {review[0].rating
                       ? `Rating: ${review[0].rating}/10`
                       : "No rating available."}
-                  </ReviewText>
-                  <ReviewText>
+                  </ReviewTextSection>
+                  <ReviewTextSection>
                     {review[0].content || "No description available."}
-                  </ReviewText>
+                  </ReviewTextSection>
                 </div>
               ) : (
                 <div></div>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "../ui/Button";
+import { Button } from "../ui/button";
 import { RecommendationSection } from "@/styles/review.styles";
 import { ButtonLoading } from "../ui/ButtonLoading";
 import {

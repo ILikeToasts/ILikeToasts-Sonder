@@ -9,9 +9,9 @@ import {
   CommandList,
   CommandEmpty,
   CommandItem,
-} from "@/components/ui/Command";
+} from "@/components/ui/command";
 import React from "react";
-import { Button } from "../ui/Button";
+import { Button } from "../ui/button";
 
 interface GenreSelectProps {
   options: string[];
