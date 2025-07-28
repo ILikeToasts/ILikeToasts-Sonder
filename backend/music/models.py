@@ -16,6 +16,7 @@ class Artist(models.Model):
     image_url = models.URLField(blank=True)
     popularity = models.IntegerField(default=0)
     followers = models.IntegerField(default=0)
+    wiki_summary = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
@@ -27,6 +28,7 @@ class Album(models.Model):
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="albums")
     genres = models.ManyToManyField(Genre, related_name="albums")
     cover_url = models.URLField(blank=True)
+    wiki_summary = models.TextField(blank=True)
 
     def __str__(self):
         return f"{self.title} - {self.artist.name}"
@@ -41,6 +43,7 @@ class Song(models.Model):
     artists = models.ManyToManyField(Artist, related_name="songs")
     duration_seconds = models.PositiveIntegerField()
     cover_url = models.URLField(blank=True)
+    wiki_summary = models.TextField(blank=True)
 
     def __str__(self):
         return self.title
