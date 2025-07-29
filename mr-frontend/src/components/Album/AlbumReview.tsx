@@ -14,6 +14,7 @@ import {
   Titles,
   TitleSection,
 } from "@/styles/common/Review.styles";
+import { AlbumSummaries } from "./AlbumSummaries";
 
 const AlbumReview: React.FC = () => {
   const location = useLocation();
@@ -96,7 +97,7 @@ const AlbumReview: React.FC = () => {
               </TitleSection>
             </ReviewTextSection>
 
-            {/* {review[0] ? (
+            {review[0] ? (
               <div>
                 <ReviewTextSection>
                   {review[0].rating
@@ -109,13 +110,14 @@ const AlbumReview: React.FC = () => {
               </div>
             ) : (
               <div></div>
-            )} */}
+            )}
           </ReviewBox>
           <SpotifyAlbumEmbed
             albumId={album.spotify_id}
             albumName={album.title}
           />
         </ReviewInfo>
+        <AlbumSummaries album={album} />
       </ReviewContainer>
     </>
   );

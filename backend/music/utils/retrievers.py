@@ -6,6 +6,8 @@ from langchain_core.documents import Document
 from langchain_core.retrievers import BaseRetriever
 from pydantic import PrivateAttr
 
+from music.helper.lastfm_retriever_help import extract_tracks
+
 URL = "http://ws.audioscrobbler.com/2.0/"
 
 
@@ -109,21 +111,33 @@ class LastFMRetriever(BaseRetriever):
             album_data = resp.json()
 
             album = album_data.get("album", {})
-            tags_data = album.get("tags", {}).get("tag", [])
-            tags = [tag["name"] for tag in tags_data if "name" in tag]
-            wiki = album.get("wiki", {}).get("summary", "No description available.")
-            tracks = album.get("tracks", {}).get("track", [])
-            track_names = [track["name"] for track in tracks if "name" in track]
+
+            # Retrieve tags
+            tags = []
+            raw_tags = album.get("tags", {})
+            if isinstance(raw_tags, dict):
+                tag_items = raw_tags.get("tag", [])
+                if isinstance(tag_items, list):
+                    tags = [
+                        tag.get("name")
+                        for tag in tag_items
+                        if isinstance(tag, dict) and "name" in tag
+                    ]
+
+            # Retrieve wiki
+            wiki_data = album.get("wiki")
+            if isinstance(wiki_data, dict):
+                wiki = wiki_data.get("content", "No description available.")
+            else:
+                wiki = "No description available."
+
+            # Retrieve tracks
+            raw_tracks_field = album.get("tracks", {}).get("track", [])
+            track_names, track_list = extract_tracks(raw_tracks_field)
 
             # Clean wiki
             if wiki and "<a" in wiki:
                 wiki = wiki.split("<a")[0].strip()
-
-            track_list = (
-                "\n".join([f"- {track['name']}" for track in tracks])
-                if isinstance(tracks, list)
-                else "No tracks available."
-            )
 
             full_content = (
                 f"Album: {album.get('name', album_name)}\n"

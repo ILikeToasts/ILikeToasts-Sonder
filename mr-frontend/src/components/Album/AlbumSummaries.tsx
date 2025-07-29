@@ -1,0 +1,66 @@
+import Carousel from "../Common/Carousel";
+import { MusicIcon } from "lucide-react";
+import {
+  CarouselContainer,
+  InformationSection,
+  RecommendationSection,
+  Secondbox,
+  Title,
+} from "@/styles/common/Review.styles";
+import type { SpotifyAlbum } from "@/types/spotify";
+
+interface AlbumSummariesProps {
+  album: SpotifyAlbum;
+}
+
+export const AlbumSummaries: React.FC<AlbumSummariesProps> = ({ album }) => {
+  return (
+    <RecommendationSection>
+      <InformationSection>
+        <Secondbox>
+          <CarouselContainer>
+            <Title>Album summary</Title>
+            <Carousel
+              baseWidth={600}
+              autoplay={false}
+              autoplayDelay={3000}
+              pauseOnHover={true}
+              loop={true}
+              round={true}
+              items={
+                album.wiki_summary
+                  ?.split(/\n\s*\n/) // or use just /\n/ depending on your formatting
+                  .filter((p) => p.trim() !== "")
+                  .map((paragraph, idx) => ({
+                    id: idx,
+                    title: `Summary (Part ${idx + 1})`,
+                    description: paragraph.trim(),
+                    icon: (
+                      <MusicIcon className="w-5 h-5 text-muted-foreground" />
+                    ),
+                  })) || []
+              }
+            />
+          </CarouselContainer>
+          <CarouselContainer>
+            <Title>Songs</Title>
+            <Carousel
+              baseWidth={600}
+              autoplay={false}
+              autoplayDelay={3000}
+              pauseOnHover={true}
+              loop={true}
+              round={true}
+              items={album.songs.map((song, idx) => ({
+                id: idx,
+                title: song.title,
+                description: song.wiki_summary,
+                icon: <MusicIcon className="w-5 h-5 text-muted-foreground" />,
+              }))}
+            />
+          </CarouselContainer>
+        </Secondbox>
+      </InformationSection>
+    </RecommendationSection>
+  );
+};

@@ -5,10 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from music.ollama_client import Ollama_client
-from music.utils.spotify_data_importer import (
-    add_album_by_id,
-    add_playlist_by_id,
-)
+from music.utils.data_importer import add_album_by_id, add_playlist_by_id
 
 from .models import Album, Artist, Playlist, Review
 from .serializers import (

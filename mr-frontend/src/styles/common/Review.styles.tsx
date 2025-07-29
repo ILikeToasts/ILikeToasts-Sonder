@@ -101,3 +101,7 @@ export const Title = styled.div`
 export const ArtistTitle = styled(Title)`
   justify-self: flex-start;
 `;
+
+export const CarouselContainer = styled.div`
+  margin: 20px;
+`;

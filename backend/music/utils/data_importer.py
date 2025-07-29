@@ -1,5 +1,3 @@
-# utils/spotify_importer.py
-
 from spotipy import Spotify
 
 from ..models import Album, Artist, Genre, Playlist, Song
@@ -39,11 +37,11 @@ def add_album_by_id(sp: Spotify, album_id: str):
             )
 
             # set the genres with lastfm tags
-            lastfm_tags = lastfm_artist_data.metadata["tags"]
-            genre_objs = [
-                Genre.objects.get_or_create(name=tag)[0] for tag in lastfm_tags
+            lastfm__artist_tags = lastfm_artist_data.metadata["tags"]
+            artist_genre_objs = [
+                Genre.objects.get_or_create(name=tag)[0] for tag in lastfm__artist_tags
             ]
-            artist.genres.set(genre_objs)
+            artist.genres.set(artist_genre_objs)
 
             artist_instances.append(artist)
 
@@ -66,7 +64,15 @@ def add_album_by_id(sp: Spotify, album_id: str):
         lastfm_album_data = lastfm_retriever.get_album_info(
             current_artist.name, album.title
         )
-        album.wiki_summary = lastfm_album_data.metadata["Description"]
+
+        if lastfm_album_data.metadata["Description"]:
+            album.wiki_summary = lastfm_album_data.metadata["Description"]
+
+        lastfm__album_tags = lastfm_album_data.metadata["Tags"]
+        album_genre_objs = [
+            Genre.objects.get_or_create(name=tag)[0] for tag in lastfm__album_tags
+        ]
+        album.genres.set(album_genre_objs)
         album.save()
 
         # Get tracks for this album
@@ -98,6 +104,8 @@ def add_album_tracks(
         lastfm_track_data = lastfm_retriever.get_track_info(artist_name, db_track.title)
         db_track.wiki_summary = lastfm_track_data.metadata["bio"]
         db_track.save()
+
+    album.save()
 
     print(f"Added {len(tracks['items'])} tracks to album '{album.title}'.")
 

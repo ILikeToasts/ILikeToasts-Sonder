@@ -94,7 +94,7 @@ const ArtistReview: React.FC = () => {
           </ReviewBox>
           <SpotifyArtistEmbed artistId={artist.spotify_id} />
         </ReviewInfo>
-        <Recommendations artistName={artist.name}></Recommendations>
+        <Recommendations artistName={artist.name} />
       </ReviewContainer>
     </>
   );
