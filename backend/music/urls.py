@@ -8,7 +8,8 @@ from .views import (
     ArtistListView,
     PlaylistImport,
     PlaylistView,
-    RecommendMusicView,
+    RecommendAlbumsView,
+    RecommendArtistsView,
     ReviewsByAlbumView,
 )
 
@@ -37,7 +38,12 @@ urlpatterns = [
     ),
     path(
         "recommend/<str:artist_name>",
-        RecommendMusicView.as_view(),
-        name="recommend_music",
+        RecommendArtistsView.as_view(),
+        name="recommend_artist",
+    ),
+    path(
+        "recommend/<str:album_name>/<str:artist_name>",
+        RecommendAlbumsView.as_view(),
+        name="recommend_album",
     ),
 ]

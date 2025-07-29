@@ -6,11 +6,17 @@ export interface SpotifyArtist {
   popularity: number;
   followers: number;
   genres: SpotifyGenre[];
+  wiki_summary: string;
 }
 
 export interface SpotifyGenre {
   id: number;
   name: string;
+}
+
+export interface Song {
+  title: string;
+  wiki_summary: string;
 }
 
 export interface SpotifyAlbum {
@@ -19,6 +25,8 @@ export interface SpotifyAlbum {
   spotify_id: string;
   cover_url: string;
   genres: SpotifyGenre[];
+  wiki_summary: string;
+  songs: Song[];
 }
 
 export interface SpotifyAlbumReview {
@@ -26,5 +34,3 @@ export interface SpotifyAlbumReview {
   rating: number;
   content: string;
 }
-
-export interface SongReview {}

@@ -1,17 +1,20 @@
 import { useLocation } from "react-router-dom";
 import SpotifyAlbumEmbed from "./SpotifyAlbumEmbed";
-import { CenteredContainer } from "../../styles/global.styles";
+import type { SpotifyAlbumReview } from "../../types/spotify";
+import { useEffect, useState } from "react";
+import Aurora, { AuroraBackground, AuroraBottom } from "../ui/Aurora";
+import { Vibrant } from "node-vibrant/browser";
 import {
   ReviewBox,
   ReviewContainer,
+  ReviewInfo,
   ReviewSubtitle,
   ReviewTextSection,
   ReviewTitle,
-} from "../../styles/review.styles";
-import type { SpotifyAlbumReview } from "../../types/spotify";
-import { useEffect, useState } from "react";
-import Aurora, { AuroraBackground } from "../ui/Aurora";
-import { Vibrant } from "node-vibrant/browser";
+  Titles,
+  TitleSection,
+} from "@/styles/common/Review.styles";
+import { AlbumSummaries } from "./AlbumSummaries";
 
 const AlbumReview: React.FC = () => {
   const location = useLocation();
@@ -56,48 +59,67 @@ const AlbumReview: React.FC = () => {
   }
 
   return (
-    <div className="space-y-4">
-      <div style={{ position: "relative", overflow: "hidden" }}>
-        {auroraColors.length > 0 && (
+    <>
+      {auroraColors.length > 0 && (
+        <>
           <AuroraBackground>
             <Aurora
               colorStops={auroraColors}
-              blend={0.6}
-              amplitude={0.5}
+              blend={1}
+              amplitude={1}
               speed={1}
             />
           </AuroraBackground>
-        )}
-        <CenteredContainer>
-          <ReviewContainer className="reviewContainer">
-            <SpotifyAlbumEmbed
-              albumId={album.spotify_id}
-              albumName={album.title}
+          <AuroraBottom>
+            <Aurora
+              colorStops={auroraColors}
+              blend={1}
+              amplitude={0.5}
+              speed={1}
             />
-            <ReviewBox>
-              <ReviewTitle>{album.title}</ReviewTitle>
-              <ReviewSubtitle>
-                {album.genres.map((g: { name: string }) => g.name).join(", ")}
-              </ReviewSubtitle>
-              {review[0] ? (
-                <div>
-                  <ReviewTextSection>
-                    {review[0].rating
-                      ? `Rating: ${review[0].rating}/10`
-                      : "No rating available."}
-                  </ReviewTextSection>
-                  <ReviewTextSection>
-                    {review[0].content || "No description available."}
-                  </ReviewTextSection>
-                </div>
-              ) : (
-                <div></div>
-              )}
-            </ReviewBox>
-          </ReviewContainer>
-        </CenteredContainer>
-      </div>
-    </div>
+          </AuroraBottom>
+        </>
+      )}
+
+      <ReviewContainer>
+        <ReviewInfo>
+          <ReviewBox>
+            <ReviewTextSection>
+              <TitleSection>
+                <Titles>
+                  <ReviewTitle>{album.title}</ReviewTitle>
+                  <ReviewSubtitle>
+                    {album.genres
+                      .map((g: { name: string }) => g.name)
+                      .join(", ")}
+                  </ReviewSubtitle>
+                </Titles>
+              </TitleSection>
+            </ReviewTextSection>
+
+            {review[0] ? (
+              <div>
+                <ReviewTextSection>
+                  {review[0].rating
+                    ? `Rating: ${review[0].rating}/10`
+                    : "No rating available."}
+                </ReviewTextSection>
+                <ReviewTextSection>
+                  {review[0].content || "No description available."}
+                </ReviewTextSection>
+              </div>
+            ) : (
+              <div></div>
+            )}
+          </ReviewBox>
+          <SpotifyAlbumEmbed
+            albumId={album.spotify_id}
+            albumName={album.title}
+          />
+        </ReviewInfo>
+        <AlbumSummaries album={album} />
+      </ReviewContainer>
+    </>
   );
 };
 

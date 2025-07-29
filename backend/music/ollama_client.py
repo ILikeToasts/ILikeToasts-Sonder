@@ -1,10 +1,8 @@
-import os
-
 from langchain_core.runnables import RunnableSequence
 from langchain_ollama import ChatOllama
 
 from music.utils.retrievers import LastFMRetriever
-from prompts import MusicRecommendationPrompt
+from prompts import AlbumRecommendationPrompt, ArtistsRecommendationPrompt
 
 
 class Ollama_client:
@@ -19,21 +17,36 @@ class Ollama_client:
             base_url=self.OLLAMA_URL,
         )
 
-    def generate_recommendations(self, artist_name: str):
-        lastfm_key = os.getenv("LASTFM_API_KEY")
-        lastfm_retriever = LastFMRetriever(lastfm_key)
+    def generate_artists_recommendations(self, artist_name: str):
+        lastfm_retriever = LastFMRetriever()
 
-        doc = lastfm_retriever.invoke(artist_name)
-        artist_info = doc[0].page_content
+        doc = lastfm_retriever.get_artist_info(artist_name)
+        artist_info = doc.page_content
 
         chain: RunnableSequence = (
-            MusicRecommendationPrompt.prompt
+            ArtistsRecommendationPrompt.prompt
             | self.llm
-            | MusicRecommendationPrompt.parser
+            | ArtistsRecommendationPrompt.parser
         )
 
         response = chain.invoke({"artist": artist_name, "artist_info": artist_info})
 
-        print(response)
+        return response
+
+    def generate_album_recommendations(self, artist_name: str, album_name: str):
+        lastfm_retriever = LastFMRetriever()
+
+        doc = lastfm_retriever.get_album_info(artist_name, album_name)
+        album_info = doc.page_content
+
+        chain: RunnableSequence = (
+            AlbumRecommendationPrompt.prompt
+            | self.llm
+            | AlbumRecommendationPrompt.parser
+        )
+
+        response = chain.invoke(
+            {"artist": artist_name, "album": album_name, "album_info": album_info}
+        )
 
         return response

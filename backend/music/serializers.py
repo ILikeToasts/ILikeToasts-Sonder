@@ -28,12 +28,28 @@ class GenreSerializer(serializers.ModelSerializer):
         fields = ["id", "name"]
 
 
+class SongDBSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Song
+        fields = ["id", "title", "wiki_summary"]
+
+
 class AlbumDBSerializer(serializers.ModelSerializer):
     genres = GenreSerializer(many=True, read_only=True)
+    songs = SongDBSerializer(many=True, read_only=True)
 
     class Meta:
         model = Album
-        fields = ["id", "spotify_id", "title", "artist", "genres", "cover_url"]
+        fields = [
+            "id",
+            "spotify_id",
+            "title",
+            "artist",
+            "genres",
+            "cover_url",
+            "wiki_summary",
+            "songs",
+        ]
 
 
 class ArtistDBSerializer(serializers.ModelSerializer):
@@ -49,27 +65,12 @@ class ArtistDBSerializer(serializers.ModelSerializer):
             "image_url",
             "popularity",
             "followers",
-        ]
-
-
-class SongSerializer(serializers.ModelSerializer):
-    artists = ArtistSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Song
-        fields = [
-            "id",
-            "title",
-            "spotify_id",
-            "cover_url",
-            "duration_seconds",
-            "album",
-            "artists",
+            "wiki_summary",
         ]
 
 
 class PlaylistDBSerializer(serializers.ModelSerializer):
-    songs = SongSerializer(many=True, read_only=True)
+    songs = SongDBSerializer(many=True, read_only=True)
 
     class Meta:
         model = Playlist

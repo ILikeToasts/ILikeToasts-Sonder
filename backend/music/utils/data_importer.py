@@ -1,8 +1,7 @@
-# utils/spotify_importer.py
-
 from spotipy import Spotify
 
 from ..models import Album, Artist, Genre, Playlist, Song
+from .retrievers import LastFMRetriever
 
 
 def add_album_by_id(sp: Spotify, album_id: str):
@@ -13,12 +12,13 @@ def add_album_by_id(sp: Spotify, album_id: str):
     """
     # Get album details
     album_data = sp.album(album_id)
-
+    lastfm_retriever = LastFMRetriever()
     if album_data:
         artist_instances = []
 
         for artist_info in album_data["artists"]:
             artist_data = sp.artist(artist_info["id"])
+            lastfm_artist_data = lastfm_retriever.get_artist_info(artist_info["name"])
 
             # Get or create the artist instance
             artist, _ = Artist.objects.update_or_create(
@@ -30,17 +30,23 @@ def add_album_by_id(sp: Spotify, album_id: str):
                     ),
                     "popularity": artist_data.get("popularity", 0),
                     "followers": artist_data.get("followers", {}).get("total", 0),
+                    "wiki_summary": lastfm_artist_data.metadata[
+                        "bio"
+                    ],  # Comes from lastfm api
                 },
             )
 
-            # Handle genres M2M properly
-            genres = [
-                Genre.objects.get_or_create(name=genre)[0]
-                for genre in artist_data.get("genres", [])
+            # set the genres with lastfm tags
+            lastfm__artist_tags = lastfm_artist_data.metadata["tags"]
+            artist_genre_objs = [
+                Genre.objects.get_or_create(name=tag)[0] for tag in lastfm__artist_tags
             ]
-            artist.genres.set(genres)
+            artist.genres.set(artist_genre_objs)
 
             artist_instances.append(artist)
+
+        # Set the artist to the first artist
+        current_artist = artist_instances[0]
 
         # Create or update the album
         album, _ = Album.objects.update_or_create(
@@ -50,29 +56,43 @@ def add_album_by_id(sp: Spotify, album_id: str):
                 "cover_url": (
                     album_data["images"][0]["url"] if album_data["images"] else ""
                 ),
-                "artist": artist_instances[0],
+                "artist": current_artist,
             },
         )
 
-        # Use the first artist’s genres for the album
-        album.genres.set(artist_instances[0].genres.all())
+        # Get the album's summary from lastfm
+        lastfm_album_data = lastfm_retriever.get_album_info(
+            current_artist.name, album.title
+        )
+
+        if lastfm_album_data.metadata["Description"]:
+            album.wiki_summary = lastfm_album_data.metadata["Description"]
+
+        lastfm__album_tags = lastfm_album_data.metadata["Tags"]
+        album_genre_objs = [
+            Genre.objects.get_or_create(name=tag)[0] for tag in lastfm__album_tags
+        ]
+        album.genres.set(album_genre_objs)
         album.save()
 
         # Get tracks for this album
-        add_album_tracks(sp, album)
+        add_album_tracks(sp, lastfm_retriever, album, current_artist.name)
 
         print(f"Imported album '{album.title}'")
 
 
-def add_album_tracks(sp: Spotify, album: Album):
+def add_album_tracks(
+    sp: Spotify, lastfm_retriever: LastFMRetriever, album: Album, artist_name: str
+):
     """
     Adds tracks to an album.
     :param sp: spotipy.Spotify client instance.
     :param album: Album instance to which tracks will be added.
     """
     tracks = sp.album_tracks(album.spotify_id)
+
     for track in tracks["items"]:
-        Song.objects.update_or_create(
+        db_track, _ = Song.objects.update_or_create(
             spotify_id=track["id"],
             defaults={
                 "title": track["name"],
@@ -81,6 +101,12 @@ def add_album_tracks(sp: Spotify, album: Album):
                 "cover_url": album.cover_url,
             },
         )
+        lastfm_track_data = lastfm_retriever.get_track_info(artist_name, db_track.title)
+        db_track.wiki_summary = lastfm_track_data.metadata["bio"]
+        db_track.save()
+
+    album.save()
+
     print(f"Added {len(tracks['items'])} tracks to album '{album.title}'.")
 
 

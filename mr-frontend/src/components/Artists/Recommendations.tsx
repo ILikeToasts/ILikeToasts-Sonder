@@ -1,17 +1,18 @@
 import { useState } from "react";
 import { Button } from "../ui/button";
-import { RecommendationSection } from "@/styles/review.styles";
 import { ButtonLoading } from "../ui/ButtonLoading";
+
+import { CenteredText } from "@/styles/global.styles";
+import Carousel from "../Common/Carousel";
+import { MusicIcon } from "lucide-react";
 import {
   ArtistTitle,
   InformationSection,
   MusicalStyle,
+  RecommendationSection,
   Secondbox,
   Title,
-} from "@/styles/Artists/Artist_review.styles";
-import { CenteredText } from "@/styles/global.styles";
-import Carousel from "../Common/Carousel";
-import { MusicIcon } from "lucide-react";
+} from "@/styles/common/Review.styles";
 
 interface ArtistRecommendationProps {
   artistName: string;

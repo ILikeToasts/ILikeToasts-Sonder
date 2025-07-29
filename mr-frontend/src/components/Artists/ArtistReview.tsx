@@ -1,20 +1,20 @@
 import { useLocation } from "react-router-dom";
 import SpotifyArtistEmbed from "./SpotiftyArtistEmbed";
+import Aurora, { AuroraBackground, AuroraBottom } from "../ui/Aurora";
+import { Vibrant } from "node-vibrant/browser";
+import { useEffect, useState } from "react";
+import { Recommendations } from "./Recommendations";
 import {
-  ArtistInfo,
   ArtistStats,
   ReviewBox,
+  ReviewContainer,
+  ReviewInfo,
   ReviewSubtitle,
   ReviewTextSection,
   ReviewTitle,
   Titles,
   TitleSection,
-} from "../../styles/review.styles";
-import Aurora, { AuroraBackground, AuroraBottom } from "../ui/Aurora";
-import { Vibrant } from "node-vibrant/browser";
-import { useEffect, useState } from "react";
-import { Recommendations } from "./Recommendations";
-import { ArtistReviewContainer } from "@/styles/Artists/Artist_review.styles";
+} from "@/styles/common/Review.styles";
 
 const ArtistReview: React.FC = () => {
   const location = useLocation();
@@ -69,8 +69,8 @@ const ArtistReview: React.FC = () => {
         </>
       )}
 
-      <ArtistReviewContainer>
-        <ArtistInfo>
+      <ReviewContainer>
+        <ReviewInfo>
           <ReviewBox>
             <ReviewTextSection>
               <TitleSection>
@@ -93,9 +93,9 @@ const ArtistReview: React.FC = () => {
             </ReviewTextSection>
           </ReviewBox>
           <SpotifyArtistEmbed artistId={artist.spotify_id} />
-        </ArtistInfo>
-        <Recommendations artistName={artist.name}></Recommendations>
-      </ArtistReviewContainer>
+        </ReviewInfo>
+        <Recommendations artistName={artist.name} />
+      </ReviewContainer>
     </>
   );
 };
