@@ -11,6 +11,8 @@ from .views import (
     RecommendAlbumsView,
     RecommendArtistsView,
     ReviewsByAlbumView,
+    TrackImportView,
+    TracksListView,
 )
 
 urlpatterns = [
@@ -21,6 +23,12 @@ urlpatterns = [
         AlbumImportView.as_view(),
         name="album-import",
     ),
+    path(
+        "spotify/track/<str:track_id>",
+        TrackImportView.as_view(),
+        name="track-import",
+    ),
+    path("spotify/tracks/", TracksListView.as_view(), name="tracks-list"),
     path("spotify/artists/", ArtistListView.as_view(), name="artist-list"),
     path(
         "spotify/artists/<str:artist_id>/", ArtistDetail.as_view(), name="artist-detail"

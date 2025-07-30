@@ -13,6 +13,7 @@ import AlbumReview from "./components/Album/AlbumReview";
 import ArtistReview from "./components/Artists/ArtistReview";
 import { ThemeProvider } from "./components/Common/theme-provider";
 import Layout from "./layouts/Layout";
+import TrackReview from "./components/Singles/TrackReview";
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/albums" element={<Album />} />
             <Route path="/artists" element={<Artists />} />
-            <Route path="/singles" element={<Singles />} />
+            <Route path="/tracks" element={<Singles />} />
             <Route path="/games" element={<Games />} />
             <Route path="/movies" element={<Movies />} />
             <Route path="/pictures" element={<Pictures />} />
@@ -31,6 +32,7 @@ function App() {
             <Route path="/trips" element={<Trips />} />
             <Route path="/albums/:album_id" element={<AlbumReview />} />
             <Route path="/artists/:artist_id" element={<ArtistReview />} />
+            <Route path="/tracks/:track_id" element={<TrackReview />} />
           </Route>
         </Routes>
       </Router>

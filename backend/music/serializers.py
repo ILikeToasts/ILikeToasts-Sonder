@@ -29,9 +29,11 @@ class GenreSerializer(serializers.ModelSerializer):
 
 
 class SongDBSerializer(serializers.ModelSerializer):
+    genres = GenreSerializer(many=True, read_only=True)
+
     class Meta:
         model = Song
-        fields = ["id", "title", "wiki_summary"]
+        fields = ["id", "title", "wiki_summary", "genres", "cover_url", "spotify_id"]
 
 
 class AlbumDBSerializer(serializers.ModelSerializer):

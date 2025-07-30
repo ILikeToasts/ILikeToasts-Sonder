@@ -44,6 +44,7 @@ class Song(models.Model):
     duration_seconds = models.PositiveIntegerField()
     cover_url = models.URLField(blank=True)
     wiki_summary = models.TextField(blank=True)
+    genres = models.ManyToManyField("Genre", related_name="songs", blank=True)
 
     def __str__(self):
         return self.title

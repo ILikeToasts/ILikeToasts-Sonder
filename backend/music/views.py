@@ -5,9 +5,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from music.ollama_client import Ollama_client
-from music.utils.data_importer import add_album_by_id, add_playlist_by_id
+from music.utils.data_importer import (
+    add_album_by_id,
+    add_playlist_by_id,
+    add_track_by_id,
+)
 
-from .models import Album, Artist, Playlist, Review
+from .models import Album, Artist, Playlist, Review, Song
 from .serializers import (
     AlbumDBSerializer,
     AlbumSerializer,
@@ -15,6 +19,7 @@ from .serializers import (
     ArtistSerializer,
     PlaylistDBSerializer,
     ReviewSerializer,
+    SongDBSerializer,
 )
 from .spotify_client import SpotifyClient
 
@@ -73,6 +78,34 @@ class AlbumImportView(APIView):
             {"message": f"Album '{album_id}' imported successfully!"},
             status=status.HTTP_201_CREATED,
         )
+
+
+class TrackImportView(APIView):
+    def post(self, request, track_id):
+        if not track_id:
+            return Response(
+                {"error": "track_id is required"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            client = SpotifyClient()
+            sp = client.sp
+            add_track_by_id(sp, track_id)
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        return Response(
+            {"message": f"Track '{track_id}' imported successfully"},
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class TracksListView(generics.ListAPIView):
+    serializer_class = SongDBSerializer
+
+    def get_queryset(self):
+        return Song.objects.filter(album__isnull=True)
 
 
 class ArtistListView(generics.ListAPIView):
