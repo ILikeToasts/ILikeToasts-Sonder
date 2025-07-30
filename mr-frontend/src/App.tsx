@@ -1,5 +1,6 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Singles from "./pages/SinglesPage";
 import Home from "./pages/HomePage";
 import Album from "./pages/AlbumsPage";
 import Games from "./pages/GamesPage";
@@ -22,6 +23,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/albums" element={<Album />} />
             <Route path="/artists" element={<Artists />} />
+            <Route path="/singles" element={<Singles />} />
             <Route path="/games" element={<Games />} />
             <Route path="/movies" element={<Movies />} />
             <Route path="/pictures" element={<Pictures />} />

@@ -34,3 +34,11 @@ export interface SpotifyAlbumReview {
   rating: number;
   content: string;
 }
+
+export interface SpotifySingle {
+  id: number;
+  title: string;
+  spotify_id: string;
+  cover_url: string;
+  genres: SpotifyGenre[];
+}
