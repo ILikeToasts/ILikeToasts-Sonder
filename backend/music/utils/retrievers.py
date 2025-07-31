@@ -238,17 +238,6 @@ class LastFMRetriever(BaseRetriever):
             )
 
     def get_track_info(self, artist_name: str, track_name: str) -> Document:
-        # TODO : Maybe use this to help llm
-        """similar_params = {
-            "method": "track.getsimilar",
-            "track": track_name,
-            "artist": artist_name,
-            "api_key": self._api_key,
-            "format": "json",
-            "limit": 5,
-        }"""
-
-        # Prepare artist bio request
         info_params = {
             "method": "track.getinfo",
             "track": track_name,
@@ -258,25 +247,30 @@ class LastFMRetriever(BaseRetriever):
         }
 
         try:
-            # Fetch artist bio
-            bio_tags_resp = requests.get(URL, params=info_params)
-            bio_tags_resp.raise_for_status()
-            bio_tags_data = bio_tags_resp.json()
+            # Fetch track info
+            resp = requests.get(URL, params=info_params)
+            resp.raise_for_status()
+            data = resp.json()
+
+            # Bio
             bio_content = (
-                bio_tags_data.get("track", {})
+                data.get("track", {})
                 .get("wiki", {})
                 .get("summary", "No bio available.")
             )
-
-            # Clean bio
-            if bio_content and "<a" in bio_content:
+            if "<a" in bio_content:
                 bio_content = bio_content.split("<a")[0].strip()
 
-            # Combine results
+            # Tags (genres)
+            tag_list = data.get("track", {}).get("toptags", {}).get("tag", [])
+            tags = [tag["name"] for tag in tag_list if "name" in tag]
+
+            # Combine
             full_content = (
                 f"Artist: {artist_name}\n\n"
                 f"Track: {track_name}\n\n"
                 f"Bio: {bio_content}\n\n"
+                f"Tags: {', '.join(tags)}"
             )
 
             return Document(
@@ -285,6 +279,7 @@ class LastFMRetriever(BaseRetriever):
                     "artist": artist_name,
                     "track": track_name,
                     "bio": bio_content,
+                    "tags": tags,
                 },
             )
 

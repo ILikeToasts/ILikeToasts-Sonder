@@ -1,4 +1,3 @@
-// SpotifyAlbumEmbed.tsx
 import React from "react";
 import "../../styles/album.css";
 

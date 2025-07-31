@@ -189,3 +189,68 @@ def add_playlist_by_id(sp: Spotify, playlist_id: str):
     playlist.songs.set(song_instances)
 
     return playlist
+
+
+def add_track_by_id(sp: Spotify, track_id: str):
+    """
+    Adds a single or a single song.
+    :param sp: spotipy.Spotify client instance.
+    :param single_id: Spotify track ID.
+    """
+    track_data = sp.track(track_id)
+    lastfm_retriever = LastFMRetriever()
+
+    if track_data:
+
+        db_track, _ = Song.objects.update_or_create(
+            spotify_id=track_data["id"],
+            defaults={
+                "title": track_data["name"],
+                "album": None,
+                "duration_seconds": track_data["duration_ms"] // 1000,
+                "cover_url": track_data["album"]["images"][0]["url"],
+            },
+        )
+
+        primary_artist_name = track_data["artists"][0]["name"]
+        lastfm_track_data = lastfm_retriever.get_track_info(
+            primary_artist_name, db_track.title
+        )
+        genre_tags = lastfm_track_data.metadata.get("tags", [])
+
+        genre_objs = [Genre.objects.get_or_create(name=tag)[0] for tag in genre_tags]
+        print(lastfm_track_data)
+        print(genre_objs)
+
+        db_track.genres.set(genre_objs)
+
+        db_track.wiki_summary = lastfm_track_data.metadata["bio"]
+        db_track.save()
+
+        artist_instances = []
+        for artist_info in track_data["artists"]:
+            artist_data = sp.artist(artist_info["id"])
+            lastfm_artist_data = lastfm_retriever.get_artist_info(artist_info["name"])
+
+            artist, _ = Artist.objects.update_or_create(
+                spotify_id=artist_info["id"],
+                defaults={
+                    "name": artist_info["name"],
+                    "image_url": (
+                        artist_data["images"][0]["url"] if artist_data["images"] else ""
+                    ),
+                    "popularity": artist_data.get("popularity", 0),
+                    "followers": artist_data.get("followers", {}).get("total", 0),
+                    "wiki_summary": lastfm_artist_data.metadata.get("bio", ""),
+                },
+            )
+
+            genre_objs = [
+                Genre.objects.get_or_create(name=tag)[0]
+                for tag in lastfm_artist_data.metadata.get("tags", [])
+            ]
+            artist.genres.set(genre_objs)
+            artist_instances.append(artist)
+
+        # Link artists to track
+        db_track.artists.set(artist_instances)

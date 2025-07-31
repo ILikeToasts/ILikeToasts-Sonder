@@ -108,7 +108,7 @@ void main() {
 }
 `;
 export const AuroraBackground = styled.div`
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
