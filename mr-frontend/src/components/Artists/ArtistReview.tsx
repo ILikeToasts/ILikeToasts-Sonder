@@ -20,7 +20,6 @@ const ArtistReview: React.FC = () => {
   const location = useLocation();
   const artist = location.state?.artist;
   const [auroraColors, setAuroraColors] = useState<string[]>([]);
-
   if (!artist) {
     return <div>No artist data found.</div>;
   }

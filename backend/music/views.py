@@ -113,7 +113,7 @@ class ArtistListView(generics.ListAPIView):
     serializer_class = ArtistDBSerializer
 
 
-class PlaylistView(APIView):
+class PlaylistView(generics.ListAPIView):
     queryset = Playlist.objects.all()
     serializer_class = PlaylistDBSerializer
 

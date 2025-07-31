@@ -1,6 +1,9 @@
+import { AuroraBackground } from "@/components/ui/Aurora";
+import LightRays from "@/components/ui/LightRays";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import { ReviewSubtitle } from "@/styles/common/Review.styles";
 import {
-  Container,
+  TitleContainer,
   ContainerLeft,
   ContainerRight,
 } from "@/styles/Home/home.styles";
@@ -8,7 +11,25 @@ import {
 export default function HomePage() {
   return (
     <>
-      <Container>Sonder "[son-der]"</Container>
+      <AuroraBackground>
+        <LightRays
+          raysOrigin="top-center"
+          raysColor="#daabfa"
+          raysSpeed={1.5}
+          lightSpread={0.8}
+          rayLength={2.5}
+          fadeDistance={1.8}
+          followMouse={true}
+          mouseInfluence={0.1}
+          noiseAmount={0.1}
+          distortion={0.05}
+        />
+      </AuroraBackground>
+
+      <TitleContainer>
+        Sonder
+        <ReviewSubtitle>"[son-der]"</ReviewSubtitle>
+      </TitleContainer>
 
       <ContainerLeft>
         <ScrollReveal
@@ -18,8 +39,7 @@ export default function HomePage() {
           blurStrength={15}
         >
           noun. the realization that each random passerby is living a life as
-          vivid and complex as your own — populated with their own ambitions,
-          friends, routines, worries and inherited craziness
+          vivid and complex as your own
         </ScrollReveal>
       </ContainerLeft>
 
@@ -30,11 +50,8 @@ export default function HomePage() {
           baseRotation={50}
           blurStrength={15}
         >
-          — an epic story that continues invisibly around you like an anthill
-          sprawling deep underground, with elaborate passageways to thousands of
-          other lives that you'll never know existed, in which you might appear
-          only once, as an extra sipping coffee in the background, as a blur of
-          traffic passing on the highway, as a lighted window at dusk.
+          populated with their own ambitions, friends, routines, worries and
+          inherited craziness
         </ScrollReveal>
       </ContainerRight>
     </>
