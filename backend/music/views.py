@@ -11,15 +11,17 @@ from music.utils.data_importer import (
     add_track_by_id,
 )
 
-from .models import Album, Artist, Playlist, Review, Song
+from .models import Album, Artist, MediaItem, Playlist, Review, Song
 from .serializers import (
     AlbumDBSerializer,
     AlbumSerializer,
     ArtistDBSerializer,
     ArtistSerializer,
+    MediaItemSerializer,
     PlaylistDBSerializer,
     ReviewSerializer,
     SongDBSerializer,
+    YTMediaItemSerializer,
 )
 from .spotify_client import SpotifyClient
 
@@ -109,7 +111,7 @@ class TracksListView(generics.ListAPIView):
 
 
 class ArtistListView(generics.ListAPIView):
-    queryset = Artist.objects.all()
+    queryset = Artist.objects.filter(albums__isnull=False).distinct()
     serializer_class = ArtistDBSerializer
 
 
@@ -184,3 +186,24 @@ class RecommendAlbumsView(APIView):
             )
 
         return Response({"recommendations": recommendations}, status=status.HTTP_200_OK)
+
+
+class MediaItemListView(generics.ListAPIView):
+    serializer_class = MediaItemSerializer
+
+    def get_queryset(self):
+        return MediaItem.objects.exclude(media_type="youtube")
+
+    """ def get_queryset(self):
+        category = self.request.query_params.get("category")
+        qs = MediaItem.objects.all()
+        if category:
+            qs = qs.filter(category__iexact=category)
+        return qs """
+
+
+class YTMediaItemListView(generics.ListAPIView):
+    serializer_class = YTMediaItemSerializer
+
+    def get_queryset(self):
+        return MediaItem.objects.filter(media_type="youtube")

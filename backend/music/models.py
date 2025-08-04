@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
@@ -45,6 +46,7 @@ class Song(models.Model):
     cover_url = models.URLField(blank=True)
     wiki_summary = models.TextField(blank=True)
     genres = models.ManyToManyField("Genre", related_name="songs", blank=True)
+    bop = models.BooleanField(blank=True)
 
     def __str__(self):
         return self.title
@@ -86,3 +88,32 @@ class Review(models.Model):
 
     def __str__(self):
         return f"{self.target_type.title()} Review ({self.rating}/10)"
+
+
+class MediaItem(models.Model):
+    MEDIA_TYPE_CHOICES = (
+        ("image", "Image"),
+        ("video", "Video"),
+        ("youtube", "YouTube"),
+    )
+
+    media_type = models.CharField(max_length=10, choices=MEDIA_TYPE_CHOICES)
+    category = models.CharField(max_length=100)
+
+    file = models.FileField(upload_to="uploads/", blank=True, null=True)
+    url = models.URLField(blank=True, null=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    height = models.PositiveIntegerField(default=300)
+
+    def __str__(self):
+        return f"{self.media_type} - {self.category} - {self.url or self.file.name}"
+
+    def clean(self):
+        if self.media_type in ["image", "video"] and not self.file:
+            raise ValidationError("File is required for images and videos.")
+        if self.media_type == "youtube" and not self.url:
+            raise ValidationError("URL is required for YouTube media.")
+        if self.media_type == "youtube" and self.file:
+            raise ValidationError("YouTube media should not have an uploaded file.")
+        if self.media_type in ["image", "video"] and self.url:
+            raise ValidationError("Uploaded media should not have a URL.")

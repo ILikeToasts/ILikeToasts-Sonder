@@ -59,11 +59,13 @@ const preloadImages = async (urls: string[]): Promise<void> => {
   );
 };
 
-interface Item {
+export interface Item {
   id: string;
   img: string;
   url: string;
   height: number;
+  mediaType: "image" | "video";
+  category: string;
 }
 
 interface MasonryProps {
@@ -135,7 +137,10 @@ const Masonry: React.FC<MasonryProps> = ({
   };
 
   useEffect(() => {
-    preloadImages(items.map((i) => i.img)).then(() => setImagesReady(true));
+    const imageUrls = items
+      .filter((i) => i.mediaType === "image")
+      .map((i) => i.img);
+    preloadImages(imageUrls).then(() => setImagesReady(true));
   }, [items]);
 
   const grid = useMemo(() => {
@@ -239,10 +244,25 @@ const Masonry: React.FC<MasonryProps> = ({
           onMouseEnter={(e) => handleMouseEnter(item.id, e.currentTarget)}
           onMouseLeave={(e) => handleMouseLeave(item.id, e.currentTarget)}
         >
-          <div
-            className="relative w-full h-full bg-cover bg-center rounded-[10px] shadow-[0px_10px_50px_-10px_rgba(0,0,0,0.2)] uppercase text-[10px] leading-[10px]"
-            style={{ backgroundImage: `url(${item.img})` }}
-          >
+          <div className="relative w-full h-full rounded-[10px] shadow-[0px_10px_50px_-10px_rgba(0,0,0,0.2)] overflow-hidden cursor-pointer">
+            {item.mediaType === "image" && (
+              <div
+                className="w-full h-full bg-cover bg-center"
+                style={{ backgroundImage: `url(${item.img})` }}
+              />
+            )}
+
+            {item.mediaType === "video" && (
+              <video
+                className="w-full h-full object-cover"
+                src={item.img}
+                autoPlay
+                muted
+                loop
+                playsInline
+              />
+            )}
+
             {colorShiftOnHover && (
               <div className="color-overlay absolute inset-0 rounded-[10px] bg-gradient-to-tr from-pink-500/50 to-sky-500/50 opacity-0 pointer-events-none" />
             )}

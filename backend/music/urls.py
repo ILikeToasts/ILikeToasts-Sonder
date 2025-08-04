@@ -6,6 +6,7 @@ from .views import (
     AlbumListView,
     ArtistDetail,
     ArtistListView,
+    MediaItemListView,
     PlaylistImport,
     PlaylistView,
     RecommendAlbumsView,
@@ -13,6 +14,7 @@ from .views import (
     ReviewsByAlbumView,
     TrackImportView,
     TracksListView,
+    YTMediaItemListView,
 )
 
 urlpatterns = [
@@ -54,4 +56,6 @@ urlpatterns = [
         RecommendAlbumsView.as_view(),
         name="recommend_album",
     ),
+    path("media-items/", MediaItemListView.as_view(), name="media-items"),
+    path("yt-media-items/", YTMediaItemListView.as_view(), name="media-item-list"),
 ]
