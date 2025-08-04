@@ -27,5 +27,4 @@ celerybeat-schedule*
 *.dir\
 
 # Media
-.jpg
-.mp4
+/backend/media/uploads
