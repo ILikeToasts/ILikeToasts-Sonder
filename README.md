@@ -19,3 +19,8 @@ npm run start
 #### To run database
 
 `docker-compose up db`
+
+### Useful dev commands
+
+docker compose exec backend python manage.py makemigrations
+docker compose exec backend python manage.py migrate

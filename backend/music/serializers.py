@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Album, Artist, Genre, Playlist, Review, Song
+from .models import Album, Artist, Genre, MediaItem, Playlist, Review, Song
 
 
 class AlbumSerializer(serializers.Serializer):
@@ -91,3 +91,26 @@ class ReviewSerializer(serializers.ModelSerializer):
             "content",
             "created_at",
         ]
+
+
+class MediaItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MediaItem
+        fields = ["id", "file", "url", "height", "media_type", "category"]
+
+    # Optionally: get full URL
+    file = serializers.SerializerMethodField()
+
+    def get_file(self, obj):
+        request = self.context.get("request")
+        return request.build_absolute_uri(obj.file.url)
+
+
+class YTMediaItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MediaItem
+        fields = ["id", "url", "height", "media_type", "category"]
+
+    def get_file(self, obj):
+        request = self.context.get("request")
+        return request.build_absolute_uri(obj.file.url)

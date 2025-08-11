@@ -24,4 +24,7 @@ build/
 celerybeat-schedule*
 *.bak
 *.dat
-*.dir
+*.dir\
+
+# Media
+/backend/media/uploads
