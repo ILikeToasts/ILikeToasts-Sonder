@@ -1,4 +1,6 @@
 from django.http import HttpResponse
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, status
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
@@ -14,6 +16,7 @@ from music.utils.data_importer import (
 from .models import Album, Artist, MediaItem, Playlist, Review, Song
 from .serializers import (
     AlbumDBSerializer,
+    AlbumImportSerializer,
     AlbumSerializer,
     ArtistDBSerializer,
     ArtistSerializer,
@@ -60,12 +63,24 @@ class AlbumListView(generics.ListAPIView):
 
 
 class AlbumImportView(APIView):
-
-    def post(self, request, album_id):
-        if not album_id:
-            return Response(
-                {"error": "album_id is required"}, status=status.HTTP_400_BAD_REQUEST
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                "album_id",
+                openapi.IN_QUERY,
+                description="Spotify Album ID",
+                type=openapi.TYPE_STRING,
+                required=True,
             )
+        ],
+        responses={201: "Album imported successfully"},
+    )
+    def post(self, request):
+        serializer = AlbumImportSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        album_id = serializer.validated_data["album_id"]
 
         try:
             client = SpotifyClient()
@@ -75,7 +90,6 @@ class AlbumImportView(APIView):
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
         return Response(
             {"message": f"Album '{album_id}' imported successfully!"},
             status=status.HTTP_201_CREATED,

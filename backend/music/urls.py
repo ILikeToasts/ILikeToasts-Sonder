@@ -21,7 +21,7 @@ urlpatterns = [
     path("spotify/albums/", AlbumListView.as_view(), name="album-list"),
     path("spotify/albums/<str:album_id>/", AlbumDetail.as_view(), name="album-detail"),
     path(
-        "spotify/albums/import/<str:album_id>/",
+        "spotify/albums/import",
         AlbumImportView.as_view(),
         name="album-import",
     ),

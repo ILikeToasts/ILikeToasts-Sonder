@@ -165,3 +165,5 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": 60 * 60 * 2,  # Every 2 hours
     },
 }
+
+SWAGGER_USE_COMPAT_RENDERERS = False

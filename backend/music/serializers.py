@@ -13,6 +13,10 @@ class AlbumSerializer(serializers.Serializer):
     album_art = serializers.URLField(allow_null=True)
 
 
+class AlbumImportSerializer(serializers.Serializer):
+    album_id = serializers.CharField(max_length=100)
+
+
 class ArtistSerializer(serializers.Serializer):
     id = serializers.CharField()
     name = serializers.CharField()
