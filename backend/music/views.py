@@ -64,18 +64,15 @@ class AlbumListView(generics.ListAPIView):
 
 class AlbumImportView(APIView):
     @swagger_auto_schema(
-        manual_parameters=[
-            openapi.Parameter(
-                "album_id",
-                openapi.IN_QUERY,
-                description="Spotify Album ID",
-                type=openapi.TYPE_STRING,
-                required=True,
-            )
-        ],
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=["album_id"],
+            properties={"album_id": openapi.Schema(type=openapi.TYPE_STRING)},
+        ),
         responses={201: "Album imported successfully"},
     )
     def post(self, request):
+        print(request.data)
         serializer = AlbumImportSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
