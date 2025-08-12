@@ -27,7 +27,7 @@ jobs:
           MYSQL_USER: ${{ secrets.MYSQL_USER }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-        run: docker-compose -f docker-compose.ci.yml up -d --build
+        run: docker-compose exec backend pytest -m integration -vv
 
       - name: Run integration tests
         run: docker-compose exec -T backend pytest -m unit --disable-warnings -q
