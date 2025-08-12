@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  backend:
+    env_file: []
+    environment:
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+
+  celery:
+    env_file: []
+    environment:
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+
+  celery-beat:
+    env_file: []
+    environment:
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
+
+  flower:
+    env_file: []
+    environment:
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
