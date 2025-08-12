@@ -68,10 +68,5 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
 
-  frontend:
-    build: ./mr-frontend
-    ports:
-      - "3000:80"
-
 volumes:
   mysql_data:
