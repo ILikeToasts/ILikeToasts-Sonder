@@ -29,8 +29,19 @@ jobs:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
         run: docker-compose -f docker-compose.ci.yml up -d --build
 
+      - name: Wait for MySQL to be ready
+        run: |
+          for i in {1..30}; do
+          if nc -z localhost 3306; then
+              echo "MySQL is up!"
+              break
+          fi
+          echo "Waiting for MySQL to start..."
+          sleep 2
+          done
+
       - name: Run integration tests
-        run: docker-compose exec backend pytest -m integration -vv --capture=no || true
+        run: docker-compose exec -T backend pytest -m integration -vv --capture=no || true
 
       - name: Backend logs
         run: docker-compose logs backend
