@@ -57,3 +57,34 @@ class TestAlbumImportView:
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "album_id" in response.data
         assert response.data["album_id"][0] == "This field is required."
+
+
+@pytest.mark.integration
+@pytest.mark.django_db
+class TestTrackImportView:
+
+    @pytest.fixture
+    def api_client(self):
+        return APIClient()
+
+    @patch("music.views.SpotifyClient")
+    @patch("music.views.add_track_by_id")
+    def test_track_import_success(
+        self, mock_add_track, mock_spotify_client, api_client
+    ):
+        mock_spotify_client.return_value.sp = "fake_sp_object"
+        mock_add_track.return_value = None
+
+        url = reverse("track-import") + "?track_id=track123"
+        response = api_client.post(url)
+
+        assert response.status_code == status.HTTP_201_CREATED
+        assert "message" in response.data
+
+    def test_track_import_missing_track_id(self, api_client):
+        url = reverse("track-import")
+        response = api_client.post(url)
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert "track_id" in response.data
+        assert response.data["track_id"][0] == "This field is required."

@@ -24,6 +24,7 @@ from .serializers import (
     PlaylistDBSerializer,
     ReviewSerializer,
     SongDBSerializer,
+    TrackImportSerializer,
     YTMediaItemSerializer,
 )
 from .spotify_client import SpotifyClient
@@ -101,11 +102,27 @@ class AlbumImportView(APIView):
 
 
 class TrackImportView(APIView):
-    def post(self, request, track_id):
-        if not track_id:
-            return Response(
-                {"error": "track_id is required"}, status=status.HTTP_400_BAD_REQUEST
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                "track_id",
+                openapi.IN_QUERY,
+                description="Spotify track ID",
+                type=openapi.TYPE_STRING,
+                required=True,
             )
+        ],
+        responses={
+            201: "Track imported successfully",
+            400: "Invalid track_id",
+            500: "Internal server error",
+        },
+    )
+    def post(self, request):
+        serializer = TrackImportSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+
+        track_id = serializer.validated_data["track_id"]
 
         try:
             client = SpotifyClient()
@@ -138,6 +155,7 @@ class PlaylistView(generics.ListAPIView):
     serializer_class = PlaylistDBSerializer
 
 
+# TODO : Disable this functionnality for now
 class PlaylistImport(APIView):
     def post(self, request, playlist_id):
         if not playlist_id:
@@ -211,13 +229,6 @@ class MediaItemListView(generics.ListAPIView):
 
     def get_queryset(self):
         return MediaItem.objects.exclude(media_type="youtube")
-
-    """ def get_queryset(self):
-        category = self.request.query_params.get("category")
-        qs = MediaItem.objects.all()
-        if category:
-            qs = qs.filter(category__iexact=category)
-        return qs """
 
 
 class YTMediaItemListView(generics.ListAPIView):

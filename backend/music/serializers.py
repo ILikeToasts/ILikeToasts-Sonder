@@ -17,6 +17,14 @@ class AlbumImportSerializer(serializers.Serializer):
     album_id = serializers.CharField(max_length=100)
 
 
+class TrackImportSerializer(serializers.Serializer):
+    track_id = serializers.CharField(max_length=100)
+
+
+class PlaylistImportSerializer(serializers.Serializer):
+    playlist_id = serializers.CharField(max_length=100)
+
+
 class ArtistSerializer(serializers.Serializer):
     id = serializers.CharField()
     name = serializers.CharField()
