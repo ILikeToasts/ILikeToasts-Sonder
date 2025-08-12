@@ -21,7 +21,7 @@ services:
 
   celery:
     build: ./backend
-    command: celery -A backend-1 worker -l info --pool=solo
+    command: celery -A backend worker -l info --pool=solo
     environment:
       SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
       SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
