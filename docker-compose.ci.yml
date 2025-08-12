@@ -28,3 +28,9 @@ services:
     environment:
       SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
       SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
+
+  redis:
+    env_file: []
+
+  db:
+    env_file: []
