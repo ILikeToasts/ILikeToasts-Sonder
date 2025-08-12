@@ -41,7 +41,7 @@ jobs:
           done
 
       - name: Run integration tests
-        run: docker-compose exec -T backend pytest -m integration -vv --capture=no || true
+        run: docker-compose exec -T backend pytest -m integration -vv
 
       - name: Backend logs
         run: docker-compose -f docker-compose.ci.yml logs backend
