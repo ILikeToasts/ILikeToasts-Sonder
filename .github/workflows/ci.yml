@@ -20,15 +20,14 @@ jobs:
         env:
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
           LASTFM_SHARED_SECRET: ${{ secrets.LASTFM_SHARED_SECRET }}
-          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
           MYSQL_USER: ${{ secrets.MYSQL_USER }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          COMPOSE_DOTENV: /dev/null
-        run: docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d --build
+        run: docker-compose -f docker-compose.ci.yml up -d --build
 
       - name: Run integration tests
         run: docker-compose exec -T backend pytest -m unit --disable-warnings -q
