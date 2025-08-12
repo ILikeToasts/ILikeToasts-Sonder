@@ -102,7 +102,6 @@ class MediaItemSerializer(serializers.ModelSerializer):
         model = MediaItem
         fields = ["id", "file", "url", "height", "media_type", "category"]
 
-    # Optionally: get full URL
     file = serializers.SerializerMethodField()
 
     def get_file(self, obj):

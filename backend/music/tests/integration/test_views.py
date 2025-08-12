@@ -44,15 +44,15 @@ class TestAlbumImportView:
         mock_spotify_client.return_value.sp = "fake_sp_object"
         mock_add_album.return_value = None
 
-        url = reverse("album-import")
-        response = api_client.post(url, data={"album_id": "album123"}, format="json")
+        url = reverse("album-import") + "?album_id=album123"
+        response = api_client.post(url)
 
         assert response.status_code == status.HTTP_201_CREATED
         assert "message" in response.data
 
     def test_album_import_missing_album_id(self, api_client):
         url = reverse("album-import")
-        response = api_client.post(url, data={}, format="json")
+        response = api_client.post(url)
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "album_id" in response.data

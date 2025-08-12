@@ -30,7 +30,7 @@ from .spotify_client import SpotifyClient
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+    return HttpResponse("Hi")
 
 
 class AlbumDetail(APIView):
@@ -64,18 +64,24 @@ class AlbumListView(generics.ListAPIView):
 
 class AlbumImportView(APIView):
     @swagger_auto_schema(
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            required=["album_id"],
-            properties={"album_id": openapi.Schema(type=openapi.TYPE_STRING)},
-        ),
-        responses={201: "Album imported successfully"},
+        manual_parameters=[
+            openapi.Parameter(
+                "album_id",
+                openapi.IN_QUERY,
+                description="Spotify Album ID",
+                type=openapi.TYPE_STRING,
+                required=True,
+            )
+        ],
+        responses={
+            201: "Album imported successfully",
+            400: "Invalid album_id",
+            500: "Internal server error",
+        },
     )
     def post(self, request):
-        print(request.data)
-        serializer = AlbumImportSerializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = AlbumImportSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
 
         album_id = serializer.validated_data["album_id"]
 
@@ -87,6 +93,7 @@ class AlbumImportView(APIView):
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
         return Response(
             {"message": f"Album '{album_id}' imported successfully!"},
             status=status.HTTP_201_CREATED,

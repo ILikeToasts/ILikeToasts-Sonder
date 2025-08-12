@@ -26,7 +26,7 @@ urlpatterns = [
         name="album-import",
     ),
     path(
-        "spotify/track/<str:track_id>",
+        "spotify/track/import",
         TrackImportView.as_view(),
         name="track-import",
     ),
