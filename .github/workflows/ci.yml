@@ -44,4 +44,4 @@ jobs:
         run: docker-compose exec -T backend pytest -m integration -vv --capture=no || true
 
       - name: Backend logs
-        run: docker-compose logs backend
+        run: docker-compose -f docker-compose.ci.yml logs backend
