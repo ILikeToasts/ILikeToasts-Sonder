@@ -103,8 +103,8 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": os.environ.get("MYSQL_DATABASE", "albumdb"),
-        "USER": os.environ.get("MYSQL_USER", "albumuser"),
-        "PASSWORD": os.environ.get("MYSQL_PASSWORD", "albumpassword"),
+        "USER": os.environ.get("MYSQL_USER", "root"),
+        "PASSWORD": os.environ.get("MYSQL_PASSWORD", "root"),
         "HOST": os.environ.get("MYSQL_HOST", "db"),
         "PORT": os.environ.get("MYSQL_PORT", "3306"),
     }
@@ -165,3 +165,5 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": 60 * 60 * 2,  # Every 2 hours
     },
 }
+
+SWAGGER_USE_COMPAT_RENDERERS = False

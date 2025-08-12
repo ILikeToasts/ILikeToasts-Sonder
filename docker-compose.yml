@@ -13,7 +13,7 @@ services:
       - redis
   celery:
     build: ./backend
-    command: celery -A backend-1 worker -l info --pool=solo
+    command: celery -A backend worker -l info --pool=solo
     volumes:
       - ./backend:/code
     env_file:
@@ -59,14 +59,9 @@ services:
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
-  frontend:
-    build:
-      context: ./mr-frontend
-    ports:
-      - "3000:80"
 volumes:
   mysql_data:

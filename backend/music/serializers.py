@@ -13,6 +13,18 @@ class AlbumSerializer(serializers.Serializer):
     album_art = serializers.URLField(allow_null=True)
 
 
+class AlbumImportSerializer(serializers.Serializer):
+    album_id = serializers.CharField(max_length=100)
+
+
+class TrackImportSerializer(serializers.Serializer):
+    track_id = serializers.CharField(max_length=100)
+
+
+class PlaylistImportSerializer(serializers.Serializer):
+    playlist_id = serializers.CharField(max_length=100)
+
+
 class ArtistSerializer(serializers.Serializer):
     id = serializers.CharField()
     name = serializers.CharField()
@@ -98,7 +110,6 @@ class MediaItemSerializer(serializers.ModelSerializer):
         model = MediaItem
         fields = ["id", "file", "url", "height", "media_type", "category"]
 
-    # Optionally: get full URL
     file = serializers.SerializerMethodField()
 
     def get_file(self, obj):

@@ -46,7 +46,7 @@ class Song(models.Model):
     cover_url = models.URLField(blank=True)
     wiki_summary = models.TextField(blank=True)
     genres = models.ManyToManyField("Genre", related_name="songs", blank=True)
-    bop = models.BooleanField(blank=True)
+    bop = models.BooleanField(blank=True, default=False)
 
     def __str__(self):
         return self.title
@@ -109,11 +109,19 @@ class MediaItem(models.Model):
         return f"{self.media_type} - {self.category} - {self.url or self.file.name}"
 
     def clean(self):
-        if self.media_type in ["image", "video"] and not self.file:
-            raise ValidationError("File is required for images and videos.")
-        if self.media_type == "youtube" and not self.url:
-            raise ValidationError("URL is required for YouTube media.")
-        if self.media_type == "youtube" and self.file:
-            raise ValidationError("YouTube media should not have an uploaded file.")
-        if self.media_type in ["image", "video"] and self.url:
-            raise ValidationError("Uploaded media should not have a URL.")
+        errors = {}
+
+        if self.media_type in ["image", "video"]:
+            if not self.file:
+                errors["file"] = "File is required for images and videos."
+            if self.url:
+                errors["url"] = "Uploaded media should not have a URL."
+
+        if self.media_type == "youtube":
+            if not self.url:
+                errors["url"] = "URL is required for YouTube media."
+            if self.file:
+                errors["file"] = "YouTube media should not have an uploaded file."
+
+        if errors:
+            raise ValidationError(errors)
