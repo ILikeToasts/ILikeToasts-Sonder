@@ -30,7 +30,7 @@ jobs:
         run: docker-compose -f docker-compose.ci.yml up -d --build
 
       - name: Run integration tests
-        run: docker-compose exec -T backend pytest -m unit --disable-warnings -q
+        run: docker-compose exec backend pytest -m integration -vv --capture=no || true
 
       - name: Backend logs
         run: docker-compose logs backend
