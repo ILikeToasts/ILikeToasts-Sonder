@@ -1,21 +1,21 @@
 import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
-import {
   Command,
-  CommandInput,
-  CommandList,
   CommandEmpty,
+  CommandInput,
   CommandItem,
+  CommandList,
 } from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import React from "react";
 import { Button } from "../ui/button";
 
 interface GenreSelectProps {
   options: string[];
-  value: string;
+  value: string | null;
   onValueChange: (value: string) => void;
 }
 

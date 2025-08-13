@@ -3,6 +3,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, status
 from rest_framework.exceptions import NotFound
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -224,11 +225,24 @@ class RecommendAlbumsView(APIView):
         return Response({"recommendations": recommendations}, status=status.HTTP_200_OK)
 
 
+class MediaItemPagination(PageNumberPagination):
+    page_size = 17
+    page_size_query_param = "limit"
+    max_page_size = 100
+
+
 class MediaItemListView(generics.ListAPIView):
     serializer_class = MediaItemSerializer
+    pagination_class = MediaItemPagination
 
     def get_queryset(self):
-        return MediaItem.objects.exclude(media_type="youtube")
+        qs = MediaItem.objects.exclude(media_type="youtube")
+
+        # Filter by selected category
+        category = self.request.query_params.get("category")
+        if category:
+            qs = qs.filter(category=category)
+        return qs
 
 
 class YTMediaItemListView(generics.ListAPIView):
@@ -236,3 +250,13 @@ class YTMediaItemListView(generics.ListAPIView):
 
     def get_queryset(self):
         return MediaItem.objects.filter(media_type="youtube")
+
+
+class MediaItemCategoriesView(APIView):
+    def get(self, request):
+        categories = (
+            MediaItem.objects.exclude(media_type="youtube")
+            .values_list("category", flat=True)
+            .distinct()
+        )
+        return Response(list(categories))

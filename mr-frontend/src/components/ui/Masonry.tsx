@@ -1,3 +1,4 @@
+import { gsap } from "gsap";
 import React, {
   useEffect,
   useLayoutEffect,
@@ -5,7 +6,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { gsap } from "gsap";
 
 const useMedia = (
   queries: string[],
@@ -141,6 +141,28 @@ const Masonry: React.FC<MasonryProps> = ({
       .filter((i) => i.mediaType === "image")
       .map((i) => i.img);
     preloadImages(imageUrls).then(() => setImagesReady(true));
+  }, [items]);
+
+  useEffect(() => {
+    if (!items.length) return;
+
+    setImagesReady(false);
+
+    const promises = items.map((item) => {
+      return new Promise<void>((resolve) => {
+        if (item.mediaType === "image") {
+          const img = new Image();
+          img.src = item.img;
+          img.onload = img.onerror = () => resolve();
+        } else if (item.mediaType === "video") {
+          const video = document.createElement("video");
+          video.src = item.img; // or item.url
+          video.onloadeddata = video.onerror = () => resolve();
+        }
+      });
+    });
+
+    Promise.all(promises).then(() => setImagesReady(true));
   }, [items]);
 
   const grid = useMemo(() => {
