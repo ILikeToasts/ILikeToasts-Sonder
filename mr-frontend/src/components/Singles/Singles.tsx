@@ -6,12 +6,13 @@ const Tracks: React.FC = () => {
   const [tracks, setTracks] = useState<SpotifyTrack[]>([]);
 
   useEffect(() => {
-    const fetchAlbums = async () => {
+    const fetchTracks = async () => {
       const response = await fetch("http://localhost:8000/api/spotify/tracks/");
       const data = await response.json();
       setTracks(data);
+      console.log(data);
     };
-    fetchAlbums();
+    fetchTracks();
   }, []);
 
   return (
