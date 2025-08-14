@@ -4,7 +4,7 @@ import { PageScroller } from "@/components/ui/PageScroller";
 import { MasonryContainer } from "@/styles/Pictures/Pictures.styles";
 import { useEffect, useState } from "react";
 
-const ITEMS_PER_PAGE = 17;
+const ITEMS_PER_PAGE = 10;
 
 export default function Pictures() {
   const [categories, setCategories] = useState<string[]>([]);
@@ -99,7 +99,7 @@ export default function Pictures() {
           <Masonry
             items={groupedItems[currentCategory] || []}
             ease="power3.out"
-            duration={1}
+            duration={1.5}
             stagger={0.05}
             animateFrom="random"
             scaleOnHover

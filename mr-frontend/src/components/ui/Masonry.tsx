@@ -46,19 +46,6 @@ const useMeasure = <T extends HTMLElement>() => {
   return [ref, size] as const;
 };
 
-const preloadImages = async (urls: string[]): Promise<void> => {
-  await Promise.all(
-    urls.map(
-      (src) =>
-        new Promise<void>((resolve) => {
-          const img = new Image();
-          img.src = src;
-          img.onload = img.onerror = () => resolve();
-        }),
-    ),
-  );
-};
-
 export interface Item {
   id: string;
   img: string;
@@ -137,13 +124,6 @@ const Masonry: React.FC<MasonryProps> = ({
   };
 
   useEffect(() => {
-    const imageUrls = items
-      .filter((i) => i.mediaType === "image")
-      .map((i) => i.img);
-    preloadImages(imageUrls).then(() => setImagesReady(true));
-  }, [items]);
-
-  useEffect(() => {
     if (!items.length) return;
 
     setImagesReady(false);
@@ -156,7 +136,7 @@ const Masonry: React.FC<MasonryProps> = ({
           img.onload = img.onerror = () => resolve();
         } else if (item.mediaType === "video") {
           const video = document.createElement("video");
-          video.src = item.img; // or item.url
+          video.src = item.img;
           video.onloadeddata = video.onerror = () => resolve();
         }
       });
@@ -183,16 +163,23 @@ const Masonry: React.FC<MasonryProps> = ({
     });
   }, [columns, items, width]);
 
-  const hasMounted = useRef(false);
+  const animatedItems = useRef<Set<string>>(new Set());
 
   useLayoutEffect(() => {
-    if (!imagesReady) return;
+    if (!imagesReady || !grid.length) return;
 
     grid.forEach((item, index) => {
       const selector = `[data-key="${item.id}"]`;
       const animProps = { x: item.x, y: item.y, width: item.w, height: item.h };
 
-      if (!hasMounted.current) {
+      if (animatedItems.current.has(item.id)) {
+        gsap.to(selector, {
+          ...animProps,
+          duration,
+          ease,
+          overwrite: "auto",
+        });
+      } else {
         const start = getInitialPosition(item);
         gsap.fromTo(
           selector,
@@ -209,22 +196,15 @@ const Masonry: React.FC<MasonryProps> = ({
             ...animProps,
             ...(blurToFocus && { filter: "blur(0px)" }),
             duration: 0.8,
-            ease: "power3.out",
-            delay: index * stagger,
+            ease: ease ?? "power3.out",
+            delay: index * (stagger ?? 0.05),
           },
         );
-      } else {
-        gsap.to(selector, {
-          ...animProps,
-          duration,
-          ease,
-          overwrite: "auto",
-        });
+
+        animatedItems.current.add(item.id);
       }
     });
-
-    hasMounted.current = true;
-  }, [grid, imagesReady, stagger, animateFrom, blurToFocus, duration, ease]);
+  }, [grid, imagesReady, duration, ease, stagger, blurToFocus]);
 
   const handleMouseEnter = (id: string, element: HTMLElement) => {
     if (scaleOnHover) {
