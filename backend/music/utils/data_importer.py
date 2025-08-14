@@ -191,7 +191,7 @@ def add_playlist_by_id(sp: Spotify, playlist_id: str):
     return playlist
 
 
-def add_track_by_id(sp: Spotify, track_id: str):
+def add_track_by_id(sp: Spotify, track_id: str, bop: bool = False):
     """
     Adds a single or a single song.
     :param sp: spotipy.Spotify client instance.
@@ -209,6 +209,7 @@ def add_track_by_id(sp: Spotify, track_id: str):
                 "album": None,
                 "duration_seconds": track_data["duration_ms"] // 1000,
                 "cover_url": track_data["album"]["images"][0]["url"],
+                "bop": bop,
             },
         )
 
