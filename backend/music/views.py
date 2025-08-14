@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import HttpResponse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -111,7 +112,15 @@ class TrackImportView(APIView):
                 description="Spotify track ID",
                 type=openapi.TYPE_STRING,
                 required=True,
-            )
+            ),
+            openapi.Parameter(
+                "bop",
+                openapi.IN_QUERY,
+                description="Considered a bop",
+                type=openapi.TYPE_BOOLEAN,
+                default=True,
+                required=True,
+            ),
         ],
         responses={
             201: "Track imported successfully",
@@ -124,11 +133,12 @@ class TrackImportView(APIView):
         serializer.is_valid(raise_exception=True)
 
         track_id = serializer.validated_data["track_id"]
+        bop = serializer.validated_data.get("bop", False)
 
         try:
             client = SpotifyClient()
             sp = client.sp
-            add_track_by_id(sp, track_id)
+            add_track_by_id(sp, track_id, bop)
         except Exception as e:
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -143,7 +153,7 @@ class TracksListView(generics.ListAPIView):
     serializer_class = SongDBSerializer
 
     def get_queryset(self):
-        return Song.objects.filter(album__isnull=True)
+        return Song.objects.filter(Q(bop=True) | Q(album__isnull=True))
 
 
 class ArtistListView(generics.ListAPIView):

@@ -1,9 +1,3 @@
-import { useLocation } from "react-router-dom";
-import SpotifyAlbumEmbed from "./SpotifyAlbumEmbed";
-import type { SpotifyAlbumReview } from "../../types/spotify";
-import { useEffect, useState } from "react";
-import Aurora, { AuroraBackground, AuroraBottom } from "../ui/Aurora";
-import { Vibrant } from "node-vibrant/browser";
 import {
   ReviewBox,
   ReviewContainer,
@@ -14,7 +8,13 @@ import {
   Titles,
   TitleSection,
 } from "@/styles/common/Review.styles";
+import { Vibrant } from "node-vibrant/browser";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import type { SpotifyAlbumReview } from "../../types/spotify";
+import Aurora, { AuroraBackground, AuroraBottom } from "../ui/Aurora";
 import { AlbumSummaries } from "./AlbumSummaries";
+import SpotifyAlbumEmbed from "./SpotifyAlbumEmbed";
 
 const AlbumReview: React.FC = () => {
   const location = useLocation();
