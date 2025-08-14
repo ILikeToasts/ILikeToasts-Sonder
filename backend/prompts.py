@@ -45,15 +45,19 @@ class AlbumAnalysis(BaseModel):
 
 
 class ArtistsRecommendationPrompt:
+    parser = JsonOutputParser(pydantic_object=Artist_Recommendations)
+
     prompt_template = """
     Using the following artist information (Bio and Tags) and similar artists,
-    describe the musical style of {artist}, how they incorporate each genre and
-    recommend 5 similar artists with a short explanation:
-    {artist_info}
-    \n{format_instructions}\n"
-    """
+    describe the musical style of {artist}, explain how they incorporate each genre,
+    and recommend 5 similar artists with a short explanation for each.
 
-    parser = JsonOutputParser(pydantic_object=Artist_Recommendations)
+    Artist Info:
+    {artist_info}
+
+    Output the result strictly as JSON, following this format:
+    {format_instructions}
+    """
 
     prompt = PromptTemplate(
         input_variables=["artist", "artist_info"],

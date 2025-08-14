@@ -2,9 +2,6 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { ButtonLoading } from "../ui/ButtonLoading";
 
-import { CenteredText } from "@/styles/global.styles";
-import Carousel from "../Common/Carousel";
-import { MusicIcon } from "lucide-react";
 import {
   ArtistTitle,
   InformationSection,
@@ -13,6 +10,9 @@ import {
   Secondbox,
   Title,
 } from "@/styles/common/Review.styles";
+import { CenteredText } from "@/styles/global.styles";
+import { MusicIcon } from "lucide-react";
+import Carousel from "../Common/Carousel";
 
 interface ArtistRecommendationProps {
   artistName: string;
