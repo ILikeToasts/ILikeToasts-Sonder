@@ -4,9 +4,11 @@ from .views import (
     AlbumDetail,
     AlbumImportView,
     AlbumListView,
+    AlbumMusicProfileView,
     ArtistDetail,
     ArtistListView,
     BottomArtistsView,
+    FavoriteArtistsView,
     MediaItemCategoriesView,
     MediaItemListView,
     PlaylistImport,
@@ -61,6 +63,11 @@ urlpatterns = [
         name="recommend_album",
     ),
     path(
+        "user/profile/albums/",
+        AlbumMusicProfileView.as_view(),
+        name="Album-user-profile",
+    ),
+    path(
         "media-items/categories/",
         MediaItemCategoriesView.as_view(),
         name="media-item-categories",
@@ -68,6 +75,9 @@ urlpatterns = [
     path("media-items/", MediaItemListView.as_view(), name="media-items"),
     path("yt-media-items/", YTMediaItemListView.as_view(), name="media-item-list"),
     path("data/top-genres/", TopGenresView.as_view(), name="top-genres"),
+    path(
+        "data/favorite-artists/", FavoriteArtistsView.as_view(), name="favorite-artists"
+    ),
     path("data/top-artists/", TopArtistsView.as_view(), name="top-artists"),
     path("data/bottom-artists/", BottomArtistsView.as_view(), name="bottom-artists"),
 ]
