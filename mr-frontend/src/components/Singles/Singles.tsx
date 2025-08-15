@@ -10,7 +10,6 @@ const Tracks: React.FC = () => {
       const response = await fetch("http://localhost:8000/api/spotify/tracks/");
       const data = await response.json();
       setTracks(data);
-      console.log(data);
     };
     fetchTracks();
   }, []);
@@ -26,6 +25,7 @@ const Tracks: React.FC = () => {
         linkTo: `/tracks/${track.spotify_id}`,
         state: { track },
       })}
+      galleryType="tracks"
     />
   );
 };

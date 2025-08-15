@@ -1,19 +1,20 @@
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Singles from "./pages/SinglesPage";
-import Home from "./pages/HomePage";
-import Album from "./pages/AlbumsPage";
-import Games from "./pages/GamesPage";
-import Movies from "./pages/MoviesPages";
-import Artists from "./pages/ArtistsPage";
-import Pictures from "./pages/PicturesPages";
-import Series from "./pages/SeriesPages";
-import Trips from "./pages/TripsPage";
 import AlbumReview from "./components/Album/AlbumReview";
 import ArtistReview from "./components/Artists/ArtistReview";
 import { ThemeProvider } from "./components/Common/theme-provider";
-import Layout from "./layouts/Layout";
 import TrackReview from "./components/Singles/TrackReview";
+import Layout from "./layouts/Layout";
+import Album from "./pages/AlbumsPage";
+import Artists from "./pages/ArtistsPage";
+import Games from "./pages/GamesPage";
+import Home from "./pages/HomePage";
+import Movies from "./pages/MoviesPages";
+import Pictures from "./pages/PicturesPages";
+import Series from "./pages/SeriesPages";
+import Singles from "./pages/SinglesPage";
+import TracksStats from "./pages/TracksStatsPage";
+import Trips from "./pages/TripsPage";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path="/albums/:album_id" element={<AlbumReview />} />
             <Route path="/artists/:artist_id" element={<ArtistReview />} />
             <Route path="/tracks/:track_id" element={<TrackReview />} />
+            <Route path="/tracks/stats" element={<TracksStats />} />
           </Route>
         </Routes>
       </Router>
