@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.http import HttpResponse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -15,7 +15,7 @@ from music.utils.data_importer import (
     add_track_by_id,
 )
 
-from .models import Album, Artist, MediaItem, Playlist, Review, Song
+from .models import Album, Artist, Genre, MediaItem, Playlist, Review, Song
 from .serializers import (
     AlbumDBSerializer,
     AlbumImportSerializer,
@@ -270,3 +270,45 @@ class MediaItemCategoriesView(APIView):
             .distinct()
         )
         return Response(list(categories))
+
+
+class TopGenresView(APIView):
+    def get(self, request):
+        genres = (
+            Genre.objects.filter(songs__bop=True)
+            .annotate(count=Count("songs", distinct=True))
+            .order_by("-count")[:10]
+        )
+
+        data = [{"name": genre.name, "value": genre.count} for genre in genres]
+        return Response(data)
+
+
+class BottomArtistsView(APIView):
+    def get(self, request):
+        bottom_artists = Artist.objects.order_by("popularity")[:10]
+
+        def serialize(artist):
+            return {
+                "name": artist.name,
+                "followers": artist.followers,
+            }
+
+        data = [serialize(artist) for artist in bottom_artists]
+
+        return Response(data)
+
+
+class TopArtistsView(APIView):
+    def get(self, request):
+        top_artists = Artist.objects.order_by("-popularity")[:10]
+
+        def serialize(artist):
+            return {
+                "name": artist.name,
+                "followers": artist.followers,
+            }
+
+        data = [serialize(artist) for artist in top_artists]
+
+        return Response(data)
