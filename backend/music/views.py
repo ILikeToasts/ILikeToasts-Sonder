@@ -235,6 +235,21 @@ class RecommendAlbumsView(APIView):
         return Response({"recommendations": recommendations}, status=status.HTTP_200_OK)
 
 
+class AlbumMusicProfileView(APIView):
+    def get(self, request):
+
+        try:
+            client = Ollama_client()
+            albums = Album.objects.all()
+            recommendations = client.generate_user_album_profile(albums)
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        return Response({"recommendations": recommendations}, status=status.HTTP_200_OK)
+
+
 class MediaItemPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = "limit"
@@ -281,6 +296,18 @@ class TopGenresView(APIView):
         )
 
         data = [{"name": genre.name, "value": genre.count} for genre in genres]
+        return Response(data)
+
+
+class FavoriteArtistsView(APIView):
+    def get(self, request):
+        artists = (
+            Artist.objects.filter(songs__bop=True)
+            .annotate(count=Count("songs", distinct=True))
+            .order_by("-count")[:10]
+        )
+
+        data = [{"name": artist.name, "value": artist.count} for artist in artists]
         return Response(data)
 
 
