@@ -1,9 +1,18 @@
-import { useLocation } from "react-router-dom";
-import SpotifyTrackEmbed from "./SpotifyTrackEmbed";
-import { useEffect, useState } from "react";
+import {
+  ReviewBox,
+  ReviewContainer,
+  ReviewInfo,
+  ReviewSubtitle,
+  ReviewTextSection,
+  ReviewTitle,
+  Titles,
+  TitleSection,
+} from "@/styles/common/Review.styles";
 import { Vibrant } from "node-vibrant/browser";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import Aurora, { AuroraBackground, AuroraBottom } from "../ui/Aurora";
-import { ReviewContainer, ReviewInfo } from "@/styles/common/Review.styles";
+import SpotifyTrackEmbed from "./SpotifyTrackEmbed";
 
 const TrackReview: React.FC = () => {
   const location = useLocation();
@@ -59,6 +68,20 @@ const TrackReview: React.FC = () => {
       )}
       <ReviewContainer>
         <ReviewInfo>
+          <ReviewBox>
+            <ReviewTextSection>
+              <TitleSection>
+                <Titles>
+                  <ReviewTitle>{track.title}</ReviewTitle>
+                  <ReviewSubtitle>
+                    {track.genres
+                      .map((g: { name: string }) => g.name)
+                      .join(", ")}
+                  </ReviewSubtitle>
+                </Titles>
+              </TitleSection>
+            </ReviewTextSection>
+          </ReviewBox>
           <SpotifyTrackEmbed spotifyTrackId={track.spotify_id} />
         </ReviewInfo>
       </ReviewContainer>

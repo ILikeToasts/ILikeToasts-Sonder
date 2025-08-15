@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { GenreSelect } from "../Album/GenreSelect";
+import { Button } from "../ui/button";
 import { PageScroller } from "../ui/PageScroller";
 import type { GalleryItem } from "./Gallery";
 import GalleryGrid from "./Gallery";
 
 export interface FilterableGalleryPageProps<T> {
   items: T[];
+  galleryType?: string;
   extractGenres: (item: T) => string[];
   mapToGalleryItem: (item: T) => GalleryItem;
 }
@@ -16,9 +19,11 @@ export default function FilterableGalleryPage<T>({
   items,
   extractGenres,
   mapToGalleryItem,
+  galleryType = "",
 }: FilterableGalleryPageProps<T>) {
   const [selectedGenre, setSelectedGenre] = useState<string>("All");
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [statsPath, setStatsPath] = useState<string>("");
 
   const genres = Array.from(new Set(items.flatMap(extractGenres)));
   const options = ["All", ...genres];
@@ -41,6 +46,13 @@ export default function FilterableGalleryPage<T>({
     setSelectedGenre(value);
     setCurrentPage(1);
   };
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (galleryType === "tracks") {
+      setStatsPath("/tracks/stats");
+    }
+  }, [galleryType]);
 
   return (
     <div className="space-y-4">
@@ -50,6 +62,9 @@ export default function FilterableGalleryPage<T>({
           value={selectedGenre}
           onValueChange={handleGenreChange}
         />
+        {galleryType === "tracks" && (
+          <Button onClick={() => navigate(statsPath)}>Stats</Button>
+        )}
         {totalPages > 1 && (
           <PageScroller
             currentPage={currentPage}
