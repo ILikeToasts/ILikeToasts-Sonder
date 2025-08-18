@@ -15,7 +15,7 @@ For now, everything is hosted locally.
 
 ## Want to see what it looks like ?
 
-[Demo](demo.md)
+https://youtu.be/SeaWwgdMCVc
 
 ## Technologies used :
 
