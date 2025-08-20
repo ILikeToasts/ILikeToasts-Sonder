@@ -90,7 +90,6 @@ class Ollama_client:
 
         for batch in chunk_list(songs, size=10):
             songs_info = self._format_song_list(batch)
-            print(songs_info)
             chain = (
                 UserMusicProfilePrompt.prompt | self.llm | UserMusicProfilePrompt.parser
             )

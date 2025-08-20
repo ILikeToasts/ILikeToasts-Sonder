@@ -241,13 +241,13 @@ class AlbumMusicProfileView(APIView):
         try:
             client = Ollama_client()
             albums = Album.objects.all()
-            recommendations = client.generate_user_album_profile(albums)
+            musicProfile = client.generate_user_album_profile(albums)
         except Exception as e:
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-        return Response({"recommendations": recommendations}, status=status.HTTP_200_OK)
+        return Response({"MusicProfile": musicProfile}, status=status.HTTP_200_OK)
 
 
 class TracksMusicProfileView(APIView):
@@ -255,14 +255,14 @@ class TracksMusicProfileView(APIView):
 
         try:
             client = Ollama_client()
-            Tracks = Song.objects.filter(bop=True)
-            recommendations = client.generate_user_music_profile(Tracks)
+            tracks = Song.objects.filter(bop=True)
+            musicProfile = client.generate_user_music_profile(tracks)
         except Exception as e:
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-        return Response({"recommendations": recommendations}, status=status.HTTP_200_OK)
+        return Response({"MusicProfile": musicProfile}, status=status.HTTP_200_OK)
 
 
 class MediaItemPagination(PageNumberPagination):
