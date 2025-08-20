@@ -54,6 +54,11 @@ class AlbumRecommendationPrompt:
 
 class UserMusicProfilePrompt:
     prompt_template = """
+    IMPORTANT:
+    -This is a batch processing prompt, so don't mention
+    the batch size or that it's in batches.
+    - Do not mention numbers, batch, summaries.
+
     You are an expert music critic and cultural analyst.
     Using the following list of highly enjoyed songs
     (with titles, artists, genres, and summaries),
