@@ -250,6 +250,21 @@ class AlbumMusicProfileView(APIView):
         return Response({"recommendations": recommendations}, status=status.HTTP_200_OK)
 
 
+class TracksMusicProfileView(APIView):
+    def get(self, request):
+
+        try:
+            client = Ollama_client()
+            Tracks = Song.objects.filter(bop=True)
+            recommendations = client.generate_user_music_profile(Tracks)
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        return Response({"recommendations": recommendations}, status=status.HTTP_200_OK)
+
+
 class MediaItemPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = "limit"

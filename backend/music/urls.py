@@ -20,6 +20,7 @@ from .views import (
     TopGenresView,
     TrackImportView,
     TracksListView,
+    TracksMusicProfileView,
     YTMediaItemListView,
 )
 
@@ -65,6 +66,11 @@ urlpatterns = [
     path(
         "user/profile/albums/",
         AlbumMusicProfileView.as_view(),
+        name="Album-user-profile",
+    ),
+    path(
+        "user/profile/tracks/",
+        TracksMusicProfileView.as_view(),
         name="Album-user-profile",
     ),
     path(

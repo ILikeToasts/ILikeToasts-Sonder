@@ -55,14 +55,13 @@ class AlbumRecommendationPrompt:
 class UserMusicProfilePrompt:
     prompt_template = """
     You are an expert music critic and cultural analyst.
-    Using the following list of upbeat or highly enjoyed songs
-    (with titles, artists, genres, albums, and summaries),
+    Using the following list of highly enjoyed songs
+    (with titles, artists, genres, and summaries),
     create a detailed profile of the user's musical taste.
 
     Look for patterns in genres, recurring artists, song moods,
     tempo, energy, lyrical themes,
-    and any notable contrasts. Identify the top genres and artists,
-    and pick a few standout songs
+    and any notable contrasts. Identify the top genres and artists
     that best represent the user's taste.
 
     Then, write a short, engaging paragraph summarizing the user's overall music style,
