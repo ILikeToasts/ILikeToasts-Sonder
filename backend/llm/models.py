@@ -54,7 +54,7 @@ class FavoriteArtist(BaseModel):
 
 class FavoriteSong(BaseModel):
     name: str
-    artist: str
+    artists: List[str]
     reason: str
 
 
@@ -70,7 +70,6 @@ class UserMusicProfile(BaseModel):
         "including mood, energy, and notable trends"
     )
     top_genres: List[TopGenre]
-    standout_songs: List[FavoriteSong]
 
 
 class UserAlbumProfile(BaseModel):
