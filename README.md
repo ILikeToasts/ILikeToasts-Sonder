@@ -1,5 +1,7 @@
 # MR
 
+Checkout the project's wiki : https://iliketoasts.github.io/ILikeToasts-Sonder/
+
 ## Installation
 
 1. Clone repo `git clone https://github.com/ILikeToasts/ILikeToasts-MR.git`
