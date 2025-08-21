@@ -18,7 +18,7 @@ For now, everything is hosted locally.
 - [Albums (Done)](albums/albums.md)
 - [Artists (Done)](artists/artists.md)
 - [Tracks/Singles (Done)](tracks/tracks.md)
-- Pictures (Done)
+- [Pictures (Done)](pictures/pictures.md)
 - Movies (TODO)
 - TV Shows (TODO)
 - Trips (50% done)

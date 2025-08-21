@@ -19,6 +19,7 @@ class AlbumImportSerializer(serializers.Serializer):
 
 class TrackImportSerializer(serializers.Serializer):
     track_id = serializers.CharField(max_length=100)
+    bop = serializers.BooleanField(default=True)
 
 
 class PlaylistImportSerializer(serializers.Serializer):

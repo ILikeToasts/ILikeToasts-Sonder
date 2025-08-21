@@ -1,3 +1,4 @@
+from django.db.models import Count, Q
 from django.http import HttpResponse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -14,7 +15,7 @@ from music.utils.data_importer import (
     add_track_by_id,
 )
 
-from .models import Album, Artist, MediaItem, Playlist, Review, Song
+from .models import Album, Artist, Genre, MediaItem, Playlist, Review, Song
 from .serializers import (
     AlbumDBSerializer,
     AlbumImportSerializer,
@@ -111,7 +112,15 @@ class TrackImportView(APIView):
                 description="Spotify track ID",
                 type=openapi.TYPE_STRING,
                 required=True,
-            )
+            ),
+            openapi.Parameter(
+                "bop",
+                openapi.IN_QUERY,
+                description="Considered a bop",
+                type=openapi.TYPE_BOOLEAN,
+                default=True,
+                required=True,
+            ),
         ],
         responses={
             201: "Track imported successfully",
@@ -124,11 +133,12 @@ class TrackImportView(APIView):
         serializer.is_valid(raise_exception=True)
 
         track_id = serializer.validated_data["track_id"]
+        bop = serializer.validated_data.get("bop", False)
 
         try:
             client = SpotifyClient()
             sp = client.sp
-            add_track_by_id(sp, track_id)
+            add_track_by_id(sp, track_id, bop)
         except Exception as e:
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -143,7 +153,7 @@ class TracksListView(generics.ListAPIView):
     serializer_class = SongDBSerializer
 
     def get_queryset(self):
-        return Song.objects.filter(album__isnull=True)
+        return Song.objects.filter(Q(bop=True) | Q(album__isnull=True))
 
 
 class ArtistListView(generics.ListAPIView):
@@ -225,6 +235,36 @@ class RecommendAlbumsView(APIView):
         return Response({"recommendations": recommendations}, status=status.HTTP_200_OK)
 
 
+class AlbumMusicProfileView(APIView):
+    def get(self, request):
+
+        try:
+            client = Ollama_client()
+            albums = Album.objects.all()
+            musicProfile = client.generate_user_album_profile(albums)
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        return Response({"MusicProfile": musicProfile}, status=status.HTTP_200_OK)
+
+
+class TracksMusicProfileView(APIView):
+    def get(self, request):
+
+        try:
+            client = Ollama_client()
+            tracks = Song.objects.filter(bop=True)
+            musicProfile = client.generate_user_music_profile(tracks)
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        return Response({"MusicProfile": musicProfile}, status=status.HTTP_200_OK)
+
+
 class MediaItemPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = "limit"
@@ -260,3 +300,57 @@ class MediaItemCategoriesView(APIView):
             .distinct()
         )
         return Response(list(categories))
+
+
+class TopGenresView(APIView):
+    def get(self, request):
+        genres = (
+            Genre.objects.filter(songs__bop=True)
+            .annotate(count=Count("songs", distinct=True))
+            .order_by("-count")[:10]
+        )
+
+        data = [{"name": genre.name, "value": genre.count} for genre in genres]
+        return Response(data)
+
+
+class FavoriteArtistsView(APIView):
+    def get(self, request):
+        artists = (
+            Artist.objects.filter(songs__bop=True)
+            .annotate(count=Count("songs", distinct=True))
+            .order_by("-count")[:10]
+        )
+
+        data = [{"name": artist.name, "value": artist.count} for artist in artists]
+        return Response(data)
+
+
+class BottomArtistsView(APIView):
+    def get(self, request):
+        bottom_artists = Artist.objects.order_by("popularity")[:10]
+
+        def serialize(artist):
+            return {
+                "name": artist.name,
+                "followers": artist.followers,
+            }
+
+        data = [serialize(artist) for artist in bottom_artists]
+
+        return Response(data)
+
+
+class TopArtistsView(APIView):
+    def get(self, request):
+        top_artists = Artist.objects.order_by("-popularity")[:10]
+
+        def serialize(artist):
+            return {
+                "name": artist.name,
+                "followers": artist.followers,
+            }
+
+        data = [serialize(artist) for artist in top_artists]
+
+        return Response(data)

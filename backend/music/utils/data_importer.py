@@ -102,8 +102,7 @@ def add_album_tracks(
             },
         )
         lastfm_track_data = lastfm_retriever.get_track_info(artist_name, db_track.title)
-        db_track.wiki_summary = lastfm_track_data.metadata["bio"]
-        db_track.save()
+        setTrackMetadata(lastfm_track_data, db_track)
 
     album.save()
 
@@ -191,7 +190,7 @@ def add_playlist_by_id(sp: Spotify, playlist_id: str):
     return playlist
 
 
-def add_track_by_id(sp: Spotify, track_id: str):
+def add_track_by_id(sp: Spotify, track_id: str, bop: bool = False):
     """
     Adds a single or a single song.
     :param sp: spotipy.Spotify client instance.
@@ -209,6 +208,7 @@ def add_track_by_id(sp: Spotify, track_id: str):
                 "album": None,
                 "duration_seconds": track_data["duration_ms"] // 1000,
                 "cover_url": track_data["album"]["images"][0]["url"],
+                "bop": bop,
             },
         )
 
@@ -216,16 +216,7 @@ def add_track_by_id(sp: Spotify, track_id: str):
         lastfm_track_data = lastfm_retriever.get_track_info(
             primary_artist_name, db_track.title
         )
-        genre_tags = lastfm_track_data.metadata.get("tags", [])
-
-        genre_objs = [Genre.objects.get_or_create(name=tag)[0] for tag in genre_tags]
-        print(lastfm_track_data)
-        print(genre_objs)
-
-        db_track.genres.set(genre_objs)
-
-        db_track.wiki_summary = lastfm_track_data.metadata["bio"]
-        db_track.save()
+        setTrackMetadata(lastfm_track_data, db_track)
 
         artist_instances = []
         for artist_info in track_data["artists"]:
@@ -254,3 +245,18 @@ def add_track_by_id(sp: Spotify, track_id: str):
 
         # Link artists to track
         db_track.artists.set(artist_instances)
+
+
+def setTrackMetadata(lastfm_track_data, db_track):
+    """
+    Sets the metadata for a track from Last.fm data.
+    :param lastfm_track_data: LastFM track data.
+    """
+    genre_tags = lastfm_track_data.metadata.get("tags", [])
+
+    genre_objs = [Genre.objects.get_or_create(name=tag)[0] for tag in genre_tags]
+
+    db_track.genres.set(genre_objs)
+
+    db_track.wiki_summary = lastfm_track_data.metadata["bio"]
+    db_track.save()

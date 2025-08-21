@@ -6,12 +6,12 @@ const Tracks: React.FC = () => {
   const [tracks, setTracks] = useState<SpotifyTrack[]>([]);
 
   useEffect(() => {
-    const fetchAlbums = async () => {
+    const fetchTracks = async () => {
       const response = await fetch("http://localhost:8000/api/spotify/tracks/");
       const data = await response.json();
       setTracks(data);
     };
-    fetchAlbums();
+    fetchTracks();
   }, []);
 
   return (
@@ -25,6 +25,7 @@ const Tracks: React.FC = () => {
         linkTo: `/tracks/${track.spotify_id}`,
         state: { track },
       })}
+      galleryType="tracks"
     />
   );
 };
