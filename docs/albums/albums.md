@@ -11,7 +11,7 @@ The user can also click on an album cover which will redirect them to the page o
 ### Album's page
 
 Let's take Mac Miller's Circles album as an example :
-![alt text](Circles.png)
+![alt text](circles.png)
 
 The page contains three sections from left to right :
 
@@ -21,9 +21,9 @@ The page contains three sections from left to right :
 
 #### Details :
 
-The background has an _aurora_ effect based on the colors of the album's cover.
-You can slide between the different _pages_ of the carousel.
-The Spotify embeded player does not work on Firefox because of it does not support cross-site cookies.
+- The background has an _aurora_ effect based on the colors of the album's cover.
+- You can slide between the different _pages_ of the carousel.
+- The Spotify embeded player does not work on Firefox because of it does not support cross-site cookies.
 
 ## To add an album
 
@@ -34,9 +34,11 @@ Here is an example :
 
 https://open.spotify.com/album/5sY6UIQ32GqwMLAfSNEaXb?si=e6wnnyuyTom3r3atceq5Cg
 
-Here the unique ID is : 5sY6UIQ32GqwMLAfSNEaXb
+In this case, the unique ID is : 5sY6UIQ32GqwMLAfSNEaXb
 
 I then have a Swagger page where I paste the Spotify unique ID which triggers my import_album endpoint.
+
+Here are some other endpoints that I use for albums :
 
 ![alt text](swagger_import.png)
 
@@ -45,5 +47,5 @@ I then have a Swagger page where I paste the Spotify unique ID which triggers my
 Right now when adding an album here are the different things happening in the background :
 
 1. Retrieve the songs, album's cover, artists info (name, follower count, popularity, profile picture) from the _Spotify Web API_
-2. Call the album, artist and track endpoints of lastFM to retrieve additional information about each of these.
-3. Create the different objects in the database.
+2. Call the album, artist and track endpoints of lastFM to retrieve additional information about each of these. (Summaries, Genres)
+3. Create the different objects in the database. (Album, Songs, Artists, Genres)

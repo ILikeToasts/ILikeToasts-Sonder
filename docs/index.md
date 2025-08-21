@@ -16,7 +16,7 @@ For now, everything is hosted locally.
 ## Features :
 
 - [Albums (Done)](albums/albums.md)
-- [Artists (Done)](artists.md)
+- [Artists (Done)](artists/artists.md)
 - [Tracks/Singles (Done)](tracks.md)
 - Pictures (Done)
 - Movies (TODO)
