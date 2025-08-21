@@ -12,6 +12,7 @@ export const ReviewContainer = styled.div`
   font-weight: 500;
   font-style: normal;
   overflow: hidden;
+  flex-wrap: wrap;
 `;
 
 export const ReviewBox = styled.div`
@@ -87,6 +88,7 @@ export const Secondbox = styled.div`
   flex-direction: row;
   margin-top: 5rem;
   justify-content: space-evenly;
+  flex-wrap: wrap;
 `;
 
 export const Title = styled.div`

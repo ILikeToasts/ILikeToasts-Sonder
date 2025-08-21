@@ -3,10 +3,6 @@ layout: default
 title: Home
 ---
 
-# ILikeToasts MR
-
-Welcome to my repo!
-
 ## What is this projet?
 
 This is a personnal project I developped during the Summer 2025 to test my web application developpement skills.
@@ -15,7 +11,17 @@ For now, everything is hosted locally.
 
 ## Want to see what it looks like ?
 
-https://youtu.be/SeaWwgdMCVc
+[Small demo video](https://youtu.be/SeaWwgdMCVc)
+
+## Features :
+
+- [Albums (Done)](albums/albums.md)
+- [Artists (Done)](artists.md)
+- [Tracks/Singles (Done)](tracks.md)
+- Pictures (Done)
+- Movies (TODO)
+- TV Shows (TODO)
+- Trips (50% done)
 
 ## Technologies used :
 
