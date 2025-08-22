@@ -8,7 +8,8 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from music.ollama_client import Ollama_client
+from music.clients.ollama_client import Ollama_client
+from music.clients.spotify_client import SpotifyClient
 from music.utils.data_importer import (
     add_album_by_id,
     add_playlist_by_id,
@@ -29,7 +30,6 @@ from .serializers import (
     TrackImportSerializer,
     YTMediaItemSerializer,
 )
-from .spotify_client import SpotifyClient
 
 
 def index(request):

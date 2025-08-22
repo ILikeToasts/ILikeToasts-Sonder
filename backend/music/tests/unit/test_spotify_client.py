@@ -2,11 +2,11 @@ from unittest.mock import patch
 
 import pytest
 
-from music.spotify_client import SpotifyClient
+from music.clients.spotify_client import SpotifyClient
 
 
 @pytest.mark.unit
-@patch("music.spotify_client.spotipy.Spotify")
+@patch("music.clients.spotify_client.spotipy.Spotify")
 def test_get_album(mock_spotify_class):
     mock_spotify = mock_spotify_class.return_value
     mock_spotify.album.return_value = {
@@ -31,7 +31,7 @@ def test_get_album(mock_spotify_class):
 
 
 @pytest.mark.unit
-@patch("music.spotify_client.spotipy.Spotify")
+@patch("music.clients.spotify_client.spotipy.Spotify")
 def test_get_artist(mock_spotify_class):
     mock_spotify = mock_spotify_class.return_value
     mock_spotify.artist.return_value = {

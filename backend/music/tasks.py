@@ -1,7 +1,7 @@
 from celery import shared_task
 
+from .clients.spotify_client import SpotifyClient
 from .models import Artist, Genre
-from .spotify_client import SpotifyClient
 
 
 @shared_task
