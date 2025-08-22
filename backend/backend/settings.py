@@ -23,6 +23,7 @@ __all__ = ("celery_app",)
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "fallback")
 DEBUG = os.getenv("DJANGO_DEBUG") == "True"
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",")
+TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

@@ -16,6 +16,7 @@ from .views import (
     RecommendAlbumsView,
     RecommendArtistsView,
     ReviewsByAlbumView,
+    TMDbImportListView,
     TopArtistsView,
     TopGenresView,
     TrackImportView,
@@ -86,4 +87,5 @@ urlpatterns = [
     ),
     path("data/top-artists/", TopArtistsView.as_view(), name="top-artists"),
     path("data/bottom-artists/", BottomArtistsView.as_view(), name="bottom-artists"),
+    path("tmdb/list/import/", TMDbImportListView.as_view(), name="tmdb-list-import"),
 ]

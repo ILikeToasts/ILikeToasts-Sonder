@@ -2,6 +2,12 @@ from rest_framework import serializers
 
 from .models import Album, Artist, Genre, MediaItem, Playlist, Review, Song
 
+CATEGORY_CHOICES = [
+    ("Movie", "Movie"),
+    ("TVShow", "TVShow"),
+    ("Anime", "Anime"),
+]
+
 
 class AlbumSerializer(serializers.Serializer):
     id = serializers.CharField()
@@ -126,3 +132,8 @@ class YTMediaItemSerializer(serializers.ModelSerializer):
     def get_file(self, obj):
         request = self.context.get("request")
         return request.build_absolute_uri(obj.file.url)
+
+
+class TMDbListImportSerializer(serializers.Serializer):
+    list_id = serializers.CharField(max_length=100)
+    category = serializers.ChoiceField(choices=CATEGORY_CHOICES)
