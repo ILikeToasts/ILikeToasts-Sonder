@@ -1,3 +1,5 @@
+import { AlbumsContainer } from "@/styles/Album/albums.styles";
+import { MediasContainer } from "@/styles/Media/media.styles";
 import React from "react";
 import { Link } from "react-router-dom";
 import "../../styles/album.css";
@@ -17,20 +19,23 @@ interface GalleryGridProps {
 }
 
 export const GalleryGrid: React.FC<GalleryGridProps> = ({ items }) => {
-  const width = "500px";
+  const hasMediaItem = items.some(
+    (item) => item.state?.serie || item.state?.anime || item.state?.movie,
+  );
+
+  const Container = hasMediaItem ? MediasContainer : AlbumsContainer;
   return (
-    <div className="albumContainer">
+    <Container>
       {items.map((item) => {
         const isSerie =
-          item.state?.serie !== undefined ||
-          item.state?.anime !== undefined ||
-          item.state?.movie !== undefined;
+          item.state?.serie || item.state?.anime || item.state?.movie;
         const height = isSerie ? "750px" : "500px";
+        const width = "500px";
 
         return (
           <Link key={item.id} to={item.linkTo} state={item.state}>
             <TiltedCard
-              imageSrc={item.imageUrl ?? null}
+              imageSrc={item.imageUrl || null}
               altText={item.title}
               captionText={item.title}
               containerHeight={height}
@@ -46,7 +51,7 @@ export const GalleryGrid: React.FC<GalleryGridProps> = ({ items }) => {
           </Link>
         );
       })}
-    </div>
+    </Container>
   );
 };
 
