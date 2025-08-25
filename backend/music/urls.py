@@ -12,6 +12,7 @@ from .views import (
     FavoriteArtistsView,
     MediaItemCategoriesView,
     MediaItemListView,
+    MovieListView,
     PlaylistImport,
     PlaylistView,
     RecommendAlbumsView,
@@ -91,5 +92,6 @@ urlpatterns = [
     path("data/bottom-artists/", BottomArtistsView.as_view(), name="bottom-artists"),
     path("tmdb/list/import/", TMDbImportListView.as_view(), name="tmdb-list-import"),
     path("tmdb/list/animes/", AnimeListView.as_view(), name="anime-list"),
-    path("tmdb/list/tv-shows/", TVShowListView.as_view(), name="anime-list"),
+    path("tmdb/list/tv-shows/", TVShowListView.as_view(), name="tvshow-list"),
+    path("tmdb/list/movies/", MovieListView.as_view(), name="movie-list"),
 ]

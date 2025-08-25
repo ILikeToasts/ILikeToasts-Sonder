@@ -24,3 +24,20 @@ export interface TVShow {
   genres: TVShowGenre[];
   production_companies: ProductionCompany[];
 }
+
+export interface Movie {
+  id: number;
+  title: string;
+  runtime: number;
+  release_date: string;
+  origin_country: string;
+  original_language: string;
+  original_name: string;
+  overview: string;
+  poster_url: string;
+  vote_average: number;
+  vote_count: number;
+  last_synced: string;
+  genres: TVShowGenre[];
+  production_companies: ProductionCompany[];
+}

@@ -10,6 +10,7 @@ from .models import (
     Review,
     Song,
     TMDbGenre,
+    TMDbMovieMediaItem,
     TMDbTVMediaItem,
 )
 
@@ -181,6 +182,34 @@ class TMDbTVMediaItemSerializer(serializers.ModelSerializer):
             "overview",
             "poster_url",
             "seasons",
+            "vote_average",
+            "vote_count",
+            "last_synced",
+            "genres",
+            "production_companies",
+        ]
+
+    def get_poster_url(self, obj):
+        return obj.poster_url()
+
+
+class TMDbMovieMediaItemSerializer(serializers.ModelSerializer):
+    genres = TMDbGenreSerializer(many=True, read_only=True)
+    production_companies = ProductionCompanySerializer(many=True, read_only=True)
+    poster_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = TMDbMovieMediaItem
+        fields = [
+            "id",
+            "title",
+            "runtime",
+            "release_date",
+            "origin_country",
+            "original_language",
+            "original_name",
+            "overview",
+            "poster_url",
             "vote_average",
             "vote_count",
             "last_synced",

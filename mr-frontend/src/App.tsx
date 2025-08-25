@@ -3,7 +3,7 @@ import "./App.css";
 import AlbumReview from "./components/Album/AlbumReview";
 import ArtistReview from "./components/Artists/ArtistReview";
 import { ThemeProvider } from "./components/Common/theme-provider";
-import Animes from "./components/Serie/Anime";
+import Animes from "./components/Serie/Animes";
 import TrackReview from "./components/Singles/TrackReview";
 import Layout from "./layouts/Layout";
 import Album from "./pages/AlbumsPage";

@@ -11,6 +11,7 @@ from .models import (
     Song,
     TMDbGenre,
     TMDbList,
+    TMDbMovieMediaItem,
     TMDbTVMediaItem,
 )
 
@@ -56,4 +57,17 @@ class TMDbTVMediaItemAdmin(admin.ModelAdmin):
     )
     search_fields = ("title", "original_name")
     list_filter = ("tmdb_list", "in_production", "genres")
+    filter_horizontal = ("genres", "production_companies")
+
+
+@admin.register(TMDbMovieMediaItem)
+class TMDbMovieMediaItem(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "tmdb_list",
+        "release_date",
+        "vote_average",
+    )
+    search_fields = ("title", "original_name")
+    list_filter = ("tmdb_list", "genres")
     filter_horizontal = ("genres", "production_companies")

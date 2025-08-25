@@ -25,6 +25,7 @@ from .models import (
     Playlist,
     Review,
     Song,
+    TMDbMovieMediaItem,
     TMDbTVMediaItem,
 )
 from .serializers import (
@@ -38,6 +39,7 @@ from .serializers import (
     ReviewSerializer,
     SongDBSerializer,
     TMDbListImportSerializer,
+    TMDbMovieMediaItemSerializer,
     TMDbTVMediaItemSerializer,
     TrackImportSerializer,
     YTMediaItemSerializer,
@@ -424,3 +426,8 @@ class AnimeListView(generics.ListAPIView):
 class TVShowListView(generics.ListAPIView):
     serializer_class = TMDbTVMediaItemSerializer
     queryset = TMDbTVMediaItem.objects.filter(tmdb_list__category="tv")
+
+
+class MovieListView(generics.ListAPIView):
+    serializer_class = TMDbMovieMediaItemSerializer
+    queryset = TMDbMovieMediaItem.objects.filter(tmdb_list__category="Movie")

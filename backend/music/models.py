@@ -186,3 +186,36 @@ class TMDbTVMediaItem(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class TMDbMovieMediaItem(models.Model):
+    tmdb_id = models.PositiveIntegerField(unique=True)
+    tmdb_list = models.ForeignKey(
+        "TMDbList", on_delete=models.CASCADE, related_name="movie_items"
+    )
+    title = models.CharField(max_length=255)
+    original_name = models.CharField(max_length=255, blank=True)
+    runtime = models.PositiveIntegerField(null=True, blank=True)
+    release_date = models.DateField(null=True, blank=True)
+    origin_country = models.CharField(max_length=50, blank=True)
+    original_language = models.CharField(max_length=10, blank=True)
+    overview = models.TextField(blank=True)
+    poster_path = models.CharField(max_length=255, blank=True, null=True)
+    vote_average = models.FloatField(default=0)
+    vote_count = models.PositiveIntegerField(default=0)
+
+    genres = models.ManyToManyField("TMDbGenre", related_name="movie_items", blank=True)
+    production_companies = models.ManyToManyField(
+        "ProductionCompany", related_name="movie_items", blank=True
+    )
+
+    last_synced = models.DateTimeField(auto_now=True)
+
+    def poster_url(self, size="w500"):
+        """Return full poster URL based on TMDb size (e.g., w500, w780, original)"""
+        if self.poster_path:
+            return f"https://image.tmdb.org/t/p/{size}{self.poster_path}"
+        return None
+
+    def __str__(self):
+        return self.title

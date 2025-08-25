@@ -4,7 +4,13 @@ from datetime import datetime
 import requests
 from django.conf import settings
 
-from music.models import ProductionCompany, TMDbGenre, TMDbList, TMDbTVMediaItem
+from music.models import (
+    ProductionCompany,
+    TMDbGenre,
+    TMDbList,
+    TMDbMovieMediaItem,
+    TMDbTVMediaItem,
+)
 
 
 class TMDbClient:
@@ -12,6 +18,22 @@ class TMDbClient:
 
     def __init__(self):
         self.api_key = settings.TMDB_API_KEY
+
+    def _get_or_create_genres(genre_list):
+        genre_objs = []
+        for genre in genre_list:
+            genre_obj, _ = TMDbGenre.objects.get_or_create(name=genre["name"])
+            genre_objs.append(genre_obj)
+        return genre_objs
+
+    def _get_or_create_companies(company_list):
+        company_objs = []
+        for company in company_list:
+            company_obj, _ = ProductionCompany.objects.get_or_create(
+                name=company["name"]
+            )
+            company_objs.append(company_obj)
+        return company_objs
 
     def fetch_list_items(self, list_id):
         """
@@ -22,73 +44,101 @@ class TMDbClient:
         resp.raise_for_status()
         return resp.json().get("items", [])
 
-    def fetch_tv_details(self, tv_id):
+    def fetch_media_details(self, media_id, media_type):
         """
         Fetch detailed TV info including genres and production companies
         """
-        url = f"{self.BASE_URL}/tv/{tv_id}"
+        if media_type == "tv":
+            url = f"{self.BASE_URL}/tv/{media_id}"
+        else:
+            url = f"{self.BASE_URL}/movie/{media_id}"
+
         params = {"api_key": self.api_key}
         resp = requests.get(url, params=params)
         resp.raise_for_status()
         return resp.json()
 
-    def sync_tv_item(self, tmdb_list, tv_data):
+    def sync_media_item(self, tmdb_list, media_data, media_type: str):
         """
-        Create or update a TMDbTVMediaItem from TV show data
+        Generic create/update function for TV or Movie items.
+        media_type: 'tv' or 'movie'
         """
-        # Genres
-        genre_objs = []
-        for genre in tv_data.get("genres", []):
-            genre_obj, _ = TMDbGenre.objects.get_or_create(name=genre["name"])
-            genre_objs.append(genre_obj)
+        # Common fields
+        genre_objs = self._get_or_create_genres(media_data.get("genres", []))
+        company_objs = self._get_or_create_companies(
+            media_data.get("production_companies", [])
+        )
+        origin_country = ",".join(
+            media_data.get("origin_country", [])
+            or media_data.get("production_countries", [])
+        )
+        overview = media_data.get("overview", "")
+        poster_path = media_data.get("poster_path")
+        original_language = media_data.get("original_language", "")
+        vote_average = media_data.get("vote_average", 0)
+        vote_count = media_data.get("vote_count", 0)
 
-        # Production companies
-        company_objs = []
-        for company in tv_data.get("production_companies", []):
-            company_obj, _ = ProductionCompany.objects.get_or_create(
-                name=company["name"]
+        if media_type == "tv":
+            first_air_date_str = media_data.get("first_air_date")
+            first_air_date = (
+                datetime.strptime(first_air_date_str, "%Y-%m-%d").date()
+                if first_air_date_str
+                else None
             )
-            company_objs.append(company_obj)
+            episode_run_time_val = media_data.get("episode_run_time", [])
+            episode_run_time_val = (
+                episode_run_time_val[0] if episode_run_time_val else None
+            )
 
-        # Episode runtime: take first value if exists
-        episode_run_time = tv_data.get("episode_run_time", [])
-        episode_run_time_val = episode_run_time[0] if episode_run_time else None
+            item, created = TMDbTVMediaItem.objects.update_or_create(
+                tmdb_id=media_data["id"],
+                tmdb_list=tmdb_list,
+                defaults={
+                    "title": media_data.get("name"),
+                    "original_name": media_data.get("original_name", ""),
+                    "episode_run_time": episode_run_time_val,
+                    "first_air_date": first_air_date,
+                    "in_production": media_data.get("in_production", False),
+                    "origin_country": origin_country,
+                    "original_language": original_language,
+                    "overview": overview,
+                    "poster_path": poster_path,
+                    "seasons": len(media_data.get("seasons", [])),
+                    "vote_average": vote_average,
+                    "vote_count": vote_count,
+                },
+            )
 
-        # Origin country: store as comma-separated string
-        origin_country = ",".join(tv_data.get("origin_country", []))
+        else:
+            release_date_str = media_data.get("release_date")
+            release_date = (
+                datetime.strptime(release_date_str, "%Y-%m-%d").date()
+                if release_date_str
+                else None
+            )
 
-        # Convert first_air_date string to date
-        first_air_date_str = tv_data.get("first_air_date")
-        first_air_date = (
-            datetime.strptime(first_air_date_str, "%Y-%m-%d").date()
-            if first_air_date_str
-            else None
-        )
-
-        tv_item, created = TMDbTVMediaItem.objects.update_or_create(
-            tmdb_id=tv_data["id"],
-            tmdb_list=tmdb_list,
-            defaults={
-                "title": tv_data.get("name"),
-                "original_name": tv_data.get("original_name", ""),
-                "episode_run_time": episode_run_time_val,
-                "first_air_date": first_air_date,
-                "in_production": tv_data.get("in_production", False),
-                "origin_country": origin_country,
-                "original_language": tv_data.get("original_language", ""),
-                "overview": tv_data.get("overview", ""),
-                "poster_path": tv_data.get("poster_path"),
-                "seasons": len(tv_data.get("seasons", [])),
-                "vote_average": tv_data.get("vote_average", 0),
-                "vote_count": tv_data.get("vote_count", 0),
-            },
-        )
+            item, created = TMDbMovieMediaItem.objects.update_or_create(
+                tmdb_id=media_data["id"],
+                tmdb_list=tmdb_list,
+                defaults={
+                    "title": media_data.get("title"),
+                    "original_name": media_data.get("original_title", ""),
+                    "runtime": media_data.get("runtime"),
+                    "release_date": release_date,
+                    "origin_country": origin_country,
+                    "original_language": original_language,
+                    "overview": overview,
+                    "poster_path": poster_path,
+                    "vote_average": vote_average,
+                    "vote_count": vote_count,
+                },
+            )
 
         # Set relations
-        tv_item.genres.set(genre_objs)
-        tv_item.production_companies.set(company_objs)
+        item.genres.set(genre_objs)
+        item.production_companies.set(company_objs)
 
-        return tv_item
+        return item
 
     def fetch_list(self, list_id: str, category: str):
         """
@@ -102,11 +152,11 @@ class TMDbClient:
 
         items = self.fetch_list_items(list_id)
 
+        if category == "Anime" or category == "TVShow":
+            media_type = "tv"
+        else:
+            media_type = "movie"
+
         for item in items:
-            if category == "Anime" or category == "TVShow":
-                # Fetch full details
-                tv_data = self.fetch_tv_details(item["id"])
-                self.sync_tv_item(tmdb_list, tv_data)
-            else:
-                # TODO: implement movies
-                pass
+            data = self.fetch_media_details(item["id"], media_type)
+            self.sync_media_item(tmdb_list, data, media_type)

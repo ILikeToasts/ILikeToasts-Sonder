@@ -22,7 +22,9 @@ export const GalleryGrid: React.FC<GalleryGridProps> = ({ items }) => {
     <div className="albumContainer">
       {items.map((item) => {
         const isSerie =
-          item.state?.serie !== undefined || item.state?.anime !== undefined;
+          item.state?.serie !== undefined ||
+          item.state?.anime !== undefined ||
+          item.state?.movie !== undefined;
         const height = isSerie ? "750px" : "500px";
 
         return (
