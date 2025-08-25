@@ -103,7 +103,7 @@ class TMDbClient:
         items = self.fetch_list_items(list_id)
 
         for item in items:
-            if category == "Anime":
+            if category == "Anime" or category == "TVShow":
                 # Fetch full details
                 tv_data = self.fetch_tv_details(item["id"])
                 self.sync_tv_item(tmdb_list, tv_data)

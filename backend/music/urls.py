@@ -5,6 +5,7 @@ from .views import (
     AlbumImportView,
     AlbumListView,
     AlbumMusicProfileView,
+    AnimeListView,
     ArtistDetail,
     ArtistListView,
     BottomArtistsView,
@@ -22,6 +23,7 @@ from .views import (
     TrackImportView,
     TracksListView,
     TracksMusicProfileView,
+    TVShowListView,
     YTMediaItemListView,
 )
 
@@ -88,4 +90,6 @@ urlpatterns = [
     path("data/top-artists/", TopArtistsView.as_view(), name="top-artists"),
     path("data/bottom-artists/", BottomArtistsView.as_view(), name="bottom-artists"),
     path("tmdb/list/import/", TMDbImportListView.as_view(), name="tmdb-list-import"),
+    path("tmdb/list/animes/", AnimeListView.as_view(), name="anime-list"),
+    path("tmdb/list/tv-shows/", TVShowListView.as_view(), name="anime-list"),
 ]

@@ -1,7 +1,8 @@
 from celery import shared_task
 
 from .clients.spotify_client import SpotifyClient
-from .models import Artist, Genre
+from .clients.tmdb_client import TMDbClient
+from .models import Artist, Genre, TMDbList
 
 
 @shared_task
@@ -30,3 +31,16 @@ def update_artist_data():
 
         except Exception as e:
             print(f"Error updating artist {artist.name}: {e}")
+
+
+@shared_task
+def update_tmdb_lists():
+    client = TMDbClient()
+    lists = TMDbList.objects.all()
+
+    for tmdb_list in lists:
+        try:
+            client.fetch_list(tmdb_list.tmdb_id, tmdb_list.category)
+            print(f"Updated TMDb list: {tmdb_list.name}")
+        except Exception as e:
+            print(f"Error updating list {tmdb_list.name}: {e}")

@@ -41,9 +41,6 @@ SECRET_KEY = "django-insecure-gg8+o5g)1662=csh9@mmle_i0(8)@dth0xec513-b$7&5ev@-i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -164,6 +161,10 @@ CELERY_BEAT_SCHEDULE = {
     "update-artist-data-every-2-hours": {
         "task": "music.tasks.update_artist_data",
         "schedule": 60 * 60 * 2,  # Every 2 hours
+    },
+    "update-tmdb-lists-every-6-hours": {
+        "task": "music.tasks.update_tmdb_lists",
+        "schedule": 60 * 60 * 12,  # Every 6 hours
     },
 }
 

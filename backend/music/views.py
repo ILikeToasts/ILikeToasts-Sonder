@@ -17,7 +17,16 @@ from music.utils.data_importer import (
     add_track_by_id,
 )
 
-from .models import Album, Artist, Genre, MediaItem, Playlist, Review, Song
+from .models import (
+    Album,
+    Artist,
+    Genre,
+    MediaItem,
+    Playlist,
+    Review,
+    Song,
+    TMDbTVMediaItem,
+)
 from .serializers import (
     AlbumDBSerializer,
     AlbumImportSerializer,
@@ -29,6 +38,7 @@ from .serializers import (
     ReviewSerializer,
     SongDBSerializer,
     TMDbListImportSerializer,
+    TMDbTVMediaItemSerializer,
     TrackImportSerializer,
     YTMediaItemSerializer,
 )
@@ -404,3 +414,13 @@ class TMDbImportListView(APIView):
             {"message": f"List '{list_id}' imported successfully!"},
             status=status.HTTP_201_CREATED,
         )
+
+
+class AnimeListView(generics.ListAPIView):
+    serializer_class = TMDbTVMediaItemSerializer
+    queryset = TMDbTVMediaItem.objects.filter(tmdb_list__category="Anime")
+
+
+class TVShowListView(generics.ListAPIView):
+    serializer_class = TMDbTVMediaItemSerializer
+    queryset = TMDbTVMediaItem.objects.filter(tmdb_list__category="tv")
