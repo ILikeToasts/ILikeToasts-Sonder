@@ -31,7 +31,7 @@ const MediaReview: React.FC = () => {
   }
 
   useEffect(() => {
-    if (mediaItem.poster_url) return;
+    if (!mediaItem.poster_url) return;
 
     const fetchColors = async () => {
       try {
@@ -50,8 +50,6 @@ const MediaReview: React.FC = () => {
     };
     fetchColors();
   }, [mediaItem]);
-
-  console.log(mediaItem.production_companies);
 
   return (
     <>
@@ -118,8 +116,8 @@ const MediaReview: React.FC = () => {
             <ProductionCompanies>
               <div>Produced by : </div>
               {mediaItem.production_companies.map(
-                (company: ProductionCompany) => {
-                  return <div>{"- " + company.name}</div>;
+                (company: ProductionCompany, index: number) => {
+                  return <div key={index}>{"- " + company.name}</div>;
                 },
               )}
             </ProductionCompanies>
