@@ -11,19 +11,20 @@ export interface FilterableGalleryPageProps<T> {
   galleryType?: string;
   extractGenres: (item: T) => string[];
   mapToGalleryItem: (item: T) => GalleryItem;
+  items_per_page?: number;
 }
-
-const ITEMS_PER_PAGE = 8;
 
 export default function FilterableGalleryPage<T>({
   items,
   extractGenres,
   mapToGalleryItem,
   galleryType = "",
+  items_per_page,
 }: FilterableGalleryPageProps<T>) {
   const [selectedGenre, setSelectedGenre] = useState<string>("All");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [statsPath, setStatsPath] = useState<string>("");
+  const ITEMS_PER_PAGE = items_per_page ? items_per_page : 8;
 
   const genres = Array.from(new Set(items.flatMap(extractGenres)));
   const options = ["All", ...genres];

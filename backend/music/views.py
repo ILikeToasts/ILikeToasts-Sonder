@@ -8,14 +8,26 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from music.ollama_client import Ollama_client
+from music.clients.ollama_client import Ollama_client
+from music.clients.spotify_client import SpotifyClient
+from music.clients.tmdb_client import TMDbClient
 from music.utils.data_importer import (
     add_album_by_id,
     add_playlist_by_id,
     add_track_by_id,
 )
 
-from .models import Album, Artist, Genre, MediaItem, Playlist, Review, Song
+from .models import (
+    Album,
+    Artist,
+    Genre,
+    MediaItem,
+    Playlist,
+    Review,
+    Song,
+    TMDbMovieMediaItem,
+    TMDbTVMediaItem,
+)
 from .serializers import (
     AlbumDBSerializer,
     AlbumImportSerializer,
@@ -26,10 +38,12 @@ from .serializers import (
     PlaylistDBSerializer,
     ReviewSerializer,
     SongDBSerializer,
+    TMDbListImportSerializer,
+    TMDbMovieMediaItemSerializer,
+    TMDbTVMediaItemSerializer,
     TrackImportSerializer,
     YTMediaItemSerializer,
 )
-from .spotify_client import SpotifyClient
 
 
 def index(request):
@@ -354,3 +368,66 @@ class TopArtistsView(APIView):
         data = [serialize(artist) for artist in top_artists]
 
         return Response(data)
+
+
+class TMDbImportListView(APIView):
+    CATEGORY_CHOICES = ["Movie", "TVShow", "Anime"]
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                "list_id",
+                openapi.IN_QUERY,
+                description="TMDB list ID",
+                type=openapi.TYPE_STRING,
+                required=True,
+            ),
+            openapi.Parameter(
+                "category",
+                openapi.IN_QUERY,
+                description="Category: Movie, TVShow, or Anime",
+                type=openapi.TYPE_STRING,
+                required=True,
+                enum=CATEGORY_CHOICES,
+            ),
+        ],
+        responses={
+            201: "List imported successfully",
+            400: "Invalid list_id",
+            500: "Internal server error",
+        },
+    )
+    def post(self, request):
+        serializer = TMDbListImportSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+
+        list_id = serializer.validated_data["list_id"]
+        category = serializer.validated_data["category"]
+
+        try:
+            client = TMDbClient()
+            client.fetch_list(list_id, category)
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        return Response(
+            {"message": f"List '{list_id}' imported successfully!"},
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class AnimeListView(generics.ListAPIView):
+    serializer_class = TMDbTVMediaItemSerializer
+    queryset = TMDbTVMediaItem.objects.filter(tmdb_list__category="Anime")
+
+
+class TVShowListView(generics.ListAPIView):
+    serializer_class = TMDbTVMediaItemSerializer
+    queryset = TMDbTVMediaItem.objects.filter(tmdb_list__category="tv")
+
+
+class MovieListView(generics.ListAPIView):
+    serializer_class = TMDbMovieMediaItemSerializer
+    queryset = TMDbMovieMediaItem.objects.filter(tmdb_list__category="Movie")

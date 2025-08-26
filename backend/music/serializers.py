@@ -1,6 +1,24 @@
 from rest_framework import serializers
 
-from .models import Album, Artist, Genre, MediaItem, Playlist, Review, Song
+from .models import (
+    Album,
+    Artist,
+    Genre,
+    MediaItem,
+    Playlist,
+    ProductionCompany,
+    Review,
+    Song,
+    TMDbGenre,
+    TMDbMovieMediaItem,
+    TMDbTVMediaItem,
+)
+
+CATEGORY_CHOICES = [
+    ("Movie", "Movie"),
+    ("TVShow", "TVShow"),
+    ("Anime", "Anime"),
+]
 
 
 class AlbumSerializer(serializers.Serializer):
@@ -126,3 +144,78 @@ class YTMediaItemSerializer(serializers.ModelSerializer):
     def get_file(self, obj):
         request = self.context.get("request")
         return request.build_absolute_uri(obj.file.url)
+
+
+class TMDbListImportSerializer(serializers.Serializer):
+    list_id = serializers.CharField(max_length=100)
+    category = serializers.ChoiceField(choices=CATEGORY_CHOICES)
+
+
+class TMDbGenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TMDbGenre
+        fields = ["name"]
+
+
+class ProductionCompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductionCompany
+        fields = ["name"]
+
+
+class TMDbTVMediaItemSerializer(serializers.ModelSerializer):
+    genres = TMDbGenreSerializer(many=True, read_only=True)
+    production_companies = ProductionCompanySerializer(many=True, read_only=True)
+    poster_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = TMDbTVMediaItem
+        fields = [
+            "id",
+            "title",
+            "episode_run_time",
+            "first_air_date",
+            "in_production",
+            "origin_country",
+            "original_language",
+            "original_name",
+            "overview",
+            "poster_url",
+            "seasons",
+            "vote_average",
+            "vote_count",
+            "last_synced",
+            "genres",
+            "production_companies",
+        ]
+
+    def get_poster_url(self, obj):
+        return obj.poster_url()
+
+
+class TMDbMovieMediaItemSerializer(serializers.ModelSerializer):
+    genres = TMDbGenreSerializer(many=True, read_only=True)
+    production_companies = ProductionCompanySerializer(many=True, read_only=True)
+    poster_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = TMDbMovieMediaItem
+        fields = [
+            "id",
+            "title",
+            "runtime",
+            "release_date",
+            "origin_country",
+            "original_language",
+            "original_name",
+            "overview",
+            "poster_url",
+            "vote_average",
+            "vote_count",
+            "last_synced",
+            "genres",
+            "production_companies",
+        ]
+
+    def get_poster_url(self, obj):
+        return obj.poster_url()
