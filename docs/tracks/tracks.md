@@ -10,6 +10,11 @@ The user can also click on the track's cover which will redirect them to the tra
 
 For this page specifically I also implemented a stats button that will display some graphs and statistics based on the tracks in this section. More info in the Tracks Stats section of the wiki.
 
+### External APIs used
+
+- [Spotify Web API](https://developer.spotify.com/documentation/web-api)
+- [LastFM API](https://www.last.fm/api)
+
 ### Track's page
 
 ![alt text](chances.png)

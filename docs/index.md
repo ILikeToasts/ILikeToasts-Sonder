@@ -19,8 +19,8 @@ For now, everything is hosted locally.
 - [Artists (Done)](artists/artists.md)
 - [Tracks/Singles (Done)](tracks/tracks.md)
 - [Pictures (Done)](pictures/pictures.md)
-- Movies (TODO)
-- TV Shows (TODO)
+- [Movies & TVShows](media/media.md)
+- Games (TODO)
 - Trips (50% done)
 
 ## Technologies used :
@@ -34,7 +34,7 @@ I used some components from [ReactBits](https://github.com/DavidHDev/react-bits)
 ### Backend
 
 My backend was developped with Python(Django). I use models, serializers, views and urls to handle data.
-I also have a single task to update data automatically.
+I also have some automated tasks using a combination of Celery and Redis.
 
 #### APIs
 
@@ -51,11 +51,11 @@ To test my multiple endpoints I use Swagger. Thats also what I use to add data t
 
 #### Automated task
 
-I have a single automated task that runs every 2 hours to update artists data.
 I use celery to handle the task which includes a worker and a beat and also a message broker (redis).
-
-The task consists of updating the stored artists information : follower count, popularity, picture etc.
 I also configured flower to monitor the queue, task progress and potential errors.
+
+The tasks are also registered and can be seen in Django Admin :
+![alt text](autoTasks.png)
 
 ![alt text](cron.png)
 

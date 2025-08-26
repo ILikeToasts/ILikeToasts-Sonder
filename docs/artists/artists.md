@@ -8,6 +8,11 @@ This page will list all of my favorite artists. There is a maximum of 8 albums p
 
 The user can also click on the profile picture of an artist which will redirect them to the artist's page.
 
+### External APIs used
+
+- [Spotify Web API](https://developer.spotify.com/documentation/web-api)
+- [LastFM API](https://www.last.fm/api)
+
 ### Artist's page
 
 Let's take Kaytranada as an example.

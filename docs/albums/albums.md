@@ -8,6 +8,11 @@ This page will list all of my favorite albums. There is a maximum of 8 albums pe
 
 The user can also click on an album cover which will redirect them to the page of the specific album.
 
+### External APIs used
+
+- [Spotify Web API](https://developer.spotify.com/documentation/web-api)
+- [LastFM API](https://www.last.fm/api)
+
 ### Album's page
 
 Let's take Mac Miller's Circles album as an example :
