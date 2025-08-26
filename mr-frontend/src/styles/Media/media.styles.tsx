@@ -8,3 +8,10 @@ export const MediasContainer = styled.div`
   justify-content: space-evenly;
   margin-top: 10vh;
 `;
+
+export const ProductionCompanies = styled.div`
+  margin-top: 3vh;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+`;

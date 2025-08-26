@@ -4,6 +4,7 @@ import AlbumReview from "./components/Album/AlbumReview";
 import ArtistReview from "./components/Artists/ArtistReview";
 import { ThemeProvider } from "./components/Common/theme-provider";
 import Animes from "./components/Serie/Animes";
+import MediaReview from "./components/Serie/MediaReview";
 import TrackReview from "./components/Singles/TrackReview";
 import Layout from "./layouts/Layout";
 import Album from "./pages/AlbumsPage";
@@ -37,7 +38,9 @@ function App() {
             <Route path="/artists/:artist_id" element={<ArtistReview />} />
             <Route path="/tracks/:track_id" element={<TrackReview />} />
             <Route path="/tracks/stats" element={<TracksStats />} />
-            <Route path="/series/:serie_id" element={<TrackReview />} />
+            <Route path="/series/:serie_id" element={<MediaReview />} />
+            <Route path="/animes/:anime_id" element={<MediaReview />} />
+            <Route path="/movies/:movie_id" element={<MediaReview />} />
           </Route>
         </Routes>
       </Router>

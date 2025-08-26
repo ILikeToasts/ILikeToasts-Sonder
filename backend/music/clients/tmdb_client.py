@@ -13,27 +13,27 @@ from music.models import (
 )
 
 
+def _get_or_create_genres(genre_list):
+    genre_objs = []
+    for genre in genre_list:
+        genre_obj, _ = TMDbGenre.objects.get_or_create(name=genre["name"])
+        genre_objs.append(genre_obj)
+    return genre_objs
+
+
+def _get_or_create_companies(company_list):
+    company_objs = []
+    for company in company_list:
+        company_obj, _ = ProductionCompany.objects.get_or_create(name=company["name"])
+        company_objs.append(company_obj)
+    return company_objs
+
+
 class TMDbClient:
     BASE_URL = "https://api.themoviedb.org/3"
 
     def __init__(self):
         self.api_key = settings.TMDB_API_KEY
-
-    def _get_or_create_genres(genre_list):
-        genre_objs = []
-        for genre in genre_list:
-            genre_obj, _ = TMDbGenre.objects.get_or_create(name=genre["name"])
-            genre_objs.append(genre_obj)
-        return genre_objs
-
-    def _get_or_create_companies(company_list):
-        company_objs = []
-        for company in company_list:
-            company_obj, _ = ProductionCompany.objects.get_or_create(
-                name=company["name"]
-            )
-            company_objs.append(company_obj)
-        return company_objs
 
     def fetch_list_items(self, list_id):
         """
@@ -64,8 +64,8 @@ class TMDbClient:
         media_type: 'tv' or 'movie'
         """
         # Common fields
-        genre_objs = self._get_or_create_genres(media_data.get("genres", []))
-        company_objs = self._get_or_create_companies(
+        genre_objs = _get_or_create_genres(media_data.get("genres", []))
+        company_objs = _get_or_create_companies(
             media_data.get("production_companies", [])
         )
         origin_country = ",".join(
@@ -103,7 +103,7 @@ class TMDbClient:
                     "original_language": original_language,
                     "overview": overview,
                     "poster_path": poster_path,
-                    "seasons": len(media_data.get("seasons", [])),
+                    "seasons": media_data.get("number_of_seasons", ""),
                     "vote_average": vote_average,
                     "vote_count": vote_count,
                 },

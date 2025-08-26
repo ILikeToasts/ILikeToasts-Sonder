@@ -9,7 +9,7 @@ export interface ProductionCompany {
 export interface TVShow {
   id: number;
   title: string;
-  episde_run_time: number;
+  episode_run_time: number;
   first_air_date: string;
   in_production: boolean;
   origin_country: string;

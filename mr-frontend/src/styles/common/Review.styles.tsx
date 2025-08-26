@@ -16,7 +16,7 @@ export const ReviewContainer = styled.div`
 `;
 
 export const ReviewBox = styled.div`
-  width: 600px;
+  width: 60vh;
   margin-bottom: 20px;
 `;
 
