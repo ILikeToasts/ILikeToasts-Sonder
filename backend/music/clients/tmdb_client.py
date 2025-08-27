@@ -37,12 +37,27 @@ class TMDbClient:
 
     def fetch_list_items(self, list_id):
         """
-        Fetch items from a TMDb list
+        Fetch all items from a TMDb list, handling pagination
         """
-        url = f"{self.BASE_URL}/list/{list_id}"
-        resp = requests.get(url, params={"api_key": self.api_key})
-        resp.raise_for_status()
-        return resp.json().get("items", [])
+        all_items = []
+        page = 1
+
+        while True:
+            url = f"{self.BASE_URL}/list/{list_id}"
+            resp = requests.get(url, params={"api_key": self.api_key, "page": page})
+            resp.raise_for_status()
+            data = resp.json()
+
+            items = data.get("items", [])
+            all_items.extend(items)
+
+            # TMDB suports 20 items/page, so check if more
+            total_pages = data.get("total_pages", 1)
+            if page >= total_pages:
+                break
+            page += 1
+
+        return all_items
 
     def fetch_media_details(self, media_id, media_type):
         """
