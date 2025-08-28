@@ -1,4 +1,3 @@
-# app/tmdb_client.py
 from datetime import datetime
 
 import requests
