@@ -3,12 +3,16 @@ from rest_framework import serializers
 from .models import (
     Album,
     Artist,
+    GameDeveloper,
+    GameGenre,
+    GamePublisher,
     Genre,
     MediaItem,
     Playlist,
     ProductionCompany,
     Review,
     Song,
+    SteamGame,
     TMDbGenre,
     TMDbMovieMediaItem,
     TMDbTVMediaItem,
@@ -219,3 +223,45 @@ class TMDbMovieMediaItemSerializer(serializers.ModelSerializer):
 
     def get_poster_url(self, obj):
         return obj.poster_url()
+
+
+class SteamGamesImportSerializer(serializers.Serializer):
+    steam_id = serializers.CharField(max_length=100)
+
+
+class GameDevelopperSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GameDeveloper
+        fields = ["name"]
+
+
+class GamePublisherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GamePublisher
+        fields = ["name"]
+
+
+class GameGenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GameGenre
+        fields = ["name"]
+
+
+class SteamGameSerializer(serializers.Serializer):
+    developpers = GameDevelopperSerializer(many=True, read_only=True)
+    publishers = GamePublisherSerializer(many=True, read_only=True)
+    genres = GameGenreSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = SteamGame
+        fields = [
+            "name",
+            "appID",
+            "description",
+            "website",
+            "developers",
+            "publishers",
+            "genres",
+            "release_date",
+            "image",
+        ]

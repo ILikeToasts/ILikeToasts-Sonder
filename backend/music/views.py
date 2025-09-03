@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 
 from music.clients.ollama_client import Ollama_client
 from music.clients.spotify_client import SpotifyClient
+from music.clients.steam_client import SteamClient
 from music.clients.tmdb_client import TMDbClient
 from music.utils.data_importer import (
     add_album_by_id,
@@ -38,6 +39,7 @@ from .serializers import (
     PlaylistDBSerializer,
     ReviewSerializer,
     SongDBSerializer,
+    SteamGamesImportSerializer,
     TMDbListImportSerializer,
     TMDbMovieMediaItemSerializer,
     TMDbTVMediaItemSerializer,
@@ -431,3 +433,40 @@ class TVShowListView(generics.ListAPIView):
 class MovieListView(generics.ListAPIView):
     serializer_class = TMDbMovieMediaItemSerializer
     queryset = TMDbMovieMediaItem.objects.filter(tmdb_list__category="Movie")
+
+
+class SteamGameImportListView(APIView):
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                "steam_id",
+                openapi.IN_QUERY,
+                description="User steam ID",
+                type=openapi.TYPE_STRING,
+                required=True,
+            )
+        ],
+        responses={
+            201: "Games imported successfully",
+            400: "Invalid steam user id",
+            500: "Internal server error",
+        },
+    )
+    def post(self, request):
+        serializer = SteamGamesImportSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+
+        steam_id = serializer.validated_data["steam_id"]
+
+        try:
+            client = SteamClient()
+            client.fetch_steam_user_games(steam_id)
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        return Response(
+            {"message": f"Games from user '{steam_id}' imported successfully!"},
+            status=status.HTTP_201_CREATED,
+        )
