@@ -26,6 +26,7 @@ from .models import (
     Playlist,
     Review,
     Song,
+    SteamGame,
     TMDbMovieMediaItem,
     TMDbTVMediaItem,
 )
@@ -39,6 +40,7 @@ from .serializers import (
     PlaylistDBSerializer,
     ReviewSerializer,
     SongDBSerializer,
+    SteamGameSerializer,
     SteamGamesImportSerializer,
     TMDbListImportSerializer,
     TMDbMovieMediaItemSerializer,
@@ -470,3 +472,8 @@ class SteamGameImportListView(APIView):
             {"message": f"Games from user '{steam_id}' imported successfully!"},
             status=status.HTTP_201_CREATED,
         )
+
+
+class SteamListView(generics.ListAPIView):
+    serializer_class = SteamGameSerializer
+    queryset = SteamGame.objects.all()

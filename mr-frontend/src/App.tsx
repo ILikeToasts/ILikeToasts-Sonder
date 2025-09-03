@@ -3,6 +3,7 @@ import "./App.css";
 import AlbumReview from "./components/Album/AlbumReview";
 import ArtistReview from "./components/Artists/ArtistReview";
 import { ThemeProvider } from "./components/Common/theme-provider";
+import GameReview from "./components/Games/GameReview";
 import Animes from "./components/Serie/Animes";
 import MediaReview from "./components/Serie/MediaReview";
 import TrackReview from "./components/Singles/TrackReview";
@@ -41,6 +42,7 @@ function App() {
             <Route path="/series/:serie_id" element={<MediaReview />} />
             <Route path="/animes/:anime_id" element={<MediaReview />} />
             <Route path="/movies/:movie_id" element={<MediaReview />} />
+            <Route path="/games/:appID" element={<GameReview />} />
           </Route>
         </Routes>
       </Router>

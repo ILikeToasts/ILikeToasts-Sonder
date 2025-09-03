@@ -247,8 +247,8 @@ class GameGenreSerializer(serializers.ModelSerializer):
         fields = ["name"]
 
 
-class SteamGameSerializer(serializers.Serializer):
-    developpers = GameDevelopperSerializer(many=True, read_only=True)
+class SteamGameSerializer(serializers.ModelSerializer):
+    developers = GameDevelopperSerializer(many=True, read_only=True)
     publishers = GamePublisherSerializer(many=True, read_only=True)
     genres = GameGenreSerializer(many=True, read_only=True)
 

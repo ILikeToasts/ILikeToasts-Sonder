@@ -23,6 +23,8 @@ export const GalleryGrid: React.FC<GalleryGridProps> = ({ items }) => {
     (item) => item.state?.serie || item.state?.anime || item.state?.movie,
   );
 
+  const isGame = items.some((item) => item.state?.game);
+
   const Container = hasMediaItem ? MediasContainer : AlbumsContainer;
   return (
     <Container>
@@ -30,7 +32,7 @@ export const GalleryGrid: React.FC<GalleryGridProps> = ({ items }) => {
         const isSerie =
           item.state?.serie || item.state?.anime || item.state?.movie;
         const height = isSerie ? "750px" : "500px";
-        const width = "500px";
+        const width = isGame ? "800px" : "500px";
 
         return (
           <Link key={item.id} to={item.linkTo} state={item.state}>
