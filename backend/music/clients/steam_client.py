@@ -106,13 +106,18 @@ class SteamClient:
                     game_data.get("publishers", [])
                 )
 
+                regular_size_image = game_data.get("header_image", "")
+
+                if regular_size_image.contains("header.jpg"):
+                    regular_size_image.replace("header.jpg", "header_2x.jpg")
+
                 game, created = SteamGame.objects.update_or_create(
                     name=game_data.get("name"),
                     appID=game_data.get("steam_appid", ""),
                     description=game_data.get("detailed_description", ""),
                     website=game_data["website"],
                     release_date=game_data.get("release_date", "").get("date", ""),
-                    image=game_data.get("header_image", ""),
+                    image=regular_size_image,
                 )
 
                 # Set Relations

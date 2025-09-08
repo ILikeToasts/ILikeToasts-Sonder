@@ -27,7 +27,7 @@ const Games: React.FC = () => {
         linkTo: `/games/${game.appID}`,
         state: { game },
       })}
-      items_per_page={4}
+      items_per_page={16}
     />
   );
 };

@@ -4,12 +4,20 @@ export interface Game {
   image: string;
   description: string;
   website: string;
-  developers: string[];
-  publishers: string[];
+  developers: Developer[];
+  publishers: Publisher[];
   genres: GameGenre[];
   release_date: string;
 }
 
 export interface GameGenre {
+  name: string;
+}
+
+export interface Developer {
+  name: string;
+}
+
+export interface Publisher {
   name: string;
 }

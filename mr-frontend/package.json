@@ -21,6 +21,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "dompurify": "^3.2.6",
     "framer-motion": "^12.23.6",
     "gsap": "^3.13.0",
     "hamburger-react": "^2.5.2",

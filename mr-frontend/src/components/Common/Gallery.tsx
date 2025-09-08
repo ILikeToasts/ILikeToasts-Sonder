@@ -31,8 +31,11 @@ export const GalleryGrid: React.FC<GalleryGridProps> = ({ items }) => {
       {items.map((item) => {
         const isSerie =
           item.state?.serie || item.state?.anime || item.state?.movie;
-        const height = isSerie ? "750px" : "500px";
-        const width = isGame ? "800px" : "500px";
+        var height = isSerie ? "750px" : "500px";
+
+        if (isGame) height = "215px";
+
+        const width = isGame ? "460px" : "500px";
 
         return (
           <Link key={item.id} to={item.linkTo} state={item.state}>
