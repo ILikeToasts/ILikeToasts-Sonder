@@ -31,7 +31,7 @@ export const GalleryGrid: React.FC<GalleryGridProps> = ({ items }) => {
       {items.map((item) => {
         const isSerie =
           item.state?.serie || item.state?.anime || item.state?.movie;
-        var height = isSerie ? "750px" : "500px";
+        let height = isSerie ? "750px" : "500px";
 
         if (isGame) height = "215px";
 
