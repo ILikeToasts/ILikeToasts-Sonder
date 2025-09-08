@@ -166,7 +166,7 @@ class TMDbClient:
 
         items = self.fetch_list_items(list_id)
 
-        if category == "Anime" or category == "TVShow":
+        if category == "anime" or category == "tv":
             media_type = "tv"
         else:
             media_type = "movie"
