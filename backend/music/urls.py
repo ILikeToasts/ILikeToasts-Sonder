@@ -18,6 +18,8 @@ from .views import (
     RecommendAlbumsView,
     RecommendArtistsView,
     ReviewsByAlbumView,
+    SteamGameImportListView,
+    SteamListView,
     TMDbImportListView,
     TopArtistsView,
     TopGenresView,
@@ -94,4 +96,6 @@ urlpatterns = [
     path("tmdb/list/animes/", AnimeListView.as_view(), name="anime-list"),
     path("tmdb/list/tv-shows/", TVShowListView.as_view(), name="tvshow-list"),
     path("tmdb/list/movies/", MovieListView.as_view(), name="movie-list"),
+    path("steam/games/import/", SteamGameImportListView.as_view(), name="steam-games"),
+    path("steam/games/list/", SteamListView.as_view(), name="games"),
 ]

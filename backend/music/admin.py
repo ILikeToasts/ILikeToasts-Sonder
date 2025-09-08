@@ -9,6 +9,7 @@ from .models import (
     ProductionCompany,
     Review,
     Song,
+    SteamGame,
     TMDbGenre,
     TMDbList,
     TMDbMovieMediaItem,
@@ -24,6 +25,7 @@ admin.site.register(Song)
 admin.site.register(Review)
 admin.site.register(Playlist)
 admin.site.register(MediaItem)
+admin.site.register(SteamGame)
 
 
 @admin.register(TMDbList)

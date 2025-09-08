@@ -1,7 +1,9 @@
-export default function Games() {
+import Games from "@/components/Games/Games";
+
+export default function GamesPage() {
   return (
     <div>
-      <h1>Games Page</h1>
+      <Games />
     </div>
   );
 }

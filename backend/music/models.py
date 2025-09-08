@@ -219,3 +219,36 @@ class TMDbMovieMediaItem(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class GameDeveloper(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class GamePublisher(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class GameGenre(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class SteamGame(models.Model):
+    name = models.CharField(max_length=255, blank=False, null=False)
+    appID = models.CharField(max_length=255, blank=False, null=False)
+    description = models.TextField(blank=True)
+    website = models.CharField(max_length=255, blank=True, null=True)
+    developers = models.ManyToManyField(GameDeveloper, related_name="games", blank=True)
+    publishers = models.ManyToManyField(GamePublisher, related_name="games", blank=True)
+    genres = models.ManyToManyField(GameGenre, related_name="games", blank=True)
+    release_date = models.CharField(max_length=100, blank=False, null=False)
+    image = models.CharField(max_length=255, blank=True, null=True)
