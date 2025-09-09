@@ -1,9 +1,35 @@
-import Games from "@/components/Games/Games";
+import FilterableGalleryPage from "@/components/Common/FilteredGalleryPage";
+import type { Game } from "@/types/games";
+import React, { useEffect, useState } from "react";
 
-export default function GamesPage() {
+const Games: React.FC = () => {
+  const [games, setGames] = useState<Game[]>([]);
+
+  useEffect(() => {
+    const fetchGames = async () => {
+      const response = await fetch(
+        "http://localhost:8000/api/steam/games/list/",
+      );
+      const data = await response.json();
+      setGames(data);
+    };
+    fetchGames();
+  }, []);
+
   return (
-    <div>
-      <Games />
-    </div>
+    <FilterableGalleryPage
+      items={games}
+      extractGenres={(game) => game.genres.map((g) => g.name)}
+      mapToGalleryItem={(game) => ({
+        id: game.appID,
+        title: game.name,
+        imageUrl: game.image,
+        linkTo: `/games/${game.appID}`,
+        state: { game },
+      })}
+      items_per_page={16}
+    />
   );
-}
+};
+
+export default Games;

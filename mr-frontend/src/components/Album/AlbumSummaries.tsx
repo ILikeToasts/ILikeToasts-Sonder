@@ -27,7 +27,7 @@ export const AlbumSummaries: React.FC<AlbumSummariesProps> = ({ album }) => {
             round={true}
             items={
               album.wiki_summary
-                ?.split(/\n\s*\n/) // or use just /\n/ depending on your formatting
+                ?.split(/\n\s*\n/)
                 .filter((p) => p.trim() !== "")
                 .map((paragraph, idx) => ({
                   id: idx,

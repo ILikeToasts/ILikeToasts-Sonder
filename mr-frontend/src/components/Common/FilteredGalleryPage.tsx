@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { GenreSelect } from "../Album/GenreSelect";
 import { Button } from "../ui/button";
 import { PageScroller } from "../ui/PageScroller";
 import type { GalleryItem } from "./Gallery";
 import GalleryGrid from "./Gallery";
+import { GenreSelect } from "./GenreSelect";
 
 export interface FilterableGalleryPageProps<T> {
   items: T[];

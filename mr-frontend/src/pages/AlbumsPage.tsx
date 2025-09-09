@@ -1,10 +1,32 @@
-import Albums from "../components/Album/Albums";
-import "../styles/global.css";
+import FilterableGalleryPage from "@/components/Common/FilteredGalleryPage";
+import type { SpotifyAlbum } from "@/types/spotify";
+import React, { useEffect, useState } from "react";
 
-export default function AlbumsPage() {
+const Albums: React.FC = () => {
+  const [albums, setAlbums] = useState<SpotifyAlbum[]>([]);
+
+  useEffect(() => {
+    const fetchAlbums = async () => {
+      const response = await fetch("http://localhost:8000/api/spotify/albums/");
+      const data = await response.json();
+      setAlbums(data);
+    };
+    fetchAlbums();
+  }, []);
+
   return (
-    <div>
-      <Albums />
-    </div>
+    <FilterableGalleryPage
+      items={albums}
+      extractGenres={(album) => album.genres.map((g) => g.name)}
+      mapToGalleryItem={(album) => ({
+        id: album.id,
+        title: album.title,
+        imageUrl: album.cover_url,
+        linkTo: `/albums/${album.spotify_id}`,
+        state: { album },
+      })}
+    />
   );
-}
+};
+
+export default Albums;

@@ -1,4 +1,4 @@
-import { GenreSelect } from "@/components/Album/GenreSelect";
+import { GenreSelect } from "@/components/Common/GenreSelect";
 import Masonry, { type Item } from "@/components/ui/Masonry";
 import { PageScroller } from "@/components/ui/PageScroller";
 import { MasonryContainer } from "@/styles/Pictures/Pictures.styles";

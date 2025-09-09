@@ -1,9 +1,33 @@
-import Singles from "../components/Singles/Singles";
+import FilterableGalleryPage from "@/components/Common/FilteredGalleryPage";
+import type { SpotifyTrack } from "@/types/spotify";
+import React, { useEffect, useState } from "react";
 
-export default function SinglesPage() {
+const Tracks: React.FC = () => {
+  const [tracks, setTracks] = useState<SpotifyTrack[]>([]);
+
+  useEffect(() => {
+    const fetchTracks = async () => {
+      const response = await fetch("http://localhost:8000/api/spotify/tracks/");
+      const data = await response.json();
+      setTracks(data);
+    };
+    fetchTracks();
+  }, []);
+
   return (
-    <div>
-      <Singles />
-    </div>
+    <FilterableGalleryPage
+      items={tracks}
+      extractGenres={(track) => track.genres?.map((g) => g.name) ?? []}
+      mapToGalleryItem={(track) => ({
+        id: track.id,
+        title: track.title,
+        imageUrl: track.cover_url,
+        linkTo: `/tracks/${track.spotify_id}`,
+        state: { track },
+      })}
+      galleryType="tracks"
+    />
   );
-}
+};
+
+export default Tracks;
