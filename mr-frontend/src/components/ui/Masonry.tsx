@@ -234,6 +234,11 @@ const Masonry: React.FC<MasonryProps> = ({
     }
   };
 
+  // To make the animation trigger every time the items change
+  useEffect(() => {
+    animatedItems.current.clear();
+  }, [items]);
+
   return (
     <div ref={containerRef} className="relative w-full h-full">
       {grid.map((item) => (
@@ -275,4 +280,4 @@ const Masonry: React.FC<MasonryProps> = ({
   );
 };
 
-export default Masonry;
+export default React.memo(Masonry);
