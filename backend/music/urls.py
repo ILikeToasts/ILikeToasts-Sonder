@@ -2,23 +2,29 @@ from django.urls import path
 
 from .views import (
     AlbumDetail,
+    AlbumGenresView,
     AlbumImportView,
     AlbumListView,
     AlbumMusicProfileView,
+    AnimeGenresView,
     AnimeListView,
     ArtistDetail,
     ArtistListView,
+    ArtistsGenresView,
     BottomArtistsView,
     FavoriteArtistsView,
     MediaItemCategoriesView,
     MediaItemListView,
+    MovieGenresView,
     MovieListView,
     PlaylistImport,
     PlaylistView,
     RecommendAlbumsView,
     RecommendArtistsView,
     ReviewsByAlbumView,
+    SinglesGenresView,
     SteamGameImportListView,
+    SteamGamesGenresView,
     SteamListView,
     TMDbImportListView,
     TopArtistsView,
@@ -26,6 +32,7 @@ from .views import (
     TrackImportView,
     TracksListView,
     TracksMusicProfileView,
+    TVSerieGenresView,
     TVShowListView,
     YTMediaItemListView,
 )
@@ -43,7 +50,7 @@ urlpatterns = [
         TrackImportView.as_view(),
         name="track-import",
     ),
-    path("spotify/tracks/", TracksListView.as_view(), name="tracks-list"),
+    path("spotify/singles/", TracksListView.as_view(), name="singles-list"),
     path("spotify/artists/", ArtistListView.as_view(), name="artist-list"),
     path(
         "spotify/artists/<str:artist_id>/", ArtistDetail.as_view(), name="artist-detail"
@@ -84,6 +91,9 @@ urlpatterns = [
         MediaItemCategoriesView.as_view(),
         name="media-item-categories",
     ),
+    path("albums/list-genres/", AlbumGenresView.as_view(), name="album-genres"),
+    path("artists/list-genres/", ArtistsGenresView.as_view(), name="artists-genres"),
+    path("singles/list-genres/", SinglesGenresView.as_view(), name="singles-genres"),
     path("media-items/", MediaItemListView.as_view(), name="media-items"),
     path("yt-media-items/", YTMediaItemListView.as_view(), name="media-item-list"),
     path("data/top-genres/", TopGenresView.as_view(), name="top-genres"),
@@ -94,8 +104,22 @@ urlpatterns = [
     path("data/bottom-artists/", BottomArtistsView.as_view(), name="bottom-artists"),
     path("tmdb/list/import/", TMDbImportListView.as_view(), name="tmdb-list-import"),
     path("tmdb/list/animes/", AnimeListView.as_view(), name="anime-list"),
-    path("tmdb/list/tv-shows/", TVShowListView.as_view(), name="tvshow-list"),
+    path("tmdb/list/series/", TVShowListView.as_view(), name="series-list"),
     path("tmdb/list/movies/", MovieListView.as_view(), name="movie-list"),
+    path(
+        "tmdb/movies/list-genres/", MovieGenresView.as_view(), name="movie-list-genres"
+    ),
+    path(
+        "tmdb/animes/list-genres/", AnimeGenresView.as_view(), name="animes-list-genres"
+    ),
+    path(
+        "tmdb/series/list-genres/",
+        TVSerieGenresView.as_view(),
+        name="series-list-genres",
+    ),
     path("steam/games/import/", SteamGameImportListView.as_view(), name="steam-games"),
     path("steam/games/list/", SteamListView.as_view(), name="games"),
+    path(
+        "steam/games/list-genres/", SteamGamesGenresView.as_view(), name="games-genres"
+    ),
 ]

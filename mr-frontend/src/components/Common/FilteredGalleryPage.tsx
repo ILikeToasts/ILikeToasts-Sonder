@@ -8,72 +8,59 @@ import { GenreSelect } from "./GenreSelect";
 
 export interface FilterableGalleryPageProps<T> {
   items: T[];
-  galleryType?: string;
-  extractGenres: (item: T) => string[];
+  genreOptions: string[];
+  selectedGenre: string;
+  onGenreChange: (genre: string) => void;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+  totalPages: number;
   mapToGalleryItem: (item: T) => GalleryItem;
-  items_per_page?: number;
+  galleryType?: string;
 }
 
 export default function FilterableGalleryPage<T>({
   items,
-  extractGenres,
+  genreOptions,
+  selectedGenre,
+  onGenreChange,
+  currentPage,
+  onPageChange,
+  totalPages,
   mapToGalleryItem,
   galleryType = "",
-  items_per_page,
 }: FilterableGalleryPageProps<T>) {
-  const [selectedGenre, setSelectedGenre] = useState<string>("All");
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [statsPath, setStatsPath] = useState<string>("");
-  const ITEMS_PER_PAGE = items_per_page ? items_per_page : 8;
-
-  const genres = Array.from(new Set(items.flatMap(extractGenres)));
-  const options = ["All", ...genres];
-
-  const filtered =
-    selectedGenre === "All"
-      ? items
-      : items.filter((item) => extractGenres(item).includes(selectedGenre));
-
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-
-  const paginatedItems = filtered.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  );
-
-  const galleryItems = paginatedItems.map(mapToGalleryItem);
-
-  const handleGenreChange = (value: string) => {
-    setSelectedGenre(value);
-    setCurrentPage(1);
-  };
   const navigate = useNavigate();
+  const [statsPath, setStatsPath] = useState<string>("");
 
+  // Optional gallery type logic
   useEffect(() => {
-    if (galleryType === "tracks") {
-      setStatsPath("/tracks/stats");
-    }
+    if (galleryType === "tracks") setStatsPath("/tracks/stats");
   }, [galleryType]);
+
+  const galleryItems = items.map(mapToGalleryItem);
 
   return (
     <div className="space-y-4">
       <div className="w-full flex justify-between items-center flex-wrap px-4 pt-4">
         <GenreSelect
-          options={options}
+          options={genreOptions}
           value={selectedGenre}
-          onValueChange={handleGenreChange}
+          onValueChange={onGenreChange}
         />
+
         {galleryType === "tracks" && (
           <Button onClick={() => navigate(statsPath)}>Stats</Button>
         )}
+
         {totalPages > 1 && (
           <PageScroller
             currentPage={currentPage}
             totalPages={totalPages}
-            onPageChange={setCurrentPage}
+            onPageChange={onPageChange}
           />
         )}
       </div>
+
       <GalleryGrid items={galleryItems} />
     </div>
   );

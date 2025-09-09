@@ -1,22 +1,22 @@
-import FilterableGalleryPage from "@/components/Common/FilteredGalleryPage";
-import type { SpotifyArtist } from "@/types/spotify";
+import type { TVShow } from "@/types/tmdb";
 import React, { useEffect, useState } from "react";
+import FilterableGalleryPage from "../components/Common/FilteredGalleryPage";
 
-const ITEMS_PER_PAGE = 8;
+const ITEMS_PER_PAGE = 4;
 
-const Artists: React.FC = () => {
+const Animes: React.FC = () => {
   const [genres, setGenres] = useState<string[]>([]);
   const [selectedGenre, setSelectedGenre] = useState<string>("All");
-  const [artists, setArtists] = useState<SpotifyArtist[]>([]);
+  const [animes, setAnimes] = useState<TVShow[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
 
-  // Fetch all albums genres
+  // Fetch all animes genres
   useEffect(() => {
     const fetchGenres = async () => {
       try {
         const res = await fetch(
-          "http://localhost:8000/api/artists/list-genres/",
+          "http://localhost:8000/api/tmdb/animes/list-genres/",
         );
         const data: string[] = await res.json();
         setGenres(["All", ...data]);
@@ -27,9 +27,9 @@ const Artists: React.FC = () => {
     fetchGenres();
   }, []);
 
-  // Fetch albums for current genre + page
+  // Fetch animes for current genre + page
   useEffect(() => {
-    const fetchArtists = async () => {
+    const fetchAnimes = async () => {
       try {
         const params = new URLSearchParams();
         if (selectedGenre !== "All") params.append("genre", selectedGenre);
@@ -37,18 +37,18 @@ const Artists: React.FC = () => {
         params.append("limit", ITEMS_PER_PAGE.toString());
 
         const res = await fetch(
-          `http://localhost:8000/api/spotify/artists/?${params}`,
+          `http://localhost:8000/api/tmdb/list/animes/?${params}`,
         );
         const data = await res.json();
 
-        setArtists(data.results);
+        setAnimes(data.results);
         setTotalPages(Math.ceil(data.count / ITEMS_PER_PAGE));
       } catch (err) {
         console.error("Failed to fetch albums:", err);
       }
     };
 
-    fetchArtists();
+    fetchAnimes();
   }, [selectedGenre, currentPage]);
 
   const handleGenreChange = (genre: string) => {
@@ -58,22 +58,22 @@ const Artists: React.FC = () => {
 
   return (
     <FilterableGalleryPage
-      items={artists}
+      items={animes}
       genreOptions={genres}
       selectedGenre={selectedGenre}
       onGenreChange={handleGenreChange}
       currentPage={currentPage}
       onPageChange={setCurrentPage}
       totalPages={totalPages}
-      mapToGalleryItem={(artist) => ({
-        id: artist.id,
-        title: artist.name,
-        imageUrl: artist.image_url,
-        linkTo: `/artists/${artist.spotify_id}`,
-        state: { artist },
+      mapToGalleryItem={(anime) => ({
+        id: anime.id,
+        title: anime.title,
+        imageUrl: anime.poster_url,
+        linkTo: `/animes/${anime.id}`,
+        state: { anime },
       })}
     />
   );
 };
 
-export default Artists;
+export default Animes;
