@@ -28,7 +28,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/albums" element={<Album />} />
             <Route path="/artists" element={<Artists />} />
-            <Route path="/tracks" element={<Singles />} />
+            <Route path="/singles" element={<Singles />} />
             <Route path="/games" element={<Games />} />
             <Route path="/movies" element={<Movies />} />
             <Route path="/pictures" element={<Pictures />} />
@@ -37,8 +37,8 @@ function App() {
             <Route path="/trips" element={<Trips />} />
             <Route path="/albums/:album_id" element={<AlbumReview />} />
             <Route path="/artists/:artist_id" element={<ArtistReview />} />
-            <Route path="/tracks/:track_id" element={<TrackReview />} />
-            <Route path="/tracks/stats" element={<TracksStats />} />
+            <Route path="/singles/:single_id" element={<TrackReview />} />
+            <Route path="/singles/stats" element={<TracksStats />} />
             <Route path="/series/:serie_id" element={<MediaReview />} />
             <Route path="/animes/:anime_id" element={<MediaReview />} />
             <Route path="/movies/:movie_id" element={<MediaReview />} />

@@ -21,7 +21,7 @@ export default function DockNavigation() {
     { path: "/", label: "Home", icon: <BookOpenText size={20} /> },
     { path: "/albums", label: "Albums", icon: <Album size={20} /> },
     { path: "/artists", label: "Artists", icon: <Users size={20} /> },
-    { path: "/tracks", label: "tracks", icon: <Disc3 size={20} /> },
+    { path: "/singles", label: "Singles", icon: <Disc3 size={20} /> },
     { path: "/pictures", label: "Pictures", icon: <Image size={20} /> },
     { path: "/games", label: "Games", icon: <Gamepad2 size={20} /> },
     { path: "/movies", label: "Movies", icon: <Film size={20} /> },

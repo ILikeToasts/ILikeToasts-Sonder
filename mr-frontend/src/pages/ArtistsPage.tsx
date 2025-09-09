@@ -1,71 +1,15 @@
-import FilterableGalleryPage from "@/components/Common/FilteredGalleryPage";
+import { ARTISTS_DATA_URL, ARTISTS_GENRES_URL } from "@/api/ApiRoutes";
 import type { SpotifyArtist } from "@/types/spotify";
-import React, { useEffect, useState } from "react";
-
-const ITEMS_PER_PAGE = 8;
+import React from "react";
+import GalleryPage from "./GalleryPageTemplate";
 
 const Artists: React.FC = () => {
-  const [genres, setGenres] = useState<string[]>([]);
-  const [selectedGenre, setSelectedGenre] = useState<string>("All");
-  const [artists, setArtists] = useState<SpotifyArtist[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(1);
-
-  // Fetch all albums genres
-  useEffect(() => {
-    const fetchGenres = async () => {
-      try {
-        const res = await fetch(
-          "http://localhost:8000/api/artists/list-genres/",
-        );
-        const data: string[] = await res.json();
-        setGenres(["All", ...data]);
-      } catch (err) {
-        console.error("Failed to fetch genres:", err);
-      }
-    };
-    fetchGenres();
-  }, []);
-
-  // Fetch albums for current genre + page
-  useEffect(() => {
-    const fetchArtists = async () => {
-      try {
-        const params = new URLSearchParams();
-        if (selectedGenre !== "All") params.append("genre", selectedGenre);
-        params.append("page", currentPage.toString());
-        params.append("limit", ITEMS_PER_PAGE.toString());
-
-        const res = await fetch(
-          `http://localhost:8000/api/spotify/artists/?${params}`,
-        );
-        const data = await res.json();
-
-        setArtists(data.results);
-        setTotalPages(Math.ceil(data.count / ITEMS_PER_PAGE));
-      } catch (err) {
-        console.error("Failed to fetch albums:", err);
-      }
-    };
-
-    fetchArtists();
-  }, [selectedGenre, currentPage]);
-
-  const handleGenreChange = (genre: string) => {
-    setSelectedGenre(genre);
-    setCurrentPage(1);
-  };
-
   return (
-    <FilterableGalleryPage
-      items={artists}
-      genreOptions={genres}
-      selectedGenre={selectedGenre}
-      onGenreChange={handleGenreChange}
-      currentPage={currentPage}
-      onPageChange={setCurrentPage}
-      totalPages={totalPages}
-      mapToGalleryItem={(artist) => ({
+    <GalleryPage
+      genres_url={ARTISTS_GENRES_URL}
+      data_url={ARTISTS_DATA_URL}
+      itemsPerPage={8}
+      mapToGalleryItem={(artist: SpotifyArtist) => ({
         id: artist.id,
         title: artist.name,
         imageUrl: artist.image_url,

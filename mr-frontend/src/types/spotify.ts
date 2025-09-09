@@ -35,7 +35,7 @@ export interface SpotifyAlbumReview {
   content: string;
 }
 
-export interface SpotifyTrack {
+export interface SpotifySingles {
   id: number;
   title: string;
   spotify_id: string;

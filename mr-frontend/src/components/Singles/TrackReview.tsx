@@ -16,19 +16,19 @@ import SpotifyTrackEmbed from "./SpotifyTrackEmbed";
 
 const TrackReview: React.FC = () => {
   const location = useLocation();
-  const track = location.state?.track;
+  const single = location.state?.single;
   const [auroraColors, setAuroraColors] = useState<string[]>([]);
 
-  if (!track) {
-    return <div>No track data found.</div>;
+  if (!single) {
+    return <div>No single data found.</div>;
   }
 
   useEffect(() => {
-    if (!track?.cover_url) return;
+    if (!single?.cover_url) return;
 
     const fetchColors = async () => {
       try {
-        const palette = await Vibrant.from(track.cover_url).getPalette();
+        const palette = await Vibrant.from(single.cover_url).getPalette();
         const selectedColors = [
           palette.Vibrant?.hex,
           palette.DarkMuted?.hex,
@@ -42,7 +42,7 @@ const TrackReview: React.FC = () => {
       }
     };
     fetchColors();
-  }, [track]);
+  }, [single]);
 
   return (
     <>
@@ -72,9 +72,9 @@ const TrackReview: React.FC = () => {
             <ReviewTextSection>
               <TitleSection>
                 <Titles>
-                  <ReviewTitle>{track.title}</ReviewTitle>
+                  <ReviewTitle>{single.title}</ReviewTitle>
                   <ReviewSubtitle>
-                    {track.genres
+                    {single.genres
                       .map((g: { name: string }) => g.name)
                       .join(", ")}
                   </ReviewSubtitle>
@@ -82,7 +82,7 @@ const TrackReview: React.FC = () => {
               </TitleSection>
             </ReviewTextSection>
           </ReviewBox>
-          <SpotifyTrackEmbed spotifyTrackId={track.spotify_id} />
+          <SpotifyTrackEmbed spotifyTrackId={single.spotify_id} />
         </ReviewInfo>
       </ReviewContainer>
     </>
