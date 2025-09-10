@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { Button } from "../ui/button";
 import { ButtonLoading } from "../ui/ButtonLoading";
 
+import { API_ROUTES } from "@/constants/ApiRoutes";
 import {
   ArtistTitle,
   InformationSection,
@@ -11,6 +11,7 @@ import {
   Title,
 } from "@/styles/common/Review.styles";
 import { CenteredText } from "@/styles/global.styles";
+import { useMutation } from "@tanstack/react-query";
 import { MusicIcon } from "lucide-react";
 import Carousel from "../Common/Carousel";
 
@@ -38,34 +39,35 @@ export interface ArtistRecommendations {
 export const Recommendations: React.FC<ArtistRecommendationProps> = ({
   artistName,
 }) => {
-  const [recommendations, setRecommendations] =
-    useState<ArtistRecommendations | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const recommendationsMutation = useMutation<
+    ArtistRecommendations,
+    Error,
+    string
+  >({
+    mutationFn: async (artistName) => {
+      const res = await fetch(API_ROUTES.llm.artistRecommendations(artistName));
+      if (!res.ok) throw new Error("Failed to fetch recommendations");
+      const data = await res.json();
+      return data.recommendations as ArtistRecommendations;
+    },
+  });
 
-  const fetchRecommendations = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(
-        `http://localhost:8000/api/recommend/${artistName}`,
-      );
-      const data = await response.json();
-      setRecommendations(data.recommendations as ArtistRecommendations);
-    } catch (err) {
-      setError("Failed to fetch recommendations.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const recommendations = recommendationsMutation.data;
+  const loading = recommendationsMutation.isPending;
 
   return (
     <RecommendationSection>
       {!recommendations && !loading && (
-        <Button onClick={fetchRecommendations}>Get Recommendations</Button>
+        <Button
+          onClick={() => recommendationsMutation.mutate(artistName)}
+          disabled={recommendationsMutation.isPending}
+        >
+          {recommendationsMutation.isPending
+            ? "Loading..."
+            : "Get Recommendations"}
+        </Button>
       )}
       {loading && <ButtonLoading />}
-      {error && <p style={{ color: "red" }}>{error}</p>}
 
       {recommendations && (
         <InformationSection>

@@ -8,64 +8,21 @@ import {
   Titles,
   TitleSection,
 } from "@/styles/common/Review.styles";
-import { Vibrant } from "node-vibrant/browser";
-import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import Aurora, { AuroraBackground, AuroraBottom } from "../ui/Aurora";
+import { CustomAuroraBackground } from "../ui/CustomAuroraBackground";
 import SpotifyTrackEmbed from "./SpotifyTrackEmbed";
 
 const TrackReview: React.FC = () => {
   const location = useLocation();
   const single = location.state?.single;
-  const [auroraColors, setAuroraColors] = useState<string[]>([]);
 
   if (!single) {
     return <div>No single data found.</div>;
   }
 
-  useEffect(() => {
-    if (!single?.cover_url) return;
-
-    const fetchColors = async () => {
-      try {
-        const palette = await Vibrant.from(single.cover_url).getPalette();
-        const selectedColors = [
-          palette.Vibrant?.hex,
-          palette.DarkMuted?.hex,
-          palette.DarkVibrant?.hex,
-        ].filter(Boolean) as string[];
-
-        setAuroraColors(selectedColors);
-      } catch (err) {
-        console.error("Failed to extract colors", err);
-        setAuroraColors(["#3A29FF", "#FF94B4", "#FF3232"]);
-      }
-    };
-    fetchColors();
-  }, [single]);
-
   return (
     <>
-      {auroraColors.length > 0 && (
-        <>
-          <AuroraBackground>
-            <Aurora
-              colorStops={auroraColors}
-              blend={1}
-              amplitude={1}
-              speed={1}
-            />
-          </AuroraBackground>
-          <AuroraBottom>
-            <Aurora
-              colorStops={auroraColors}
-              blend={1}
-              amplitude={0.5}
-              speed={1}
-            />
-          </AuroraBottom>
-        </>
-      )}
+      <CustomAuroraBackground imageUrl={single?.cover_url} />
       <ReviewContainer>
         <ReviewInfo>
           <ReviewBox>

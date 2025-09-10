@@ -11,18 +11,15 @@ import {
 } from "@/styles/common/Review.styles";
 import { ProductionCompanies } from "@/styles/Media/media.styles";
 import type { ProductionCompany } from "@/types/tmdb";
-import { Vibrant } from "node-vibrant/browser";
-import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import TiltedCard from "../Common/TiltedCard";
-import Aurora, { AuroraBackground, AuroraBottom } from "../ui/Aurora";
+import { CustomAuroraBackground } from "../ui/CustomAuroraBackground";
 
 const MediaReview: React.FC = () => {
   const location = useLocation();
   const mediaItem =
     location.state?.serie || location.state?.anime || location.state?.movie;
   const mediaType = location.state?.movie ? "Movie" : "TV";
-  const [auroraColors, setAuroraColors] = useState<string[]>([]);
   const height = "750px";
   const width = "500px";
 
@@ -30,49 +27,9 @@ const MediaReview: React.FC = () => {
     return <div>No mediaItem data found.</div>;
   }
 
-  useEffect(() => {
-    if (!mediaItem.poster_url) return;
-
-    const fetchColors = async () => {
-      try {
-        const palette = await Vibrant.from(mediaItem.poster_url).getPalette();
-        const selectedColors = [
-          palette.Vibrant?.hex,
-          palette.DarkMuted?.hex,
-          palette.DarkVibrant?.hex,
-        ].filter(Boolean) as string[];
-
-        setAuroraColors(selectedColors);
-      } catch (err) {
-        console.error("Failed to extract colors", err);
-        setAuroraColors(["#3A29FF", "#FF94B4", "#FF3232"]);
-      }
-    };
-    fetchColors();
-  }, [mediaItem]);
-
   return (
     <>
-      {auroraColors.length > 0 && (
-        <>
-          <AuroraBackground>
-            <Aurora
-              colorStops={auroraColors}
-              blend={1}
-              amplitude={1}
-              speed={1}
-            />
-          </AuroraBackground>
-          <AuroraBottom>
-            <Aurora
-              colorStops={auroraColors}
-              blend={1}
-              amplitude={0.5}
-              speed={1}
-            />
-          </AuroraBottom>
-        </>
-      )}
+      <CustomAuroraBackground imageUrl={mediaItem?.poster_url} />
       <ReviewContainer>
         <ReviewInfo>
           <ReviewBox>

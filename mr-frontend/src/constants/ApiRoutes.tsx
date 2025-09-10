@@ -37,5 +37,11 @@ export const API_ROUTES = {
   },
   llm: {
     musicProfile: `${BASE_URL}user/profile/tracks/`,
+    artistRecommendations: (artistName: string) =>
+      `${BASE_URL}recommend/${artistName}`,
+  },
+  reviews: {
+    albums: (albumId: string | number) =>
+      `${BASE_URL}spotify/reviews/album/${albumId}/`,
   },
 };

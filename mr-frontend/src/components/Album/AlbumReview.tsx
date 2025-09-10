@@ -1,3 +1,5 @@
+import { fetcher } from "@/api/service";
+import { API_ROUTES } from "@/constants/ApiRoutes";
 import {
   ReviewBox,
   ReviewContainer,
@@ -8,51 +10,22 @@ import {
   Titles,
   TitleSection,
 } from "@/styles/common/Review.styles";
-import { Vibrant } from "node-vibrant/browser";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
 import type { SpotifyAlbumReview } from "../../types/spotify";
-import Aurora, { AuroraBackground, AuroraBottom } from "../ui/Aurora";
+import { CustomAuroraBackground } from "../ui/CustomAuroraBackground";
 import { AlbumSummaries } from "./AlbumSummaries";
 import SpotifyAlbumEmbed from "./SpotifyAlbumEmbed";
 
 const AlbumReview: React.FC = () => {
   const location = useLocation();
   const album = location.state?.album;
-  const [review, setReview] = useState<SpotifyAlbumReview[]>([]);
-  const [auroraColors, setAuroraColors] = useState<string[]>([]);
 
-  useEffect(() => {
-    const fetchReview = async () => {
-      const response = await fetch(
-        "http://localhost:8000/api/spotify/reviews/album/" + album.id + "/",
-      );
-      const data = await response.json();
-      setReview(data);
-    };
-    fetchReview();
-  }, []);
-
-  useEffect(() => {
-    if (!album?.cover_url) return;
-
-    const fetchColors = async () => {
-      try {
-        const palette = await Vibrant.from(album.cover_url).getPalette();
-        const selectedColors = [
-          palette.Vibrant?.hex,
-          palette.DarkMuted?.hex,
-          palette.DarkVibrant?.hex,
-        ].filter(Boolean) as string[];
-
-        setAuroraColors(selectedColors);
-      } catch (err) {
-        console.error("Failed to extract colors", err);
-        setAuroraColors(["#3A29FF", "#FF94B4", "#FF3232"]);
-      }
-    };
-    fetchColors();
-  }, [album]);
+  const { data: review } = useQuery<SpotifyAlbumReview[]>({
+    queryKey: ["top-genres"],
+    queryFn: async () =>
+      fetcher<SpotifyAlbumReview[]>(API_ROUTES.reviews.albums(album.id)),
+  });
 
   if (!album) {
     return <div>No album data found.</div>;
@@ -60,26 +33,7 @@ const AlbumReview: React.FC = () => {
 
   return (
     <>
-      {auroraColors.length > 0 && (
-        <>
-          <AuroraBackground>
-            <Aurora
-              colorStops={auroraColors}
-              blend={1}
-              amplitude={1}
-              speed={1}
-            />
-          </AuroraBackground>
-          <AuroraBottom>
-            <Aurora
-              colorStops={auroraColors}
-              blend={1}
-              amplitude={0.5}
-              speed={1}
-            />
-          </AuroraBottom>
-        </>
-      )}
+      <CustomAuroraBackground imageUrl={album.cover_url} />
 
       <ReviewContainer>
         <ReviewInfo>
@@ -97,7 +51,7 @@ const AlbumReview: React.FC = () => {
               </TitleSection>
             </ReviewTextSection>
 
-            {review[0] ? (
+            {review && review.length > 0 ? (
               <div>
                 <ReviewTextSection>
                   {review[0].rating
