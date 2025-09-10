@@ -91,38 +91,10 @@ const Masonry: React.FC<MasonryProps> = ({
 
   const [containerRef, { width }] = useMeasure<HTMLDivElement>();
   const [imagesReady, setImagesReady] = useState(false);
+  const [activeItem, setActiveItem] = useState<Item | null>(null);
+  const animatedItems = useRef<Set<string>>(new Set());
 
-  const getInitialPosition = (item: any) => {
-    const containerRect = containerRef.current?.getBoundingClientRect();
-    if (!containerRect) return { x: item.x, y: item.y };
-
-    let direction = animateFrom;
-    if (animateFrom === "random") {
-      const dirs = ["top", "bottom", "left", "right"];
-      direction = dirs[
-        Math.floor(Math.random() * dirs.length)
-      ] as typeof animateFrom;
-    }
-
-    switch (direction) {
-      case "top":
-        return { x: item.x, y: -200 };
-      case "bottom":
-        return { x: item.x, y: window.innerHeight + 200 };
-      case "left":
-        return { x: -200, y: item.y };
-      case "right":
-        return { x: window.innerWidth + 200, y: item.y };
-      case "center":
-        return {
-          x: containerRect.width / 2 - item.w / 2,
-          y: containerRect.height / 2 - item.h / 2,
-        };
-      default:
-        return { x: item.x, y: item.y + 100 };
-    }
-  };
-
+  // Preload images/videos
   useEffect(() => {
     if (!items.length) return;
 
@@ -163,8 +135,38 @@ const Masonry: React.FC<MasonryProps> = ({
     });
   }, [columns, items, width]);
 
-  const animatedItems = useRef<Set<string>>(new Set());
+  const getInitialPosition = (item: any) => {
+    const containerRect = containerRef.current?.getBoundingClientRect();
+    if (!containerRect) return { x: item.x, y: item.y };
 
+    let direction = animateFrom;
+    if (animateFrom === "random") {
+      const dirs = ["top", "bottom", "left", "right"];
+      direction = dirs[
+        Math.floor(Math.random() * dirs.length)
+      ] as typeof animateFrom;
+    }
+
+    switch (direction) {
+      case "top":
+        return { x: item.x, y: -200 };
+      case "bottom":
+        return { x: item.x, y: window.innerHeight + 200 };
+      case "left":
+        return { x: -200, y: item.y };
+      case "right":
+        return { x: window.innerWidth + 200, y: item.y };
+      case "center":
+        return {
+          x: containerRect.width / 2 - item.w / 2,
+          y: containerRect.height / 2 - item.h / 2,
+        };
+      default:
+        return { x: item.x, y: item.y + 100 };
+    }
+  };
+
+  // Animate items on load
   useLayoutEffect(() => {
     if (!imagesReady || !grid.length) return;
 
@@ -173,12 +175,7 @@ const Masonry: React.FC<MasonryProps> = ({
       const animProps = { x: item.x, y: item.y, width: item.w, height: item.h };
 
       if (animatedItems.current.has(item.id)) {
-        gsap.to(selector, {
-          ...animProps,
-          duration,
-          ease,
-          overwrite: "auto",
-        });
+        gsap.to(selector, { ...animProps, duration, ease, overwrite: "auto" });
       } else {
         const start = getInitialPosition(item);
         gsap.fromTo(
@@ -196,24 +193,26 @@ const Masonry: React.FC<MasonryProps> = ({
             ...animProps,
             ...(blurToFocus && { filter: "blur(0px)" }),
             duration: 0.8,
-            ease: ease ?? "power3.out",
+            ease,
             delay: index * (stagger ?? 0.05),
           },
         );
-
         animatedItems.current.add(item.id);
       }
     });
   }, [grid, imagesReady, duration, ease, stagger, blurToFocus]);
 
+  useEffect(() => {
+    animatedItems.current.clear();
+  }, [items]);
+
   const handleMouseEnter = (id: string, element: HTMLElement) => {
-    if (scaleOnHover) {
+    if (scaleOnHover)
       gsap.to(`[data-key="${id}"]`, {
         scale: hoverScale,
         duration: 0.3,
         ease: "power2.out",
       });
-    }
     if (colorShiftOnHover) {
       const overlay = element.querySelector(".color-overlay") as HTMLElement;
       if (overlay) gsap.to(overlay, { opacity: 0.3, duration: 0.3 });
@@ -221,23 +220,17 @@ const Masonry: React.FC<MasonryProps> = ({
   };
 
   const handleMouseLeave = (id: string, element: HTMLElement) => {
-    if (scaleOnHover) {
+    if (scaleOnHover)
       gsap.to(`[data-key="${id}"]`, {
         scale: 1,
         duration: 0.3,
         ease: "power2.out",
       });
-    }
     if (colorShiftOnHover) {
       const overlay = element.querySelector(".color-overlay") as HTMLElement;
       if (overlay) gsap.to(overlay, { opacity: 0, duration: 0.3 });
     }
   };
-
-  // To make the animation trigger every time the items change
-  useEffect(() => {
-    animatedItems.current.clear();
-  }, [items]);
 
   return (
     <div ref={containerRef} className="relative w-full h-full">
@@ -247,19 +240,17 @@ const Masonry: React.FC<MasonryProps> = ({
           data-key={item.id}
           className="absolute box-content"
           style={{ willChange: "transform, width, height, opacity" }}
-          onClick={() => window.open(item.url, "_blank", "noopener")}
+          onClick={() => setActiveItem(item)}
           onMouseEnter={(e) => handleMouseEnter(item.id, e.currentTarget)}
           onMouseLeave={(e) => handleMouseLeave(item.id, e.currentTarget)}
         >
           <div className="relative w-full h-full rounded-[10px] shadow-[0px_10px_50px_-10px_rgba(0,0,0,0.2)] overflow-hidden cursor-pointer">
-            {item.mediaType === "image" && (
+            {item.mediaType === "image" ? (
               <div
                 className="w-full h-full bg-cover bg-center"
                 style={{ backgroundImage: `url(${item.img})` }}
               />
-            )}
-
-            {item.mediaType === "video" && (
+            ) : (
               <video
                 className="w-full h-full object-cover"
                 src={item.img}
@@ -276,6 +267,40 @@ const Masonry: React.FC<MasonryProps> = ({
           </div>
         </div>
       ))}
+
+      {/* Modal / Lightbox */}
+      {activeItem && (
+        <div
+          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+          onClick={() => setActiveItem(null)}
+        >
+          <div
+            className="relative flex items-center justify-center"
+            style={{
+              width: "80%",
+              height: "95%",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {activeItem.mediaType === "image" ? (
+              <img
+                src={activeItem.img}
+                alt=""
+                className="rounded-md max-w-full max-h-full object-contain"
+              />
+            ) : (
+              <video
+                src={activeItem.img}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="rounded-md max-w-full max-h-full object-contain"
+              />
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
