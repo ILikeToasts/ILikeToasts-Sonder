@@ -1,14 +1,16 @@
+import { fetcher } from "@/api/service";
 import Carousel from "@/components/Common/Carousel";
 import { Button } from "@/components/ui/button";
 import { ButtonLoading } from "@/components/ui/ButtonLoading";
 import { Card } from "@/components/ui/card";
 import { ChartPieInteractive } from "@/components/ui/PieChart";
 import { ChartRadar } from "@/components/ui/RadarChart";
+import { API_ROUTES } from "@/constants/ApiRoutes";
 import { FlexContainer } from "@/styles/common/Page.styles";
 import { CenteredText } from "@/styles/global.styles";
 import { CarouselContainer, MusicProfile } from "@/styles/Tracks/Tracks.styles";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { MusicIcon } from "lucide-react";
-import { useEffect, useState } from "react";
 
 type GenreData = {
   name: string;
@@ -36,75 +38,41 @@ export interface MusicProfile {
 }
 
 export default function TracksStats() {
-  const [musicProfile, setMusicProfile] = useState<MusicProfile | null>(null);
-  const [tracksGenresData, setTracksGenresData] = useState<GenreData[]>([]);
-  const [favoriteArtistsData, setFavoriteArtistsData] = useState<
-    FavoriteArtistData[]
-  >([]);
-  const [topArtistsData, setTopArtistsData] = useState<ArtistData[]>([]);
-  const [bottomArtistsData, setBottomArtistsData] = useState<ArtistData[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { data: topGenres } = useQuery<GenreData[]>({
+    queryKey: ["top-genres"],
+    queryFn: async () => fetcher<GenreData[]>(API_ROUTES.stats.topGenres),
+  });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(
-        "http://localhost:8000/api/data/top-genres/",
-      );
-      const data = await response.json();
-      setTracksGenresData(data);
-    };
-    fetchData();
-  }, []);
+  const { data: topArtists } = useQuery<ArtistData[]>({
+    queryKey: ["top-artists"],
+    queryFn: async () => fetcher<ArtistData[]>(API_ROUTES.stats.topArtists),
+  });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(
-        "http://localhost:8000/api/data/top-artists/",
-      );
-      const data = await response.json();
-      setTopArtistsData(data);
-    };
-    fetchData();
-  }, []);
+  const { data: bottomArtists } = useQuery<ArtistData[]>({
+    queryKey: ["bottom-artists"],
+    queryFn: async () => fetcher<ArtistData[]>(API_ROUTES.stats.bottomArtists),
+  });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(
-        "http://localhost:8000/api/data/bottom-artists/",
-      );
-      const data = await response.json();
-      setBottomArtistsData(data);
-    };
-    fetchData();
-  }, []);
+  const { data: favoriteArtists } = useQuery<FavoriteArtistData[]>({
+    queryKey: ["favorite-artists"],
+    queryFn: async () =>
+      fetcher<FavoriteArtistData[]>(API_ROUTES.stats.favoriteArtists),
+  });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(
-        "http://localhost:8000/api/data/favorite-artists/",
-      );
-      const data = await response.json();
-      setFavoriteArtistsData(data);
-    };
-    fetchData();
-  }, []);
-
-  const generateMusicProifle = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(
-        `http://localhost:8000/api/user/profile/tracks/`,
-      );
-      const data = await response.json();
-      setMusicProfile(data.MusicProfile as MusicProfile);
-    } catch (err) {
-      setError("Failed to fetch music profile.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    data: musicProfile,
+    isPending,
+    isError,
+    error,
+    mutate,
+  } = useMutation<MusicProfile, Error, void>({
+    mutationFn: async (): Promise<MusicProfile> => {
+      const res = await fetch(API_ROUTES.llm.musicProfile);
+      if (!res.ok) throw new Error("Failed to fetch music profile");
+      const data = await res.json();
+      return data.MusicProfile as MusicProfile;
+    },
+  });
 
   return (
     <FlexContainer>
@@ -112,7 +80,7 @@ export default function TracksStats() {
         title="Top Genres"
         description="Number of tracks per genre"
         footerText="Based on liked songs"
-        data={tracksGenresData}
+        data={topGenres ?? []}
         labelKey="name"
         valueKey="value"
         color="var(--chart-4)"
@@ -122,7 +90,7 @@ export default function TracksStats() {
         id="most-popular-artists"
         title="Most Popular Artists"
         description="Top 10 artists based on Spotify followers"
-        data={topArtistsData}
+        data={topArtists ?? []}
         labelKey="name"
         valueKey="followers"
       />
@@ -131,7 +99,7 @@ export default function TracksStats() {
         id="bottom-artists"
         title="Least Popular Artists"
         description="Bottom 10 artists based on Spotify followers"
-        data={bottomArtistsData}
+        data={bottomArtists ?? []}
         labelKey="name"
         valueKey="followers"
       />
@@ -140,18 +108,21 @@ export default function TracksStats() {
         id="favorite-artists"
         title="Favorite Artists"
         description="Favorite artists based on liked singles"
-        data={favoriteArtistsData}
+        data={favoriteArtists ?? []}
         labelKey="name"
         valueKey="value"
       />
 
       <Card>
         <MusicProfile>
-          {!musicProfile && !loading && (
-            <Button onClick={generateMusicProifle}>Get Music Profile</Button>
+          {!musicProfile && !isPending && (
+            <Button onClick={() => mutate()}>Get Music Profile</Button>
           )}
-          {loading && <ButtonLoading />}
-          {error && <p style={{ color: "red" }}>{error}</p>}
+
+          {isPending && <ButtonLoading />}
+
+          {isError && <p style={{ color: "red" }}>{error?.message}</p>}
+
           {musicProfile && (
             <>
               <CenteredText>{musicProfile.profile_summary}</CenteredText>

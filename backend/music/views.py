@@ -21,12 +21,14 @@ from music.utils.data_importer import (
 from .models import (
     Album,
     Artist,
+    GameGenre,
     Genre,
     MediaItem,
     Playlist,
     Review,
     Song,
     SteamGame,
+    TMDbGenre,
     TMDbMovieMediaItem,
     TMDbTVMediaItem,
 )
@@ -54,6 +56,12 @@ def index(request):
     return HttpResponse("Hi")
 
 
+class ItemPagination(PageNumberPagination):
+    page_size = 8
+    page_size_query_param = "limit"
+    max_page_size = 100
+
+
 class AlbumDetail(APIView):
     def get(self, request, album_id):
         client = SpotifyClient()
@@ -79,8 +87,17 @@ class ArtistDetail(APIView):
 
 
 class AlbumListView(generics.ListAPIView):
-    queryset = Album.objects.all()
+    pagination_class = ItemPagination
     serializer_class = AlbumDBSerializer
+
+    def get_queryset(self):
+        queryset = Album.objects.all()
+
+        # Filter by selected category
+        genre = self.request.query_params.get("genre")
+        if genre:
+            queryset = queryset.filter(genres__name=genre)
+        return queryset
 
 
 class AlbumImportView(APIView):
@@ -168,15 +185,29 @@ class TrackImportView(APIView):
 
 
 class TracksListView(generics.ListAPIView):
+    pagination_class = ItemPagination
     serializer_class = SongDBSerializer
 
     def get_queryset(self):
-        return Song.objects.filter(Q(bop=True) | Q(album__isnull=True))
+        queryset = Song.objects.filter(Q(bop=True) | Q(album__isnull=True))
+        genre = self.request.query_params.get("genre")
+        if genre:
+            queryset = queryset.filter(genres__name=genre)
+        return queryset
 
 
 class ArtistListView(generics.ListAPIView):
-    queryset = Artist.objects.filter(albums__isnull=False).distinct()
+    pagination_class = ItemPagination
     serializer_class = ArtistDBSerializer
+
+    def get_queryset(self):
+        queryset = Artist.objects.filter(albums__isnull=False).distinct()
+
+        # Filter by selected category
+        genre = self.request.query_params.get("genre")
+        if genre:
+            queryset = queryset.filter(genres__name=genre)
+        return queryset
 
 
 class PlaylistView(generics.ListAPIView):
@@ -310,6 +341,68 @@ class YTMediaItemListView(generics.ListAPIView):
         return MediaItem.objects.filter(media_type="youtube")
 
 
+class AlbumGenresView(APIView):
+    def get(self, request):
+        genres = (
+            Genre.objects.filter(albums__isnull=False)
+            .values_list("name", flat=True)
+            .distinct()
+        )
+        return Response(list(genres))
+
+
+class ArtistsGenresView(APIView):
+    def get(self, request):
+        genres = (
+            Genre.objects.filter(artists__isnull=False)
+            .values_list("name", flat=True)
+            .distinct()
+        )
+        return Response(list(genres))
+
+
+class SinglesGenresView(APIView):
+    def get(self, request):
+        singles_qs = Song.objects.filter(Q(bop=True) | Q(album__isnull=True))
+
+        # Get all genres linked to these singles
+        genres_qs = Genre.objects.filter(songs__in=singles_qs).distinct()
+
+        # Return genre names
+        genres = list(genres_qs.values_list("name", flat=True))
+        return Response(genres)
+
+
+class MovieGenresView(APIView):
+    def get(self, request):
+        genre_qs = TMDbGenre.objects.filter(
+            movie_items__tmdb_list__category="Movie"
+        ).distinct()
+
+        genres = list(genre_qs.values_list("name", flat=True))
+        return Response(genres)
+
+
+class TVSerieGenresView(APIView):
+    def get(self, request):
+        genre_qs = TMDbGenre.objects.filter(
+            tv_items__tmdb_list__category="tv"
+        ).distinct()
+
+        genres = list(genre_qs.values_list("name", flat=True))
+        return Response(genres)
+
+
+class AnimeGenresView(APIView):
+    def get(self, request):
+        genre_qs = TMDbGenre.objects.filter(
+            tv_items__tmdb_list__category="Anime"
+        ).distinct()
+
+        genres = list(genre_qs.values_list("name", flat=True))
+        return Response(genres)
+
+
 class MediaItemCategoriesView(APIView):
     def get(self, request):
         categories = (
@@ -424,17 +517,44 @@ class TMDbImportListView(APIView):
 
 class AnimeListView(generics.ListAPIView):
     serializer_class = TMDbTVMediaItemSerializer
-    queryset = TMDbTVMediaItem.objects.filter(tmdb_list__category="Anime")
+    pagination_class = ItemPagination
+
+    def get_queryset(self):
+        queryset = TMDbTVMediaItem.objects.filter(tmdb_list__category="Anime")
+
+        # Filter by selected category
+        genre = self.request.query_params.get("genre")
+        if genre:
+            queryset = queryset.filter(genres__name=genre)
+        return queryset
 
 
 class TVShowListView(generics.ListAPIView):
     serializer_class = TMDbTVMediaItemSerializer
-    queryset = TMDbTVMediaItem.objects.filter(tmdb_list__category="tv")
+    pagination_class = ItemPagination
+
+    def get_queryset(self):
+        queryset = TMDbTVMediaItem.objects.filter(tmdb_list__category="tv")
+
+        # Filter by selected category
+        genre = self.request.query_params.get("genre")
+        if genre:
+            queryset = queryset.filter(genres__name=genre)
+        return queryset
 
 
 class MovieListView(generics.ListAPIView):
     serializer_class = TMDbMovieMediaItemSerializer
-    queryset = TMDbMovieMediaItem.objects.filter(tmdb_list__category="Movie")
+    pagination_class = ItemPagination
+
+    def get_queryset(self):
+        queryset = TMDbMovieMediaItem.objects.filter(tmdb_list__category="Movie")
+
+        # Filter by selected category
+        genre = self.request.query_params.get("genre")
+        if genre:
+            queryset = queryset.filter(genres__name=genre)
+        return queryset
 
 
 class SteamGameImportListView(APIView):
@@ -476,4 +596,21 @@ class SteamGameImportListView(APIView):
 
 class SteamListView(generics.ListAPIView):
     serializer_class = SteamGameSerializer
-    queryset = SteamGame.objects.all()
+    pagination_class = ItemPagination
+
+    def get_queryset(self):
+        queryset = SteamGame.objects.all()
+
+        # Filter by selected category
+        genre = self.request.query_params.get("genre")
+        if genre:
+            queryset = queryset.filter(genres__name=genre)
+        return queryset
+
+
+class SteamGamesGenresView(APIView):
+    def get(self, request):
+        genre_qs = GameGenre.objects.all().distinct()
+
+        genres = list(genre_qs.values_list("name", flat=True))
+        return Response(genres)

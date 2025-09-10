@@ -1,10 +1,23 @@
-import Albums from "../components/Album/Albums";
-import "../styles/global.css";
+import { API_ROUTES } from "@/constants/ApiRoutes";
+import type { SpotifyAlbum } from "@/types/spotify";
+import React from "react";
+import GalleryPage from "./GalleryPageTemplate";
 
-export default function AlbumsPage() {
+const Albums: React.FC = () => {
   return (
-    <div>
-      <Albums />
-    </div>
+    <GalleryPage
+      genres_url={API_ROUTES.albums.genres}
+      data_url={API_ROUTES.albums.data}
+      itemsPerPage={8}
+      mapToGalleryItem={(album: SpotifyAlbum) => ({
+        id: album.id,
+        title: album.title,
+        imageUrl: album.cover_url,
+        linkTo: `/albums/${album.spotify_id}`,
+        state: { album },
+      })}
+    />
   );
-}
+};
+
+export default Albums;

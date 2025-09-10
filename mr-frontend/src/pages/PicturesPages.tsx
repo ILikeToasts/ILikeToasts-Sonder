@@ -1,20 +1,23 @@
-import { GenreSelect } from "@/components/Album/GenreSelect";
+import { GenreSelect } from "@/components/Common/GenreSelect";
 import Masonry, { type Item } from "@/components/ui/Masonry";
 import { PageScroller } from "@/components/ui/PageScroller";
 import { MasonryContainer } from "@/styles/Pictures/Pictures.styles";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 const ITEMS_PER_PAGE = 10;
 
 export default function Pictures() {
   const [categories, setCategories] = useState<string[]>([]);
-  const [currentCategory, setCurrentCategory] = useState<string | null>(null);
+  const [currentCategory, setCurrentCategory] = useState<string>("");
   const [categoryPages, setCategoryPages] = useState<Record<string, number>>(
     {},
   );
   const [groupedItems, setGroupedItems] = useState<Record<string, Item[]>>({});
   const [totalPages, setTotalPages] = useState<Record<string, number>>({});
-
+  const currentItems = useMemo(
+    () => groupedItems[currentCategory] || [],
+    [groupedItems, currentCategory],
+  );
   const currentPage = currentCategory ? categoryPages[currentCategory] || 1 : 1;
 
   useEffect(() => {
@@ -25,7 +28,7 @@ export default function Pictures() {
         );
         const data: string[] = await response.json();
         setCategories(data);
-        setCurrentCategory(data[0] || null);
+        setCurrentCategory(data[0] || "");
       } catch (err) {
         console.error("Failed to fetch categories:", err);
       }
@@ -71,9 +74,24 @@ export default function Pictures() {
     fetchItems();
   }, [currentCategory, currentPage]);
 
-  const setPageForCategory = (category: string, page: number) => {
+  const setPageForCategory = useCallback((category: string, page: number) => {
     setCategoryPages((prev) => ({ ...prev, [category]: page }));
-  };
+  }, []);
+
+  const handleCategoryChange = useCallback(
+    (category: string) => {
+      setCurrentCategory(category);
+      setPageForCategory(category, 1);
+    },
+    [setPageForCategory],
+  );
+
+  const handlePageChange = useCallback(
+    (page: number) => {
+      if (currentCategory) setPageForCategory(currentCategory, page);
+    },
+    [currentCategory, setPageForCategory],
+  );
 
   return (
     <>
@@ -82,22 +100,19 @@ export default function Pictures() {
           <GenreSelect
             options={categories}
             value={currentCategory}
-            onValueChange={(category) => {
-              setCurrentCategory(category);
-              setPageForCategory(category, 1);
-            }}
+            onValueChange={handleCategoryChange}
           />
           {currentCategory && totalPages[currentCategory] > 1 && (
             <PageScroller
               currentPage={currentPage}
               totalPages={totalPages[currentCategory]}
-              onPageChange={(page) => setPageForCategory(currentCategory, page)}
+              onPageChange={handlePageChange}
             />
           )}
         </div>
         <MasonryContainer>
           <Masonry
-            items={groupedItems[currentCategory] || []}
+            items={currentItems}
             ease="power3.out"
             duration={1.5}
             stagger={0.05}

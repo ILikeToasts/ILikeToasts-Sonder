@@ -1,9 +1,23 @@
-import Artists from "../components/Artists/Artists";
+import { API_ROUTES } from "@/constants/ApiRoutes";
+import type { SpotifyArtist } from "@/types/spotify";
+import React from "react";
+import GalleryPage from "./GalleryPageTemplate";
 
-export default function ArtistsPage() {
+const Artists: React.FC = () => {
   return (
-    <div>
-      <Artists />
-    </div>
+    <GalleryPage
+      genres_url={API_ROUTES.artists.genres}
+      data_url={API_ROUTES.artists.data}
+      itemsPerPage={8}
+      mapToGalleryItem={(artist: SpotifyArtist) => ({
+        id: artist.id,
+        title: artist.name,
+        imageUrl: artist.image_url,
+        linkTo: `/artists/${artist.spotify_id}`,
+        state: { artist },
+      })}
+    />
   );
-}
+};
+
+export default Artists;

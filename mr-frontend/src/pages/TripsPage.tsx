@@ -1,8 +1,8 @@
-import { TripsPage, YTContainer } from "@/styles/Trips/TripsPage.styles";
 import { type Item } from "@/components/ui/Masonry";
+import { PageScroller } from "@/components/ui/PageScroller";
+import { TripsPage, YTContainer } from "@/styles/Trips/TripsPage.styles";
 import { useEffect, useMemo, useState } from "react";
 import ReactPlayer from "react-player";
-import { PageScroller } from "@/components/ui/PageScroller";
 
 export default function Trips() {
   const [groupedItems, setGroupedItems] = useState<Record<string, Item[]>>({});
@@ -15,7 +15,6 @@ export default function Trips() {
           "http://127.0.0.1:8000/api/yt-media-items/",
         );
         const data = await response.json();
-        console.log(data);
         const items: Item[] = data.map((item: any) => ({
           id: item.id,
           img: item.file || "",
