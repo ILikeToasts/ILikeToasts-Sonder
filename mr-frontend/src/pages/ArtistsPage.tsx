@@ -1,4 +1,4 @@
-import { ARTISTS_DATA_URL, ARTISTS_GENRES_URL } from "@/api/ApiRoutes";
+import { API_ROUTES } from "@/constants/ApiRoutes";
 import type { SpotifyArtist } from "@/types/spotify";
 import React from "react";
 import GalleryPage from "./GalleryPageTemplate";
@@ -6,8 +6,8 @@ import GalleryPage from "./GalleryPageTemplate";
 const Artists: React.FC = () => {
   return (
     <GalleryPage
-      genres_url={ARTISTS_GENRES_URL}
-      data_url={ARTISTS_DATA_URL}
+      genres_url={API_ROUTES.artists.genres}
+      data_url={API_ROUTES.artists.data}
       itemsPerPage={8}
       mapToGalleryItem={(artist: SpotifyArtist) => ({
         id: artist.id,

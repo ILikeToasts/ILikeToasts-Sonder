@@ -18,8 +18,6 @@ const GameReview: React.FC = () => {
   const location = useLocation();
   const game = location.state?.game;
   const [auroraColors, setAuroraColors] = useState<string[]>([]);
-  const height = "215px";
-  const width = "460px";
 
   useEffect(() => {
     if (!game?.image) return;
@@ -41,8 +39,6 @@ const GameReview: React.FC = () => {
     };
     fetchColors();
   }, [game]);
-
-  console.log(game);
 
   return (
     <>

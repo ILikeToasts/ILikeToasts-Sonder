@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
 import AlbumReview from "./components/Album/AlbumReview";
@@ -19,34 +20,38 @@ import Singles from "./pages/SinglesPage";
 import TracksStats from "./pages/TracksStatsPage";
 import Trips from "./pages/TripsPage";
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
-    <ThemeProvider>
-      <Router>
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/albums" element={<Album />} />
-            <Route path="/artists" element={<Artists />} />
-            <Route path="/singles" element={<Singles />} />
-            <Route path="/games" element={<Games />} />
-            <Route path="/movies" element={<Movies />} />
-            <Route path="/pictures" element={<Pictures />} />
-            <Route path="/series" element={<Series />} />
-            <Route path="/animes" element={<Animes />} />
-            <Route path="/trips" element={<Trips />} />
-            <Route path="/albums/:album_id" element={<AlbumReview />} />
-            <Route path="/artists/:artist_id" element={<ArtistReview />} />
-            <Route path="/singles/:single_id" element={<TrackReview />} />
-            <Route path="/singles/stats" element={<TracksStats />} />
-            <Route path="/series/:serie_id" element={<MediaReview />} />
-            <Route path="/animes/:anime_id" element={<MediaReview />} />
-            <Route path="/movies/:movie_id" element={<MediaReview />} />
-            <Route path="/games/:appID" element={<GameReview />} />
-          </Route>
-        </Routes>
-      </Router>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <Router>
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/albums" element={<Album />} />
+              <Route path="/artists" element={<Artists />} />
+              <Route path="/singles" element={<Singles />} />
+              <Route path="/games" element={<Games />} />
+              <Route path="/movies" element={<Movies />} />
+              <Route path="/pictures" element={<Pictures />} />
+              <Route path="/series" element={<Series />} />
+              <Route path="/animes" element={<Animes />} />
+              <Route path="/trips" element={<Trips />} />
+              <Route path="/albums/:album_id" element={<AlbumReview />} />
+              <Route path="/artists/:artist_id" element={<ArtistReview />} />
+              <Route path="/singles/:single_id" element={<TrackReview />} />
+              <Route path="/singles/stats" element={<TracksStats />} />
+              <Route path="/series/:serie_id" element={<MediaReview />} />
+              <Route path="/animes/:anime_id" element={<MediaReview />} />
+              <Route path="/movies/:movie_id" element={<MediaReview />} />
+              <Route path="/games/:appID" element={<GameReview />} />
+            </Route>
+          </Routes>
+        </Router>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 

@@ -27,14 +27,13 @@ export default function FilterableGalleryPage<T>({
   onPageChange,
   totalPages,
   mapToGalleryItem,
-  galleryType = "",
+  galleryType,
 }: FilterableGalleryPageProps<T>) {
   const navigate = useNavigate();
   const [statsPath, setStatsPath] = useState<string>("");
-
   // Optional gallery type logic
   useEffect(() => {
-    if (galleryType === "tracks") setStatsPath("/tracks/stats");
+    if (galleryType === "singles") setStatsPath("/singles/stats");
   }, [galleryType]);
 
   const galleryItems = items.map(mapToGalleryItem);
@@ -48,7 +47,7 @@ export default function FilterableGalleryPage<T>({
           onValueChange={onGenreChange}
         />
 
-        {galleryType === "tracks" && (
+        {galleryType === "singles" && (
           <Button onClick={() => navigate(statsPath)}>Stats</Button>
         )}
 

@@ -12,6 +12,7 @@ interface GalleryPageProps<T> {
     linkTo: string;
     state?: any;
   };
+  galleryType?: string;
 }
 
 const GalleryPage = <T,>({
@@ -19,6 +20,7 @@ const GalleryPage = <T,>({
   data_url,
   itemsPerPage,
   mapToGalleryItem,
+  galleryType,
 }: GalleryPageProps<T>) => {
   const ITEMS_PER_PAGE = itemsPerPage || 8;
   const [genres, setGenres] = useState<string[]>([]);
@@ -77,6 +79,7 @@ const GalleryPage = <T,>({
       onPageChange={setCurrentPage}
       totalPages={totalPages}
       mapToGalleryItem={mapToGalleryItem}
+      galleryType={galleryType}
     />
   );
 };

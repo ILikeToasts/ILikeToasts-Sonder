@@ -1,4 +1,4 @@
-import { GAMES_DATA_URL, GAMES_GENRES_URL } from "@/api/ApiRoutes";
+import { API_ROUTES } from "@/constants/ApiRoutes";
 import type { Game } from "@/types/games";
 import React from "react";
 import GalleryPage from "./GalleryPageTemplate";
@@ -8,8 +8,8 @@ const ITEMS_PER_PAGE = 16;
 const Games: React.FC = () => {
   return (
     <GalleryPage
-      genres_url={GAMES_GENRES_URL}
-      data_url={GAMES_DATA_URL}
+      genres_url={API_ROUTES.games.genres}
+      data_url={API_ROUTES.games.data}
       itemsPerPage={ITEMS_PER_PAGE}
       mapToGalleryItem={(game: Game) => ({
         id: game.appID,
