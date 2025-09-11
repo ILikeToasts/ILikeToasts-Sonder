@@ -42,7 +42,7 @@ services:
 
   celery:
     build: ./backend
-    command: celery -A backend worker -l info --pool=solo
+    command: poetry run celery -A backend worker -l info --pool=solo
     environment:
       SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
       SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
@@ -53,7 +53,7 @@ services:
 
   celery-beat:
     build: ./backend
-    command: celery -A backend beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    command: poetry run celery -A backend beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
     environment:
       SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
       SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
@@ -63,8 +63,7 @@ services:
 
   flower:
     build: ./backend
-    image: mher/flower
-    command: celery -A backend flower --port=5555
+    command: poetry run celery -A backend flower --port=5555
     ports:
       - "5555:5555"
     environment:
