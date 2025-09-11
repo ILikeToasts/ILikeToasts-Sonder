@@ -60,7 +60,7 @@ export default function Trips() {
           onPageChange={(pageIndex) => setCurrentCategoryIndex(pageIndex - 1)}
         />
       )}
-      {currentItems.map((item, index) => (
+      {currentItems.map((item) => (
         <YTContainer>
           <ReactPlayer
             src={item.url}

@@ -126,7 +126,7 @@ export function ChartPieInteractive<T extends Record<string, any>>({
               content={<ChartTooltipContent hideLabel />}
             />
             <Pie
-              data={data.map((item, idx) => ({
+              data={data.map((item) => ({
                 ...item,
                 fill: chartConfig[String(item[labelKey])]?.color,
               }))}
