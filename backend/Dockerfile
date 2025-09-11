@@ -1,7 +1,7 @@
 FROM python:3.12-slim AS builder
 
 # Install build dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     default-libmysqlclient-dev \
     curl \
@@ -17,6 +17,14 @@ ENV PATH="/root/.local/bin:$PATH"
 
 WORKDIR /code
 COPY pyproject.toml poetry.lock* ./
+
+WORKDIR /code
+
+# Copy Poetry files first (for caching)
+COPY pyproject.toml poetry.lock* ./
+
+# Install export plugin for poetry
+RUN poetry self add poetry-plugin-export
 
 # Install dependencies
 RUN poetry config virtualenvs.create false \
