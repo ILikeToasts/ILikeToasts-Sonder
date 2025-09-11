@@ -29,7 +29,7 @@ RUN poetry self add poetry-plugin-export
 
 # Install dependencies
 RUN poetry config virtualenvs.create false \
-    && poetry install --no-interaction --no-ansi --only main \
+    && poetry install --no-interaction --no-ansi \
     && poetry export -f requirements.txt --without-hashes -o requirements.txt \
     && pip install --no-cache-dir --target=/install -r requirements.txt \
     && rm requirements.txt
