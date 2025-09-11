@@ -23,19 +23,14 @@ jobs:
           fi
           docker-compose --version
 
-      - name: Start services
+      - name: Start services (DB + Redis)
         env:
-          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
-          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
-          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
-          LASTFM_SHARED_SECRET: ${{ secrets.LASTFM_SHARED_SECRET }}
           MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
           MYSQL_USER: ${{ secrets.MYSQL_USER }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
         run: |
-          docker compose -f docker-compose.ci.yml up -d db redis backend
+          docker compose -f docker-compose.ci.yml up -d db redis
           docker compose -f docker-compose.ci.yml ps
 
       - name: Run integration tests
@@ -50,22 +45,14 @@ jobs:
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
         run: |
-          docker compose -f docker-compose.ci.yml exec -T backend pytest -m integration -vv --tb=short --no-header
-        continue-on-error: true
+          docker compose -f docker-compose.ci.yml run --rm backend-ci -m integration -vv --tb=short --no-header
 
       - name: Show all service logs on failure
         if: failure()
-        run: |
-          docker-compose -f docker-compose.ci.yml logs
+        run: docker compose -f docker-compose.ci.yml logs
 
-      - name: Show backend logs
-        run: |
-          docker-compose -f docker-compose.ci.yml logs backend
-
-      - name: Show test results and cleanup
-        run: |
-          docker-compose -f docker-compose.ci.yml ps
-          docker-compose -f docker-compose.ci.yml down -v
+      - name: Cleanup
+        run: docker compose -f docker-compose.ci.yml down -v
 
   build-and-push:
     if: github.ref == 'refs/heads/main'
