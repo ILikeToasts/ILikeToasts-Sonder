@@ -81,9 +81,9 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t iliketoasts/mr:latest -t iliketoasts/mr:${GITHUB_SHA} .
+          docker build -f backend/Dockerfile -t iliketoasts/mr:latest -t iliketoasts/mr:${{ github.sha }} backend
 
       - name: Push Docker image
         run: |
           docker push iliketoasts/mr:latest
-          docker push iliketoasts/mr::${GITHUB_SHA}
+          docker push iliketoasts/mr:${GITHUB_SHA}

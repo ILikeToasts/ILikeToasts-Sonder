@@ -278,7 +278,7 @@ const Masonry: React.FC<MasonryProps> = ({
             className="relative flex items-center justify-center"
             style={{
               width: "80%",
-              height: "95%",
+              height: "90%",
             }}
             onClick={(e) => e.stopPropagation()}
           >
