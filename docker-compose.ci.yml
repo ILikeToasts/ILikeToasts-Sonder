@@ -41,7 +41,9 @@ services:
         condition: service_started
 
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      target: runtime
     ports:
       - "8000:8000"
     environment:
@@ -60,7 +62,9 @@ services:
         condition: service_started
 
   celery:
-    build: ./backend
+    build:
+      context: ./backend
+      target: builder
     command: python -m celery -A backend worker -l info --pool=solo
     environment:
       SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
