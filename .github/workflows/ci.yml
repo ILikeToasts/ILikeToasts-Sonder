@@ -100,7 +100,7 @@ jobs:
             -f mr-frontend/Dockerfile \
             -t iliketoasts/mr-frontend:latest \
             -t iliketoasts/mr-frontend:${{ github.sha }} \
-            frontend
+            mr-frontend
 
       - name: Push frontend image
         run: |
