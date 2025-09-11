@@ -44,7 +44,7 @@ jobs:
 
       - name: Run integration tests
         run: |
-          docker-compose -f docker-compose.ci.yml exec -T backend pytest -m integration -vv --tb=short --no-header
+          docker-compose -f docker-compose.ci.yml exec -T backend-builder pytest -m integration -vv --tb=short --no-header
         continue-on-error: true
 
       - name: Show all service logs on failure
