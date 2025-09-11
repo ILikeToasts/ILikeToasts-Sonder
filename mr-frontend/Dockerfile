@@ -9,7 +9,7 @@ COPY tsconfig*.json ./
 COPY vite.config.* ./
 COPY .npmrc* ./
 
-RUN npm install
+RUN npm ci --omit=dev
 
 COPY . .
 

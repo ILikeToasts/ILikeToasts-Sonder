@@ -79,11 +79,30 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Docker image
+      # Backend
+      - name: Build backend image
         run: |
-          docker build -f backend/Dockerfile -t iliketoasts/mr:latest -t iliketoasts/mr:${{ github.sha }} backend
+          docker build \
+            -f backend/Dockerfile \
+            -t iliketoasts/mr-backend:latest \
+            -t iliketoasts/mr-backend:${{ github.sha }} \
+            backend
 
-      - name: Push Docker image
+      - name: Push backend image
         run: |
-          docker push iliketoasts/mr:latest
-          docker push iliketoasts/mr:${GITHUB_SHA}
+          docker push iliketoasts/mr-backend:latest
+          docker push iliketoasts/mr-backend:${{ github.sha }}
+
+      # Frontend
+      - name: Build frontend image
+        run: |
+          docker build \
+            -f mr-frontend/Dockerfile \
+            -t iliketoasts/mr-frontend:latest \
+            -t iliketoasts/mr-frontend:${{ github.sha }} \
+            frontend
+
+      - name: Push frontend image
+        run: |
+          docker push iliketoasts/mr-frontend:latest
+          docker push iliketoasts/mr-frontend:${{ github.sha }}
