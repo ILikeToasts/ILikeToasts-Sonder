@@ -46,7 +46,9 @@ COPY --from=builder /install /usr/local/lib/python3.12/site-packages
 COPY --from=builder /code .
 
 # Redis
-RUN apt-get update && apt-get install -y --no-install-recommends redis-tools \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libmariadb3 \
+    redis-tools \
     && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 8000
