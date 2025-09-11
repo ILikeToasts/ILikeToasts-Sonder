@@ -21,7 +21,9 @@ COPY pyproject.toml poetry.lock* ./
 # Install dependencies
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi --only main \
-    && pip install --no-cache-dir --target=/install -r <(poetry export -f requirements.txt --without-hashes)
+    && poetry export -f requirements.txt --without-hashes -o requirements.txt \
+    && pip install --no-cache-dir --target=/install -r requirements.txt \
+    && rm requirements.txt
 
 COPY . .
 
