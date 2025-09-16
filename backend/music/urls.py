@@ -35,6 +35,7 @@ from .views import (
     TVSerieGenresView,
     TVShowListView,
     YTMediaItemListView,
+    YTMediaItemsCategoriesView,
 )
 
 urlpatterns = [
@@ -99,6 +100,11 @@ urlpatterns = [
     path("yt-media-items/", YTMediaItemListView.as_view(), name="media-item-list"),
     path(
         "media-items/categories/",
+        YTMediaItemsCategoriesView.as_view(),
+        name="yt-media-item-categories",
+    ),
+    path(
+        "yt-media-items/categories/",
         MediaItemCategoriesView.as_view(),
         name="media-item-categories",
     ),

@@ -6,13 +6,13 @@ import {
   ReviewInfo,
   ReviewSubtitle,
   ReviewTextSection,
-  ReviewTitle,
   Titles,
   TitleSection,
 } from "@/styles/common/Review.styles";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
 import type { SpotifyAlbumReview } from "../../types/spotify";
+import BlurText from "../ui/BlurText";
 import { CustomAuroraBackground } from "../ui/CustomAuroraBackground";
 import { AlbumSummaries } from "./AlbumSummaries";
 import SpotifyAlbumEmbed from "./SpotifyAlbumEmbed";
@@ -41,11 +41,23 @@ const AlbumReview: React.FC = () => {
             <ReviewTextSection>
               <TitleSection>
                 <Titles>
-                  <ReviewTitle>{album.title}</ReviewTitle>
+                  <BlurText
+                    text={album.title}
+                    delay={150}
+                    animateBy="words"
+                    direction="top"
+                    className="text-5xl mb-8 underline"
+                  />
                   <ReviewSubtitle>
-                    {album.genres
-                      .map((g: { name: string }) => g.name)
-                      .join(", ")}
+                    <BlurText
+                      text={album.genres
+                        .map((g: { name: string }) => g.name)
+                        .join(", ")}
+                      delay={150}
+                      animateBy="words"
+                      direction="top"
+                      className="text-3xl mb-8 bold"
+                    />
                   </ReviewSubtitle>
                 </Titles>
               </TitleSection>

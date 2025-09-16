@@ -334,11 +334,27 @@ class MediaItemListView(generics.ListAPIView):
         return qs
 
 
+class YTMediaItemsCategoriesView(APIView):
+    def get(self, request):
+        categories = (
+            MediaItem.objects.filter(media_type="youtube")
+            .values_list("category", flat=True)
+            .distinct()
+        )
+        return Response(list(categories))
+
+
 class YTMediaItemListView(generics.ListAPIView):
     serializer_class = YTMediaItemSerializer
+    pagination_class = MediaItemPagination
 
     def get_queryset(self):
-        return MediaItem.objects.filter(media_type="youtube")
+        qs = MediaItem.objects.filter(media_type="youtube")
+
+        category = self.request.query_params.get("category")
+        if category:
+            qs = qs.filter(category=category)
+        return qs
 
 
 class AlbumGenresView(APIView):

@@ -5,10 +5,10 @@ import {
   Film,
   Gamepad2,
   Image,
-  Map,
   Tv,
   TvMinimal,
   Users,
+  Youtube,
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Dock from "./Dock";
@@ -27,7 +27,7 @@ export default function DockNavigation() {
     { path: "/movies", label: "Movies", icon: <Film size={20} /> },
     { path: "/series", label: "Series", icon: <Tv size={20} /> },
     { path: "/animes", label: "Animes", icon: <TvMinimal size={20} /> },
-    { path: "/trips", label: "Trips", icon: <Map size={20} /> },
+    { path: "/youtubeReco", label: "YtReco", icon: <Youtube size={20} /> },
   ];
 
   const items = dockItems.map((item) => ({
