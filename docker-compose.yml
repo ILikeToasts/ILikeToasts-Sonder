@@ -1,4 +1,8 @@
 services:
+  frontend:
+    build: ./mr-frontend
+    ports:
+      - "8080:80"
   backend:
     build: ./backend
     volumes:

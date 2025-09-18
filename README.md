@@ -23,3 +23,7 @@ Checkout the project's wiki : https://iliketoasts.github.io/ILikeToasts-Sonder/
 
 docker compose exec backend python manage.py makemigrations
 docker compose exec backend python manage.py migrate
+
+### To run docker in dev mode
+
+docker compose -f docker-compose.yml -f docker-compose.override.yml up --build

@@ -44,4 +44,8 @@ export const API_ROUTES = {
     albums: (albumId: string | number) =>
       `${BASE_URL}spotify/reviews/album/${albumId}/`,
   },
+  ytMediaItems: {
+    genres: `${BASE_URL}yt-media-items/categories/`,
+    data: `${BASE_URL}yt-media-items/`,
+  },
 };

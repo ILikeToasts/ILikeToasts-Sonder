@@ -18,7 +18,7 @@ import Pictures from "./pages/PicturesPages";
 import Series from "./pages/SeriesPages";
 import Singles from "./pages/SinglesPage";
 import TracksStats from "./pages/TracksStatsPage";
-import Trips from "./pages/TripsPage";
+import YotubeReco from "./pages/YoutubeRecoPage";
 
 const queryClient = new QueryClient();
 
@@ -38,7 +38,7 @@ function App() {
               <Route path="/pictures" element={<Pictures />} />
               <Route path="/series" element={<Series />} />
               <Route path="/animes" element={<Animes />} />
-              <Route path="/trips" element={<Trips />} />
+              <Route path="/youtubeReco" element={<YotubeReco />} />
               <Route path="/albums/:album_id" element={<AlbumReview />} />
               <Route path="/artists/:artist_id" element={<ArtistReview />} />
               <Route path="/singles/:single_id" element={<TrackReview />} />

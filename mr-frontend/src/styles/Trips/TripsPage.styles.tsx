@@ -10,6 +10,6 @@ export const TripsPage = styled.div`
 
 export const YTContainer = styled.div`
   margin: 5vh;
-  min-width: 1000px;
-  min-height: 600px;
+  min-width: 800px;
+  min-height: 480px;
 `;
