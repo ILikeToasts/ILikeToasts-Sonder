@@ -13,7 +13,6 @@ interface AlbumSummariesProps {
 }
 
 export const AlbumSummaries: React.FC<AlbumSummariesProps> = ({ album }) => {
-  console.log(album.wiki_summary);
   return (
     <InformationSection>
       <Secondbox>
