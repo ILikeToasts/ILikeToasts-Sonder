@@ -2,10 +2,18 @@
 
 ![alt text](pictures.png)
 
-I modified the following [Masonry](https://reactbits.dev/components/masonry) component from ReactBits to create my "Pictures" page.
-
-I modified it to also be able to display videos.
+I modified the following [Masonry](https://reactbits.dev/components/masonry) component from ReactBits to create my "Pictures" page. I modified it to also be able to display videos.
 
 All the media items have a specific category that you can filter at the top-left of the screen.
 
 The page also uses a pagination logic when retrieving and loading items to make the page feel more fluid. I currently limit it to 10 components per page.
+
+## Adding media items to the website
+
+I currently add the items through Django Admin.
+
+![alt text](django-admin-media.png)
+
+I have three different media files categories : Image, Video, Youtube
+
+The Url field is optional and the height field only has an impact on the media-files with the Image or Video category.

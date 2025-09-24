@@ -25,7 +25,7 @@ export default function YotubeReco() {
     const fetchCategories = async () => {
       try {
         const response = await fetch(
-          "http://127.0.0.1:8000/api/media-items/categories/",
+          "http://127.0.0.1:8000/api/yt-media-items/categories/",
         );
         const data: string[] = await response.json();
         setCategories(data);

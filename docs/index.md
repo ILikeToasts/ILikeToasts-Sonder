@@ -20,8 +20,8 @@ For now, everything is hosted locally so the content in the database won't be pu
 - [Tracks/Singles](tracks/tracks.md)
 - [Pictures](pictures/pictures.md)
 - [Movies & TVShows](media/media.md)
-- Games (TODO)
-- Trips (50% done)
+- [Games](games/games.md)
+- [YTReco](ytReco/ytReco.md)
 
 ## Technologies used :
 
