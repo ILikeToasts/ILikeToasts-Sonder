@@ -38,6 +38,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.index, name="index"),
+    path("health", views.health, name="health"),
     path("api/", include("music.urls")),
     # Swagger UI:
     re_path(

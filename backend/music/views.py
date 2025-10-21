@@ -56,6 +56,10 @@ def index(request):
     return HttpResponse("Hi")
 
 
+def health(request):
+    return HttpResponse("OK", status=200)
+
+
 class ItemPagination(PageNumberPagination):
     page_size = 8
     page_size_query_param = "limit"
