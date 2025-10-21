@@ -11,7 +11,7 @@ services:
     ports:
       - "8000:8000"
     env_file:
-      - .env
+      - .env.local
     depends_on:
       - db
       - redis
@@ -21,7 +21,7 @@ services:
     volumes:
       - ./backend:/code
     env_file:
-      - .env
+      - .env.local
     depends_on:
       - backend
       - redis
@@ -32,7 +32,7 @@ services:
     volumes:
       - ./backend:/code
     env_file:
-      - .env
+      - .env.local
     depends_on:
       - backend
       - redis
@@ -50,7 +50,7 @@ services:
       - ./backend:/code
     working_dir: /code
     env_file:
-      - .env
+      - .env.local
     ports:
       - "5555:5555"
     environment:

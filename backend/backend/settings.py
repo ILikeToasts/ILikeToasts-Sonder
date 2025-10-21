@@ -17,11 +17,13 @@ from celery import app as celery_app
 from dotenv import load_dotenv
 
 load_dotenv()
+DJANGO_ENV = os.getenv("DJANGO_ENV", "local")
+DEBUG = os.getenv("DJANGO_DEBUG", "True").lower() == "true"
 
 __all__ = ("celery_app",)
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "fallback")
-DEBUG = os.getenv("DJANGO_DEBUG") == "True"
+DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",")
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 STEAM_API_KEY = os.getenv("STEAM_API_KEY")
@@ -35,12 +37,6 @@ MEDIA_URL = "/media/"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-gg8+o5g)1662=csh9@mmle_i0(8)@dth0xec513-b$7&5ev@-i"
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 # Application definition
 
