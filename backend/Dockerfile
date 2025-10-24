@@ -27,5 +27,10 @@ RUN poetry config virtualenvs.create false && poetry install --no-interaction --
 # Copy app code
 COPY . .
 
+# Collect static files for Whitenoise
+RUN poetry run python manage.py collectstatic --noinput
+
+EXPOSE 8000
+
 # Run Django
 CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
