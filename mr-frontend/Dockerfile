@@ -17,7 +17,7 @@ RUN npm install
 COPY . .
 
 # Copy the production env file
-COPY .env.production .env
+COPY .env.prod .env
 
 # Build the frontend (Vite will pick up .env)
 RUN npm run build
