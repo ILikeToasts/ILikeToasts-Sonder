@@ -24,7 +24,6 @@ __all__ = ("celery_app",)
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "fallback")
 DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
-AWS_HOST = os.getenv("AWS_HOST", "")
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 STEAM_API_KEY = os.getenv("STEAM_API_KEY")
 MYSQL_DATABASE = os.getenv("MYSQL_DATABASE", "albummrdb")
@@ -33,7 +32,8 @@ MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", "albumpassword")
 MYSQL_ROOT_PASSWORD = os.getenv("MYSQL_ROOT_PASSWORD", "albumpassword")
 MYSQL_HOST = os.getenv("MYSQL_HOST", "localhost")
 MYSQL_PORT = os.getenv("MYSQL_PORT", "3306")
-
+AWS_HOST = os.getenv("AWS_HOST", "")
+ALLOWED_HOSTS = [AWS_HOST] if AWS_HOST else ["localhost", "127.0.0.1"]
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -72,7 +72,15 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
 ]
 
-CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "http://localhost:5173", AWS_HOST]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+]
+
+if AWS_HOST:
+    # Include https:// prefix for proper CORS validation
+    CORS_ALLOWED_ORIGINS.append(f"{AWS_HOST}")
 
 ROOT_URLCONF = "backend.urls"
 
