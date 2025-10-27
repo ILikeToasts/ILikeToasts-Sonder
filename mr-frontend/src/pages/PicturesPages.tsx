@@ -1,6 +1,7 @@
 import { GenreSelect } from "@/components/Common/GenreSelect";
 import Masonry, { type Item } from "@/components/ui/Masonry";
 import { PageScroller } from "@/components/ui/PageScroller";
+import { API_ROUTES } from "@/constants/ApiRoutes";
 import { MasonryContainer } from "@/styles/Pictures/Pictures.styles";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -23,9 +24,7 @@ export default function Pictures() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch(
-          "http://127.0.0.1:8000/api/media-items/categories/",
-        );
+        const response = await fetch(API_ROUTES.pictures.genres);
         const data: string[] = await response.json();
         setCategories(data);
         setCurrentCategory(data[0] || "");
@@ -47,9 +46,7 @@ export default function Pictures() {
         params.append("page", currentPage.toString());
         params.append("limit", ITEMS_PER_PAGE.toString());
 
-        const response = await fetch(
-          `http://127.0.0.1:8000/api/media-items/?${params}`,
-        );
+        const response = await fetch(`${API_ROUTES.pictures.data}?${params}`);
         const data = await response.json();
 
         const items: Item[] = data.results.map((item: any) => ({

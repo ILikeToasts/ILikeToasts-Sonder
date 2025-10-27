@@ -26,7 +26,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "fallback")
 DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 STEAM_API_KEY = os.getenv("STEAM_API_KEY")
-MYSQL_DATABASE = os.getenv("MYSQL_DATABASE", "albummrdb")
+MYSQL_DATABASE = os.getenv("MYSQL_DATABASE", "albumdb")
 MYSQL_USER = os.getenv("MYSQL_USER", "albumuser")
 MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", "albumpassword")
 MYSQL_ROOT_PASSWORD = os.getenv("MYSQL_ROOT_PASSWORD", "albumpassword")

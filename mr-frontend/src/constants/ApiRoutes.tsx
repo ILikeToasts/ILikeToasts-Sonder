@@ -48,4 +48,8 @@ export const API_ROUTES = {
     genres: `${BASE_URL}yt-media-items/categories/`,
     data: `${BASE_URL}yt-media-items/`,
   },
+  pictures: {
+    genres: `${BASE_URL}media-items/categories/`,
+    data: `${BASE_URL}media-items/`,
+  },
 };
