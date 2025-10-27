@@ -27,6 +27,13 @@ DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",")
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 STEAM_API_KEY = os.getenv("STEAM_API_KEY")
+MYSQL_DATABASE = os.getenv("MYSQL_DATABASE", "albummrdb")
+MYSQL_USER = os.getenv("MYSQL_USER", "albumuser")
+MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", "albumpassword")
+MYSQL_ROOT_PASSWORD = os.getenv("MYSQL_ROOT_PASSWORD", "albumpassword")
+MYSQL_HOST = os.getenv("MYSQL_HOST", "localhost")
+MYSQL_PORT = os.getenv("MYSQL_PORT", "3306")
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -68,7 +75,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:5173",
-    "http://sonder-alb-160704815.us-east-1.elb.amazonaws.com",
+    ALLOWED_HOSTS[0],
 ]
 
 ROOT_URLCONF = "backend.urls"
@@ -98,11 +105,11 @@ WSGI_APPLICATION = "backend.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "sonder_db",
-        "USER": "sonder_admin",
-        "PASSWORD": "61Xd4lJ2VOOAHfQXsWsF!",
-        "HOST": "sonder-db.c41ay6yg6n05.us-east-1.rds.amazonaws.com",
-        "PORT": os.environ.get("MYSQL_PORT", "3306"),
+        "NAME": MYSQL_DATABASE,
+        "USER": MYSQL_USER,
+        "PASSWORD": MYSQL_PASSWORD,
+        "HOST": MYSQL_HOST,
+        "PORT": MYSQL_PORT,
     }
 }
 

@@ -16,8 +16,9 @@ RUN npm install
 # Copy the source code
 COPY . .
 
-# Copy the production env file
-COPY .env.prod .env
+# Accept the build arg
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
 
 # Build the frontend (Vite will pick up .env)
 RUN npm run build

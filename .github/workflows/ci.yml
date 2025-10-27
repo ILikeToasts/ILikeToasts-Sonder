@@ -103,6 +103,7 @@ jobs:
         run: |
           docker build \
             -f mr-frontend/Dockerfile \
+            --build-arg VITE_API_URL=${{ secrets.VITE_API_URL }} \
             -t 796078372698.dkr.ecr.us-east-1.amazonaws.com/sonder-frontend:latest \
             -t 796078372698.dkr.ecr.us-east-1.amazonaws.com/sonder-frontend:${{ github.sha }} \
             mr-frontend
