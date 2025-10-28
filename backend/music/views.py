@@ -1,5 +1,6 @@
 from django.db.models import Count, Q
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, status
@@ -56,6 +57,7 @@ def index(request):
     return HttpResponse("Hi")
 
 
+@csrf_exempt
 def health(request):
     return HttpResponse("OK", status=200)
 
