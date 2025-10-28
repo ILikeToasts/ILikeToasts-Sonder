@@ -14,6 +14,8 @@ import os
 from pathlib import Path
 
 from celery import app as celery_app
+from corsheaders.signals import check_request_enabled
+from django.dispatch import receiver
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -86,8 +88,17 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 if AWS_HOST:
-    # Include https:// prefix for proper CORS validation
-    CORS_ALLOWED_ORIGINS.append(f"{AWS_HOST}")
+    origin = AWS_HOST.rstrip("/")
+    if origin not in CORS_ALLOWED_ORIGINS:
+        CORS_ALLOWED_ORIGINS.append(origin)
+
+
+@receiver(check_request_enabled)
+def skip_cors_for_alb(sender, request, **kwargs):
+    if request.path == "/health":
+        return False
+    return None
+
 
 ROOT_URLCONF = "backend.urls"
 
@@ -185,4 +196,6 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
+SWAGGER_USE_COMPAT_RENDERERS = False
+SWAGGER_USE_COMPAT_RENDERERS = False
 SWAGGER_USE_COMPAT_RENDERERS = False
