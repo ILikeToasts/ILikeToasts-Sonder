@@ -34,8 +34,7 @@ MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", "albumpassword")
 MYSQL_ROOT_PASSWORD = os.getenv("MYSQL_ROOT_PASSWORD", "albumpassword")
 MYSQL_HOST = os.getenv("MYSQL_HOST", "localhost")
 MYSQL_PORT = os.getenv("MYSQL_PORT", "3306")
-AWS_HOST = os.getenv("AWS_HOST", "")
-ALLOWED_HOSTS = [AWS_HOST] if AWS_HOST else ["localhost", "127.0.0.1"]
+AWS_HOST = os.getenv("AWS_HOST")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -91,6 +90,12 @@ if AWS_HOST:
     origin = AWS_HOST.rstrip("/")
     if origin not in CORS_ALLOWED_ORIGINS:
         CORS_ALLOWED_ORIGINS.append(origin)
+
+if AWS_HOST:
+    parsed = AWS_HOST.replace("http://", "").replace("https://", "").split("/")[0]
+    ALLOWED_HOSTS = [parsed, "localhost", "127.0.0.1"]
+else:
+    ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 
 @receiver(check_request_enabled)
