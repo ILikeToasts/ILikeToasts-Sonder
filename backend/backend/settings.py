@@ -24,6 +24,7 @@ DJANGO_ENV = os.getenv("DJANGO_ENV", "local")
 __all__ = ("celery_app",)
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "fallback")
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",")
 DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 STEAM_API_KEY = os.getenv("STEAM_API_KEY")
@@ -92,11 +93,11 @@ if AWS_HOST:
     if origin not in CORS_ALLOWED_ORIGINS:
         CORS_ALLOWED_ORIGINS.append(origin)
 
-if AWS_HOST:
+""" if AWS_HOST:
     parsed = AWS_HOST.replace("http://", "").replace("https://", "").split("/")[0]
     ALLOWED_HOSTS = [parsed, "localhost", "127.0.0.1"]
 else:
-    ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+    ALLOWED_HOSTS = ["localhost", "127.0.0.1"] """
 
 
 @receiver(check_request_enabled)
