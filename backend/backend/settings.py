@@ -18,7 +18,7 @@ from corsheaders.signals import check_request_enabled
 from django.dispatch import receiver
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=False)
 DJANGO_ENV = os.getenv("DJANGO_ENV", "local")
 DEBUG = os.getenv("DJANGO_DEBUG", "True").lower() == "true"
 
