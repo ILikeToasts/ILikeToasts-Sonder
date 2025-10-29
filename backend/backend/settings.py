@@ -20,7 +20,6 @@ from dotenv import load_dotenv
 
 load_dotenv(override=False)
 DJANGO_ENV = os.getenv("DJANGO_ENV", "local")
-DEBUG = os.getenv("DJANGO_DEBUG", "True").lower() == "true"
 
 __all__ = ("celery_app",)
 
@@ -35,6 +34,8 @@ MYSQL_ROOT_PASSWORD = os.getenv("MYSQL_ROOT_PASSWORD", "albumpassword")
 MYSQL_HOST = os.getenv("MYSQL_HOST", "localhost")
 MYSQL_PORT = os.getenv("MYSQL_PORT", "3306")
 AWS_HOST = os.getenv("AWS_HOST")
+
+print(f"!!! DEBUG: The value of AWS_HOST is: '{AWS_HOST}' (Type: {type(AWS_HOST)})")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
