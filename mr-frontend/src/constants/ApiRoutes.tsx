@@ -3,15 +3,15 @@ const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api/";
 export const API_ROUTES = {
   albums: {
     genres: `${BASE_URL}albums/list-genres/`,
-    data: `${BASE_URL}spotify/albums/list/?`,
+    data: `${BASE_URL}albums/list/?`,
   },
   artists: {
     genres: `${BASE_URL}artists/list-genres/`,
-    data: `${BASE_URL}spotify/artists/list/?`,
+    data: `${BASE_URL}artists/list/?`,
   },
   singles: {
     genres: `${BASE_URL}singles/list-genres/`,
-    data: `${BASE_URL}spotify/singles/list/?`,
+    data: `${BASE_URL}singles/list/?`,
   },
   games: {
     genres: `${BASE_URL}steam/games/list-genres/`,
@@ -30,10 +30,10 @@ export const API_ROUTES = {
     data: `${BASE_URL}tmdb/list/animes/?`,
   },
   stats: {
-    topGenres: `${BASE_URL}data/top-genres/`,
-    topArtists: `${BASE_URL}data/top-artists/`,
-    bottomArtists: `${BASE_URL}data/bottom-artists/`,
-    favoriteArtists: `${BASE_URL}data/favorite-artists/`,
+    topGenres: `${BASE_URL}stats/top-genres/`,
+    topArtists: `${BASE_URL}stats/top-artists/`,
+    bottomArtists: `${BASE_URL}stats/bottom-artists/`,
+    favoriteArtists: `${BASE_URL}stats/favorite-artists/`,
   },
   llm: {
     musicProfile: `${BASE_URL}user/profile/tracks/`,

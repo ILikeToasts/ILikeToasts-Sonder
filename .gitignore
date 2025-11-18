@@ -33,3 +33,5 @@ celerybeat-schedule*
 
 # Tests
 .coverage
+
+/backend/staticfiles/

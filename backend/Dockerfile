@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
     default-libmysqlclient-dev \
     curl \
     pkg-config \
-    build-essential \ 
+    build-essential \
     redis-tools \
     && rm -rf /var/lib/apt/lists/*
 
@@ -28,9 +28,9 @@ RUN poetry config virtualenvs.create false && poetry install --no-interaction --
 COPY . .
 
 # Collect static files for Whitenoise
-RUN poetry run python manage.py collectstatic --noinput
+RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
 
 # Run Django
-CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

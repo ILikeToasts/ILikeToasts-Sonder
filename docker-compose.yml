@@ -6,7 +6,6 @@ services:
   backend:
     build: ./backend
     volumes:
-      - ./backend:/code
       - ./backend/media:/code/media
     ports:
       - "8000:8000"

@@ -40,27 +40,25 @@ from .views import (
 
 urlpatterns = [
     # Spotify Albums
-    path("spotify/albums/list/", AlbumListView.as_view(), name="album-list"),
-    path("spotify/albums/<str:album_id>/", AlbumDetail.as_view(), name="album-detail"),
+    path("albums/list/", AlbumListView.as_view(), name="album-list"),
+    path("albums/<str:album_id>/", AlbumDetail.as_view(), name="album-detail"),
     path(
-        "spotify/albums/import",
+        "albums/import",
         AlbumImportView.as_view(),
         name="album-import",
     ),
     path("albums/list-genres/", AlbumGenresView.as_view(), name="album-genres"),
     # Spotify Singles
     path(
-        "spotify/track/import",
+        "singles/import",
         TrackImportView.as_view(),
         name="track-import",
     ),
-    path("spotify/singles/list/", TracksListView.as_view(), name="singles-list"),
+    path("singles/list/", TracksListView.as_view(), name="singles-list"),
     path("singles/list-genres/", SinglesGenresView.as_view(), name="singles-genres"),
     # Spotify Artists
-    path("spotify/artists/list/", ArtistListView.as_view(), name="artist-list"),
-    path(
-        "spotify/artists/<str:artist_id>/", ArtistDetail.as_view(), name="artist-detail"
-    ),
+    path("artists/list/", ArtistListView.as_view(), name="artist-list"),
+    path("artists/<str:artist_id>/", ArtistDetail.as_view(), name="artist-detail"),
     path("artists/list-genres/", ArtistsGenresView.as_view(), name="artists-genres"),
     # Spotify Playlists
     path("spotify/playlists/", PlaylistView.as_view(), name="playlist-list"),
@@ -108,13 +106,15 @@ urlpatterns = [
         YTMediaItemsCategoriesView.as_view(),
         name="media-item-categories",
     ),
-    # Statistics / Data
-    path("data/top-genres/", TopGenresView.as_view(), name="top-genres"),
+    # Statistics
+    path("stats/top-genres/", TopGenresView.as_view(), name="top-genres"),
     path(
-        "data/favorite-artists/", FavoriteArtistsView.as_view(), name="favorite-artists"
+        "stats/favorite-artists/",
+        FavoriteArtistsView.as_view(),
+        name="favorite-artists",
     ),
-    path("data/top-artists/", TopArtistsView.as_view(), name="top-artists"),
-    path("data/bottom-artists/", BottomArtistsView.as_view(), name="bottom-artists"),
+    path("stats/top-artists/", TopArtistsView.as_view(), name="top-artists"),
+    path("stats/bottom-artists/", BottomArtistsView.as_view(), name="bottom-artists"),
     # TMDB
     path("tmdb/list/import/", TMDbImportListView.as_view(), name="tmdb-list-import"),
     path("tmdb/list/animes/", AnimeListView.as_view(), name="anime-list"),

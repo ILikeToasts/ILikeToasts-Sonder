@@ -20,12 +20,12 @@ from dotenv import load_dotenv
 
 load_dotenv(override=False)
 DJANGO_ENV = os.getenv("DJANGO_ENV", "local")
+DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
 
 __all__ = ("celery_app",)
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "fallback")
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",")
-DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 STEAM_API_KEY = os.getenv("STEAM_API_KEY")
 MYSQL_DATABASE = os.getenv("MYSQL_DATABASE", "albumdb")
@@ -41,15 +41,12 @@ print(f"!!! DEBUG: The value of AWS_HOST is: '{AWS_HOST}' (Type: {type(AWS_HOST)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# MEDIA
-MEDIA_ROOT = BASE_DIR / "media"
-MEDIA_URL = "/media/"
-
+# static files
 STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -92,12 +89,6 @@ if AWS_HOST:
     origin = AWS_HOST.rstrip("/")
     if origin not in CORS_ALLOWED_ORIGINS:
         CORS_ALLOWED_ORIGINS.append(origin)
-
-""" if AWS_HOST:
-    parsed = AWS_HOST.replace("http://", "").replace("https://", "").split("/")[0]
-    ALLOWED_HOSTS = [parsed, "localhost", "127.0.0.1"]
-else:
-    ALLOWED_HOSTS = ["localhost", "127.0.0.1"] """
 
 
 @receiver(check_request_enabled)
